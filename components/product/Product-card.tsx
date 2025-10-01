@@ -3,7 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Title } from '../shared';
 import { Button } from '../ui/button';
-import { Ingredient, ProductItem } from '@/generated/prisma/client';
+import { Ingredient, ProductItem } from '@/lib/generated/prisma/client';
 
 interface Props {
   className?: string;

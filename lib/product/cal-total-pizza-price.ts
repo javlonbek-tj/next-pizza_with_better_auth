@@ -1,5 +1,5 @@
 import { PizzaSize, PizzaType } from '@/constants/pizza';
-import { Ingredient, ProductItem } from '@/generated/prisma/client';
+import { Ingredient, ProductItem } from '@/lib/generated/prisma/client';
 import Decimal from 'decimal.js';
 
 export const totalPizzaPrice = (

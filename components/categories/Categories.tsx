@@ -1,6 +1,6 @@
 'use client';
 
-import { Category } from '@/generated/prisma/client';
+import { Category } from '@/lib/generated/prisma/client';
 import { cn } from '@/lib';
 import { useCategoryStore } from '@/store/category';
 
@@ -14,7 +14,7 @@ export function Categories({ className, categories }: Props) {
   return (
     <div
       className={cn(
-        'bg-gray-50 flex items-center gap-1 p-1 rounded-2xl',
+        'flex items-center gap-1 bg-gray-50 p-1 rounded-2xl',
         className
       )}
     >
@@ -23,7 +23,7 @@ export function Categories({ className, categories }: Props) {
           key={category.name}
           href={`/#${category.name}`}
           className={cn(
-            'hover:bg-white px-5 py-2 rounded-xl hover:text-primary transition duration-300 font-medium',
+            'hover:bg-white px-5 py-2 rounded-xl font-medium hover:text-primary transition duration-300',
             categoryActiveId === category.id && 'bg-white text-primary'
           )}
         >

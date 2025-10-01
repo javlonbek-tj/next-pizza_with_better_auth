@@ -8,7 +8,7 @@ import { useClickAway } from 'react-use';
 import Link from 'next/link';
 import Image from 'next/image';
 
-import { Product } from '@/generated/prisma/client';
+import { Product } from '@/lib/generated/prisma/client';
 import { cn } from '@/lib';
 import { Api } from '@/services/api-client';
 

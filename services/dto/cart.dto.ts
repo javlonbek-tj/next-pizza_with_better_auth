@@ -4,7 +4,7 @@ import {
   Ingredient,
   Product,
   ProductItem,
-} from '@/generated/prisma/client';
+} from '@/lib/generated/prisma/client';
 
 export type CartItemDto = CartItem & {
   productItem: ProductItem & { product: Product };

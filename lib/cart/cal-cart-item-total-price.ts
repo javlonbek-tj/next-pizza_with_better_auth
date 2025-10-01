@@ -1,10 +1,11 @@
 import { CartItemDto } from '@/services/dto/cart.dto';
 import Decimal from 'decimal.js';
 
-export const calCartItemTotalPrice = (cartItem: CartItemDto) => {
+export const calCartItemTotalPrice = (cartItem: CartItemDto): number => {
   const pizzaPrice = new Decimal(cartItem.productItem.price);
-  const totalIngredientsPrice = cartItem.ingredients.reduce(
-    (acc, ing) => acc.plus(ing.price),
+
+  const totalIngredientsPrice = cartItem.ingredients.reduce<Decimal>(
+    (acc, ing) => acc.plus(new Decimal(ing.price)),
     new Decimal(0)
   );
 
