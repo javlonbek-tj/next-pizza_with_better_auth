@@ -6,13 +6,11 @@ import { FaGithub } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import { LoginForm } from './forms/login-form';
-import { RegisterForm } from './forms/register-form';
 import { Button } from '@/components/ui/button';
-import { AuthSwitch } from './auth-switch';
-import { DEFAULT_LOGIN_REDIRECT } from '@/routes';
+import { AuthSwitch } from '../auth/auth-switch';
 import { Loader } from 'lucide-react';
-import { VerifyModal } from '../Verify-modal';
+import { LoginForm } from '../auth/login-form';
+import { RegisterForm } from '../auth/register-form';
 
 interface Props {
   open: boolean;
@@ -25,12 +23,6 @@ export function AuthModal({ open, onClose }: Props) {
     null | 'google' | 'github'
   >(null);
 
-  const [showVerifyModal, setShowVerifyModal] = useState(false);
-  const [verificationData, setVerificationData] = useState<{
-    userId: string;
-    email: string;
-  } | null>(null);
-
   const onSwitchType = () => setType(type === 'login' ? 'register' : 'login');
 
   const handleClose = () => {
@@ -41,18 +33,12 @@ export function AuthModal({ open, onClose }: Props) {
   const onClick = async (provider: 'google' | 'github') => {
     setLoadingProvider(provider);
     await signIn(provider, {
-      callbackUrl: DEFAULT_LOGIN_REDIRECT,
+      callbackUrl: '/', // DEFAULT_LOGIN_REDIRECT
       redirect: true,
     });
   };
 
   const isLoading = !!loadingProvider;
-
-  const handleNeedsVerification = (data: { userId: string; email: string }) => {
-    setVerificationData(data);
-    setShowVerifyModal(true);
-    onClose();
-  };
 
   return (
     <>
@@ -64,12 +50,9 @@ export function AuthModal({ open, onClose }: Props) {
             </DialogTitle>
 
             {type === 'login' ? (
-              <LoginForm
-                onClose={onClose}
-                onNeedsVerification={handleNeedsVerification}
-              />
+              <LoginForm onClose={onClose} />
             ) : (
-              <RegisterForm onNeedsVerification={handleNeedsVerification} />
+              <RegisterForm onClose={onClose} />
             )}
 
             <hr className='my-3' />
@@ -109,13 +92,6 @@ export function AuthModal({ open, onClose }: Props) {
           </div>
         </DialogContent>
       </Dialog>
-
-      <VerifyModal
-        open={showVerifyModal}
-        onClose={() => setShowVerifyModal(false)}
-        userId={verificationData?.userId || ''}
-        email={verificationData?.email}
-      />
     </>
   );
 }

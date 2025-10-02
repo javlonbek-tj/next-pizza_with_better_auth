@@ -1,7 +1,9 @@
-import prisma from '@/prisma/prisma-client';
+import { sendOTPEmail } from '@/app/actions/send-email-action';
+import { prisma } from '@/prisma/prisma-client';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { nextCookies } from 'better-auth/next-js';
+import { emailOTP } from 'better-auth/plugins';
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -9,6 +11,8 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
+    minPasswordLength: 6,
+    requireEmailVerification: true,
   },
   socialProviders: {
     google: {
@@ -20,5 +24,17 @@ export const auth = betterAuth({
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     },
   },
-  plugins: [nextCookies()],
+  plugins: [
+    nextCookies(),
+    emailOTP({
+      async sendVerificationOTP({ email, otp, type }) {
+        await sendOTPEmail(email, otp, type);
+      },
+      sendVerificationOnSignUp: true,
+      otpLength: 6,
+      expiresIn: 60,
+    }),
+  ],
 });
+
+export type ErrorCodes = typeof auth.$ERROR_CODES | 'UNKNOWN';

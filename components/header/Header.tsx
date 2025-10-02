@@ -9,17 +9,15 @@ import { Container } from '../shared/Container';
 import { SearchInput } from '../filters/Search-input';
 import { CartButton } from '../cart';
 import { ProfileButton } from '../profile/Profile-button';
-import { AuthModal } from '../modals/auth-modal/auth-modal';
-import { Session } from 'next-auth';
+import { AuthModal } from '../modals/auth-modal';
 
 interface Props {
   className?: string;
   hasSearch?: boolean;
   hasCartBtn?: boolean;
-  session?: Session | null;
 }
 
-export function Header({ className, hasSearch, hasCartBtn, session }: Props) {
+export function Header({ className, hasSearch, hasCartBtn }: Props) {
   const [openAuthModal, setOpenAuthModal] = useState(false);
   return (
     <header className={cn('border border-b', className)}>
@@ -45,10 +43,7 @@ export function Header({ className, hasSearch, hasCartBtn, session }: Props) {
             onClose={() => setOpenAuthModal(false)}
           />
 
-          <ProfileButton
-            onClickSignIn={() => setOpenAuthModal(true)}
-            session={session}
-          />
+          <ProfileButton onClickSignIn={() => setOpenAuthModal(true)} />
         </div>
       </Container>
     </header>

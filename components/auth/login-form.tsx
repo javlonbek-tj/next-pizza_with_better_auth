@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Loader } from 'lucide-react';
-import { signIn } from 'next-auth/react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -11,82 +10,65 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { loginSchema, LoginValues } from './schemas';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { loginAction } from '@/app/actions/login';
+import { loginAction } from '@/app/actions';
+import { loginSchema, LoginValues } from './schemas';
+import { OTPVerificationForm } from './otp-verification-form';
 
 interface Props {
   onClose: () => void;
-  onNeedsVerification: (data: { userId: string; email: string }) => void;
 }
 
-export function LoginForm({ onClose, onNeedsVerification }: Props) {
+export function LoginForm({ onClose }: Props) {
   const [error, setError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const [isPending, setIsPending] = useState(false);
+  const [showOTPVerification, setShowOTPVerification] = useState(false);
+  const [unverifiedEmail, setUnverifiedEmail] = useState('');
   const router = useRouter();
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: 'test@gmail.com',
-      password: '123456',
+      email: '',
+      password: '',
     },
   });
 
   const onSubmit = async (values: LoginValues) => {
-    setIsSubmitting(true);
+    setIsPending(true);
     setError(null);
 
-    try {
-      // 1) Pre-check credentials with server action
-      const pre = await loginAction(values);
+    const result = await loginAction(values);
 
-      if (!pre.success) {
-        if (pre.needsVerification && pre.userId) {
-          onNeedsVerification({
-            userId: pre.userId,
-            email: values.email,
-          });
-          setIsSubmitting(false);
-          return;
-        }
-
-        setError(pre.error ?? 'Неверный email или пароль');
-        return;
-      }
-
-      // 2) If pre-check succeeded, call next-auth signIn to establish session
-      const result = await signIn('credentials', {
-        email: values.email,
-        password: values.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        if (result.error === 'CredentialsSignin') {
-          setError('Неверный email или пароль');
-        } else {
-          setError('Произошла ошибка. Пожалуйста, попробуйте ещё раз.');
-        }
-        return;
-      }
-
-      if (result?.ok) {
-        onClose?.();
-        router.push('/');
-        router.refresh();
-      }
-    } catch (error) {
-      // TODO REMOVE IN PRODUCTION
-      console.error('Error [LOGIN]', error);
-      setError('Произошла ошибка. Пожалуйста, попробуйте ещё раз.');
-    } finally {
-      setIsSubmitting(false);
+    if (result.requiresVerification) {
+      setUnverifiedEmail(result.email || values.email);
+      setShowOTPVerification(true);
+      setIsPending(false);
+    } else if (result.error) {
+      setError(result.error);
+      setIsPending(false);
+    } else {
+      onClose();
+      router.push('/');
     }
   };
+
+  const handleVerificationSuccess = () => {
+    onClose();
+    router.push('/');
+  };
+
+  if (showOTPVerification) {
+    return (
+      <OTPVerificationForm
+        email={unverifiedEmail}
+        onSuccess={handleVerificationSuccess}
+        onBack={() => setShowOTPVerification(false)}
+      />
+    );
+  }
 
   return (
     <>
@@ -132,13 +114,9 @@ export function LoginForm({ onClose, onNeedsVerification }: Props) {
           <Button
             type='submit'
             className='w-full cursor-pointer'
-            disabled={isSubmitting}
+            disabled={isPending}
           >
-            {isSubmitting ? (
-              <Loader className='w-5 h-5 animate-spin' />
-            ) : (
-              'Войти'
-            )}
+            {isPending ? <Loader className='w-5 h-5 animate-spin' /> : 'Войти'}
           </Button>
 
           {/* Messages */}

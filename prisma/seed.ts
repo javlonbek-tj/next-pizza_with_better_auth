@@ -1,5 +1,5 @@
 import prisma from '../prisma/prisma-client';
-import { hashSync } from 'bcryptjs';
+/* import { hashSync } from 'bcryptjs'; */
 import { categories, _ingredients, products } from '../prisma/constants';
 
 const randomDecimalNumber = (min: number, max: number) => {
@@ -39,9 +39,7 @@ async function up() {
     data: {
       name: 'User Test',
       email: 'user@test.ru',
-      password: hashSync('111111', 10),
-      emailVerified: new Date(),
-      role: 'USER',
+      emailVerified: false,
     },
   });
 
@@ -49,9 +47,7 @@ async function up() {
     data: {
       name: 'Admin Admin',
       email: 'admin@test.ru',
-      password: hashSync('111111', 10),
-      emailVerified: new Date(),
-      role: 'ADMIN',
+      emailVerified: false,
     },
   });
 

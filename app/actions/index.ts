@@ -1,2 +1,2 @@
-export { resendCodeAction } from './resend-code';
-export { verifyCodeAction } from './verify';
+export { registerAction } from './register-action';
+export { loginAction } from './login-action';

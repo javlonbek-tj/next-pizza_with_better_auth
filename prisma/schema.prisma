@@ -11,37 +11,46 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String    @id @default(uuid())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @default(now()) @updatedAt
+
   name          String
   email         String
   emailVerified Boolean   @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
+
+  Cart Cart?
+
   sessions      Session[]
   accounts      Account[]
 
   @@unique([email])
-  @@map("user")
+  @@map("users")
 }
 
 model Session {
-  id        String   @id
-  expiresAt DateTime
-  token     String
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  expiresAt DateTime
+  token     String
   ipAddress String?
   userAgent String?
+
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
-  @@map("session")
+  @@map("sessions")
 }
 
 model Account {
-  id                    String    @id
+  id                    String    @id @default(uuid())
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
   accountId             String
   providerId            String
   userId                String
@@ -53,19 +62,118 @@ model Account {
   refreshTokenExpiresAt DateTime?
   scope                 String?
   password              String?
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
 
-  @@map("account")
+  @@map("accounts")
 }
 
 model Verification {
-  id         String   @id
-  identifier String
-  value      String
-  expiresAt  DateTime
+  id         String   @id @default(uuid())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now()) @updatedAt
 
-  @@map("verification")
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@map("verifications")
+}
+
+
+model Product {
+  id       String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name     String
+  imageUrl String
+
+  productItems ProductItem[]
+  ingredients Ingredient[]
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+
+  @@map ("products")
+}
+
+model ProductItem {
+  id       String @id @default(uuid())
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  price     Float
+  size      Int?
+  pizzaType Int?
+
+  cartItems CartItem[]
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String
+
+  @@map("product_items")
+}
+
+model Category {
+  id   String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique
+
+  products Product[]
+
+  @@map("categories")
+}
+
+model Ingredient {
+  id   String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  name String @unique
+  price    Float
+  imageUrl String
+
+  products    Product[]
+  ingredients CartItem[]
+
+  @@map("ingredients")
+}
+
+model Cart {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  token String
+
+  items CartItem[]
+
+  userId String? @unique
+  user   User?   @relation(fields: [userId], references: [id])
+
+  @@map("carts")
+}
+
+model CartItem {
+  id String @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+
+  quantity      Int         @default(1)
+  ingredients Ingredient[]
+
+  productItem   ProductItem @relation(fields: [productItemId], references: [id])
+  productItemId String
+
+  cart   Cart   @relation(fields: [cartId], references: [id])
+  cartId String
+
+  @@map("cart_items")
+}
+
+enum UserRole {
+  USER
+  ADMIN
 }
