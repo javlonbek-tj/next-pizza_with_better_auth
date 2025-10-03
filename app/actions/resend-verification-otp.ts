@@ -4,14 +4,15 @@ import { APIError } from 'better-auth';
 
 export async function resendVerificationOTP(email: string) {
   try {
-    await auth.api.sendVerificationEmail({
-      body: { email },
+    await auth.api.sendVerificationOTP({
+      body: { email, type: 'email-verification' },
     });
-    return { error: null, success: true };
+
+    return { error: null };
   } catch (error) {
     if (error instanceof APIError) {
-      return { error: error.message, success: false };
+      return { error: error.message };
     }
-    return { error: 'Failed to send verification code', success: false };
+    return { error: 'Failed to send verification code' };
   }
 }

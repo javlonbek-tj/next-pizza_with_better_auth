@@ -2,11 +2,10 @@
 
 import nodemailer from 'nodemailer';
 
-// Create reusable transporter
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true', // true for 465, false for other ports
+  secure: process.env.SMTP_SECURE === 'true',
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASSWORD,
@@ -19,15 +18,15 @@ export async function sendOTPEmail(
   type: 'sign-in' | 'email-verification' | 'forget-password'
 ) {
   const subjects = {
-    'sign-in': 'Sign in to Your App',
-    'email-verification': 'Verify your email',
-    'forget-password': 'Reset your password',
+    'sign-in': 'Войдите в ваш аккаунт',
+    'email-verification': 'Подтвердите вашу почту',
+    'forget-password': 'Сброс пароля',
   };
 
   const messages = {
-    'sign-in': `Your OTP code for signing in is: <strong>${otp}</strong>`,
-    'email-verification': `Your email verification code is: <strong>${otp}</strong>`,
-    'forget-password': `Your password reset code is: <strong>${otp}</strong>`,
+    'sign-in': `Ваш код для входа: <strong>${otp}</strong>`,
+    'email-verification': `Ваш код подтверждения почты: <strong>${otp}</strong>`,
+    'forget-password': `Ваш код для сброса пароля: <strong>${otp}</strong>`,
   };
 
   try {
@@ -73,10 +72,10 @@ export async function sendOTPEmail(
               <h2>${subjects[type]}</h2>
               <p>${messages[type]}</p>
               <div class="otp-code">${otp}</div>
-              <p>This code will expire in 1 minutes.</p>
-              <p>If you didn't request this code, please ignore this email.</p>
+              <p>Этот код действителен в течение 1 минуты.</p>
+              <p>Если вы не запрашивали этот код, просто проигнорируйте это письмо.</p>
               <div class="footer">
-                <p>This is an automated message, please do not reply.</p>
+                <p>Это автоматическое сообщение, пожалуйста, не отвечайте на него.</p>
               </div>
             </div>
           </body>

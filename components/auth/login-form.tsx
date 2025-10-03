@@ -19,9 +19,10 @@ import { OTPVerificationForm } from './otp-verification-form';
 
 interface Props {
   onClose: () => void;
+  onShowOTP?: (show: boolean) => void;
 }
 
-export function LoginForm({ onClose }: Props) {
+export function LoginForm({ onClose, onShowOTP }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [isPending, setIsPending] = useState(false);
   const [showOTPVerification, setShowOTPVerification] = useState(false);
@@ -45,6 +46,7 @@ export function LoginForm({ onClose }: Props) {
     if (result.requiresVerification) {
       setUnverifiedEmail(result.email || values.email);
       setShowOTPVerification(true);
+      onShowOTP?.(true);
       setIsPending(false);
     } else if (result.error) {
       setError(result.error);
@@ -60,12 +62,17 @@ export function LoginForm({ onClose }: Props) {
     router.push('/');
   };
 
+  const handleBack = () => {
+    setShowOTPVerification(false);
+    onShowOTP?.(false);
+  };
+
   if (showOTPVerification) {
     return (
       <OTPVerificationForm
         email={unverifiedEmail}
         onSuccess={handleVerificationSuccess}
-        onBack={() => setShowOTPVerification(false)}
+        onBack={handleBack}
       />
     );
   }
@@ -75,19 +82,19 @@ export function LoginForm({ onClose }: Props) {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='space-y-4 mx-auto w-90'
+          className="space-y-4 mx-auto w-90"
         >
           {/* Email */}
           <FormField
             control={form.control}
-            name='email'
+            name="email"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder='you@example.com'
-                    type='email'
+                    placeholder="you@example.com"
+                    type="email"
                     {...field}
                   />
                 </FormControl>
@@ -99,12 +106,12 @@ export function LoginForm({ onClose }: Props) {
           {/* Password */}
           <FormField
             control={form.control}
-            name='password'
+            name="password"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input placeholder='******' type='password' {...field} />
+                  <Input placeholder="******" type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -112,15 +119,15 @@ export function LoginForm({ onClose }: Props) {
           />
 
           <Button
-            type='submit'
-            className='w-full cursor-pointer'
+            type="submit"
+            className="w-full cursor-pointer"
             disabled={isPending}
           >
-            {isPending ? <Loader className='w-5 h-5 animate-spin' /> : 'Войти'}
+            {isPending ? <Loader className="w-5 h-5 animate-spin" /> : 'Войти'}
           </Button>
 
           {/* Messages */}
-          {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
+          {error && <p className="text-red-500 text-sm text-center">{error}</p>}
         </form>
       </Form>
     </>

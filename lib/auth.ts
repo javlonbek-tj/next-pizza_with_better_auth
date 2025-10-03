@@ -1,5 +1,5 @@
 import { sendOTPEmail } from '@/app/actions/send-email-action';
-import { prisma } from '@/prisma/prisma-client';
+import prisma from '@/prisma/prisma-client';
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { nextCookies } from 'better-auth/next-js';
@@ -13,6 +13,7 @@ export const auth = betterAuth({
     enabled: true,
     minPasswordLength: 6,
     requireEmailVerification: true,
+    sendVerificationOnSignUp: true,
   },
   socialProviders: {
     google: {
