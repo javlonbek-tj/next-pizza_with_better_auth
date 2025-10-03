@@ -1,13 +1,14 @@
 import { Trash2Icon } from 'lucide-react';
 import Image from 'next/image';
+
 import { cn } from '@/lib/utils';
 import { CartItemInfo } from './Cart-item-info';
 import { CartIconButton } from './Cart-icon-button';
-import { useRemoveCartItem } from '../hooks/use-cart';
+import { useRemoveCartItem } from '@/hooks';
 
 interface Props {
   className?: string;
-  id: number;
+  id: string;
   imageUrl: string;
   name: string;
   quantity: number;

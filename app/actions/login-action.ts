@@ -1,7 +1,10 @@
 'use server';
+
+import { APIError } from 'better-auth';
+
 import { loginSchema, LoginValues } from '@/components/auth/schemas';
 import { auth } from '@/lib';
-import { APIError } from 'better-auth';
+import { resendVerificationOTP } from './resend-verification-otp';
 
 export async function loginAction(values: LoginValues) {
   const parsed = loginSchema.safeParse(values);
@@ -18,13 +21,21 @@ export async function loginAction(values: LoginValues) {
     return { error: null, requiresVerification: false };
   } catch (error) {
     if (error instanceof APIError) {
-      // Check if the error is about email verification
       if (
         error.message.toLowerCase().includes('email') &&
         error.message.toLowerCase().includes('verif')
       ) {
+        const resendResult = await resendVerificationOTP(email);
+
+        if (resendResult.error) {
+          return {
+            error: 'Не удалось отправить код подтверждения',
+            requiresVerification: false,
+          };
+        }
+
         return {
-          error: error.message,
+          error: 'Пожалуйста, подтвердите вашу почту',
           requiresVerification: true,
           email,
         };

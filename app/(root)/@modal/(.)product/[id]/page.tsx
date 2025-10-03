@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import prisma from '@/prisma/prisma-client';
+
 import { ChooseProductModal } from '@/components/modals/Choose-product-modal';
 
 export default async function ProductModalPage({

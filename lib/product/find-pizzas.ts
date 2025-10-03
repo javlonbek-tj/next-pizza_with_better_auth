@@ -1,6 +1,6 @@
 'use server';
 
-import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/constants';
+import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/lib/constants';
 import prisma from '@/prisma/prisma-client';
 
 export interface GetSearchParams {

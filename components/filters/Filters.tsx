@@ -4,9 +4,9 @@ import { cn } from '@/lib';
 import { Title } from '../shared/Title';
 import { FilterCheckboxGroup } from './Filter-checkbox-group';
 import { PriceRange } from './Price-range';
-import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/constants';
-import { useFilterState } from '../hooks';
-import { useIngredients } from '../hooks';
+import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/lib/constants';
+import { useFilterState } from '@/hooks';
+import { useIngredients } from '@/hooks';
 import { FilterLoading } from './Filter-loading';
 
 interface Props {

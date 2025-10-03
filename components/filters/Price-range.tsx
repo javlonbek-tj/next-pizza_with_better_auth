@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+
 import { cn } from '@/lib';
 import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
@@ -39,7 +40,6 @@ export function PriceRange({
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
-    // Allow empty input for better UX
     if (inputValue === '') {
       setRange([min, range[1]]);
       return;
@@ -47,13 +47,10 @@ export function PriceRange({
 
     let newMin = Number(inputValue);
 
-    // Prevent invalid numbers
     if (isNaN(newMin)) return;
 
-    // Clamp between min and max
     newMin = Math.max(min, Math.min(newMin, max));
 
-    // Ensure min doesn't exceed current max
     newMin = Math.min(newMin, range[1]);
 
     const newRange: [number, number] = [newMin, range[1]];
@@ -64,7 +61,6 @@ export function PriceRange({
   const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = e.target.value;
 
-    // Allow empty input for better UX
     if (inputValue === '') {
       setRange([range[0], max]);
       return;
@@ -72,13 +68,10 @@ export function PriceRange({
 
     let newMax = Number(inputValue);
 
-    // Prevent invalid numbers
     if (isNaN(newMax)) return;
 
-    // Clamp between min and max - THIS IS KEY
     newMax = Math.max(min, Math.min(newMax, max));
 
-    // Ensure max doesn't go below current min
     newMax = Math.max(newMax, range[0]);
 
     const newRange: [number, number] = [range[0], newMax];
@@ -86,7 +79,6 @@ export function PriceRange({
     onValueChange(newRange);
   };
 
-  // Handle blur to ensure valid values
   const handleMinBlur = () => {
     if (range[0] < min || isNaN(range[0])) {
       const newRange: [number, number] = [min, range[1]];

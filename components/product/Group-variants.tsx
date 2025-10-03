@@ -1,4 +1,4 @@
-import { PizzaSize, PizzaType } from '@/constants';
+import { PizzaSize, PizzaType } from '@/lib/constants';
 import { cn } from '@/lib';
 
 interface Props {

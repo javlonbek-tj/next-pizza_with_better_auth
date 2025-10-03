@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { Api } from '@/services/api-client';
 import { getCartDetails } from '@/lib/cart';
 import { AddToCartDto } from '@/services/dto/cart.dto';
-import { queryKeys } from '@/constants';
+import { queryKeys } from '@/lib/constants';
 
 export function useCart() {
   return useQuery({
@@ -15,7 +15,7 @@ export function useCart() {
   });
 }
 
-type UpdateQtyVars = { id: number; quantity: number };
+type UpdateQtyVars = { id: string; quantity: number };
 
 export function useUpdateCartQuantity() {
   const queryClient = useQueryClient();
@@ -29,7 +29,7 @@ export function useUpdateCartQuantity() {
   });
 }
 
-type RemoveCartItemVars = { id: number };
+type RemoveCartItemVars = { id: string };
 
 export function useRemoveCartItem() {
   const queryClient = useQueryClient();

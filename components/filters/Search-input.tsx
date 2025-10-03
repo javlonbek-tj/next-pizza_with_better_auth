@@ -36,7 +36,7 @@ export function SearchInput({ className }: Props) {
   return (
     <>
       {focused && (
-        <div className="top-0 right-0 bottom-0 left-0 z-40 fixed bg-black/50" />
+        <div className='top-0 right-0 bottom-0 left-0 z-40 fixed bg-black/50' />
       )}
       <div
         ref={ref}
@@ -45,11 +45,11 @@ export function SearchInput({ className }: Props) {
           className
         )}
       >
-        <Search className="h-5 text-gray-400" />
+        <Search className='h-5 text-gray-400' />
         <input
-          type="text"
-          className="pl-5 outline-none w-full"
-          placeholder="Найти пиццу..."
+          type='text'
+          className='pl-5 outline-none w-full'
+          placeholder='Найти пиццу...'
           onFocus={() => setFocused(true)}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -67,12 +67,12 @@ export function SearchInput({ className }: Props) {
               <Link
                 key={product.id}
                 href={`/product/${product.id}`}
-                className="flex items-center gap-3 hover:bg-orange-50 px-3 py-2 w-full transition duration-200"
+                className='flex items-center gap-3 hover:bg-orange-50 px-3 py-2 w-full transition duration-200'
               >
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
-                  className="rounded-full w-8 h-8"
+                  className='rounded-full w-8 h-8'
                   width={32}
                   height={32}
                 />

@@ -15,10 +15,10 @@ import {
 import { CartDrawerItem } from '../cart';
 
 import { calculateTotalAmount, getCartItemDetails } from '@/lib/cart';
-import { useCart } from '../hooks';
+import { useCart } from '@/hooks';
 import { cn } from '@/lib';
 
-import { queryKeys } from '@/constants';
+import { queryKeys } from '@/lib/constants';
 import { EmptyCart } from './Empty-cart';
 
 export function CartDrawer({ children }: PropsWithChildren) {

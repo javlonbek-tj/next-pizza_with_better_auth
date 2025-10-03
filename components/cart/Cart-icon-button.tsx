@@ -1,13 +1,13 @@
 'use client';
 
 import { Minus, Plus } from 'lucide-react';
-import { useUpdateCartQuantity } from '../hooks/use-cart';
+import { useUpdateCartQuantity } from '@/hooks/use-cart';
 import { cn } from '@/lib/utils';
 
 interface Props {
   type: 'minus' | 'plus';
   quantity: number;
-  cartItemId: number;
+  cartItemId: string;
 }
 
 export function CartIconButton({ type, quantity, cartItemId }: Props) {

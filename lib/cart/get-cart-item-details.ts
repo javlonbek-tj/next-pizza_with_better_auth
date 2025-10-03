@@ -1,5 +1,10 @@
 import { CartItemModel } from '@/components/cart/Cart-item-type';
-import { mapPizzaSize, mapPizzaType, PizzaSize, PizzaType } from '@/constants';
+import {
+  mapPizzaSize,
+  mapPizzaType,
+  PizzaSize,
+  PizzaType,
+} from '@/lib/constants';
 
 export const getCartItemDetails = (
   ingredients: CartItemModel['ingredients'],

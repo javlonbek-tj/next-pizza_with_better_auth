@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+
 import prisma from '@/prisma/prisma-client';
 import { ProductForm } from '@/components/product';
 import { Container } from '@/components/shared';
@@ -30,7 +31,7 @@ export default async function ProductPage({
   if (!product) return notFound();
 
   return (
-    <Container className="my-10">
+    <Container className='my-10'>
       <ProductForm product={product} isModal={false} />
     </Container>
   );

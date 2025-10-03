@@ -4,13 +4,11 @@ import { useState } from 'react';
 import { FcGoogle } from 'react-icons/fc';
 import { FaGithub } from 'react-icons/fa';
 import { signIn } from 'next-auth/react';
+import { Loader } from 'lucide-react';
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { AuthSwitch } from '../auth/auth-switch';
-import { Loader } from 'lucide-react';
-import { LoginForm } from '../auth/login-form';
-import { RegisterForm } from '../auth/register-form';
+import { RegisterForm, LoginForm, AuthSwitch } from '../auth';
 
 interface Props {
   open: boolean;
@@ -22,7 +20,7 @@ export function AuthModal({ open, onClose }: Props) {
   const [loadingProvider, setLoadingProvider] = useState<
     null | 'google' | 'github'
   >(null);
-  const [showingOTP, setShowingOTP] = useState(false); // Add this state
+  const [showingOTP, setShowingOTP] = useState(false);
 
   const onSwitchType = () => setType(type === 'login' ? 'register' : 'login');
 
@@ -46,9 +44,9 @@ export function AuthModal({ open, onClose }: Props) {
   return (
     <>
       <Dialog open={open} onOpenChange={handleClose}>
-        <DialogContent className="bg-white p-7 w-[450px]">
+        <DialogContent className='bg-white p-7 w-[450px]'>
           <div className={isLoading ? 'opacity-50 pointer-events-none' : ''}>
-            <DialogTitle className="font-semibold text-xl text-center">
+            <DialogTitle className='font-semibold text-xl text-center'>
               {showingOTP
                 ? 'Подтверждение почты'
                 : type === 'login'
@@ -65,34 +63,34 @@ export function AuthModal({ open, onClose }: Props) {
             {/* Only show social buttons and auth switch when NOT showing OTP */}
             {!showingOTP && (
               <>
-                <hr className="my-3" />
+                <hr className='my-3' />
 
-                <div className="flex gap-2">
+                <div className='flex gap-2'>
                   <Button
-                    variant="secondary"
+                    variant='secondary'
                     onClick={() => onClick('google')}
-                    type="button"
+                    type='button'
                     disabled={isLoading}
-                    className="flex-1 gap-2 p-2 h-10 text-amber-950 cursor-pointer"
+                    className='flex-1 gap-2 p-2 h-10 text-amber-950 cursor-pointer'
                   >
                     {loadingProvider === 'google' ? (
-                      <Loader className="w-5 h-5 animate-spin" />
+                      <Loader className='w-5 h-5 animate-spin' />
                     ) : (
-                      <FcGoogle className="w-6 h-6" />
+                      <FcGoogle className='w-6 h-6' />
                     )}
                     Google
                   </Button>
                   <Button
-                    variant="secondary"
+                    variant='secondary'
                     onClick={() => onClick('github')}
-                    type="button"
+                    type='button'
                     disabled={isLoading}
-                    className="flex-1 gap-2 p-2 h-10 text-amber-950 cursor-pointer"
+                    className='flex-1 gap-2 p-2 h-10 text-amber-950 cursor-pointer'
                   >
                     {loadingProvider === 'github' ? (
-                      <Loader className="w-5 h-5 animate-spin" />
+                      <Loader className='w-5 h-5 animate-spin' />
                     ) : (
-                      <FaGithub className="w-6 h-6" />
+                      <FaGithub className='w-6 h-6' />
                     )}
                     GitHub
                   </Button>
@@ -101,7 +99,7 @@ export function AuthModal({ open, onClose }: Props) {
                 <AuthSwitch
                   type={type}
                   onSwitch={onSwitchType}
-                  className="mt-4"
+                  className='mt-4'
                 />
               </>
             )}

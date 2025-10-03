@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { useIntersection } from 'react-use';
+
 import { cn } from '@/lib';
 import { Title } from '../shared';
 import { ProductCard } from './Product-card';
@@ -42,7 +43,7 @@ export function ProductGroupList({
       id={categoryTitle}
       ref={intersectionRef}
     >
-      <Title text={categoryTitle} size="lg" className="mb-5 font-extrabold" />
+      <Title text={categoryTitle} size='lg' className='mb-5 font-extrabold' />
 
       <div className={cn('gap-8 grid grid-cols-3', listClassName)}>
         {products.map((product) => (

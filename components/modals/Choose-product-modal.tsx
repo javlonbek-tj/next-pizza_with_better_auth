@@ -1,12 +1,12 @@
 'use client';
 
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { useRouter } from 'next/navigation';
+
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { cn } from '@/lib';
 import { ProductForm } from '../product';
 
 import { ProductWithRelations } from '@/prisma/@types/prisma';
-import { useRouter } from 'next/navigation';
-import { DialogTitle } from '@radix-ui/react-dialog';
 
 interface Props {
   className?: string;
@@ -19,11 +19,11 @@ export function ChooseProductModal({ className, product }: Props) {
   return (
     <Dialog open={Boolean(product)} onOpenChange={() => router.back()}>
       <DialogContent
-        size="xl"
+        size='xl'
         className={cn('p-0 min-h-[500px] overflow-hidden', className)}
       >
         {/* Hidden title for accessibility */}
-        <DialogTitle className="sr-only">
+        <DialogTitle className='sr-only'>
           Choose {product?.name || 'Product'}
         </DialogTitle>
         <ProductForm product={product} isModal={true} />

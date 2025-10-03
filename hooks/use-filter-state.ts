@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState, useTransition } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSet } from 'react-use';
 import qs from 'qs';
-import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/constants';
+import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/lib/constants';
 
 interface PriceProps {
   priceFrom?: number;

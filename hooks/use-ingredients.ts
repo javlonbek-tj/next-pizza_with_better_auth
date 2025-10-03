@@ -1,6 +1,6 @@
 'use client';
 
-import { queryKeys } from '@/constants';
+import { queryKeys } from '@/lib/constants';
 import { Ingredient } from '@/lib/generated/prisma/client';
 import { getAll } from '@/services/ingredients';
 import { useQuery } from '@tanstack/react-query';

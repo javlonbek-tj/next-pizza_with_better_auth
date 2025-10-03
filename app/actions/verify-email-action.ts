@@ -1,4 +1,5 @@
 'use server';
+
 import { APIError } from 'better-auth';
 import { auth } from '@/lib';
 

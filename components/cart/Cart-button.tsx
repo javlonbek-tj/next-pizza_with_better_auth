@@ -1,10 +1,11 @@
 'use client';
 
 import { ArrowRight, ShoppingCart } from 'lucide-react';
-import { CartDrawer } from './Cart-drawer';
 import { Button } from '../ui/button';
+
+import { CartDrawer } from './Cart-drawer';
 import { cn } from '@/lib/utils';
-import { useCart } from '../hooks';
+import { useCart } from '@/hooks';
 import { calculateTotalAmount } from '@/lib/cart';
 import { CartButtonSkeleton } from '../skeletons';
 

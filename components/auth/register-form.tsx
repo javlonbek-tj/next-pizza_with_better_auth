@@ -1,9 +1,6 @@
-import { useState } from 'react';
-import { Loader } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
-import { registerSchema, RegisterValues } from './schemas';
+import { Loader } from 'lucide-react';
 import {
   Form,
   FormField,
@@ -14,20 +11,26 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { registerAction } from '@/app/actions/register-action';
+import { registerAction } from '@/app/actions';
+import { registerSchema, RegisterValues } from './schemas';
 import { OTPVerificationForm } from './otp-verification-form';
+import { useAuthForm } from '@/hooks/use-auth-form';
 
 interface Props {
   onClose: () => void;
-  onShowOTP?: (show: boolean) => void; // Add this prop
+  onShowOTP?: (show: boolean) => void;
 }
 
 export function RegisterForm({ onClose, onShowOTP }: Props) {
-  const [isPending, setIsPending] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [showOTPVerification, setShowOTPVerification] = useState(false);
-  const [registeredEmail, setRegisteredEmail] = useState('');
-  const router = useRouter();
+  const {
+    error,
+    isPending,
+    showOTPVerification,
+    verificationEmail,
+    handleAuthSubmit,
+    handleVerificationSuccess,
+    handleBack,
+  } = useAuthForm({ onClose, onShowOTP });
 
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
@@ -40,39 +43,13 @@ export function RegisterForm({ onClose, onShowOTP }: Props) {
   });
 
   const onSubmit = async (values: RegisterValues) => {
-    setIsPending(true);
-    setError(null);
-
-    const result = await registerAction(values);
-
-    if (result.error) {
-      setError(result.error);
-      setIsPending(false);
-    } else if (result.requiresVerification && result.email) {
-      setRegisteredEmail(result.email);
-      setShowOTPVerification(true);
-      onShowOTP?.(true); // Notify parent
-      setIsPending(false);
-    } else {
-      onClose();
-      router.push('/');
-    }
-  };
-
-  const handleVerificationSuccess = () => {
-    onClose();
-    router.push('/');
-  };
-
-  const handleBack = () => {
-    setShowOTPVerification(false);
-    onShowOTP?.(false); // Notify parent
+    await handleAuthSubmit(() => registerAction(values), values.email);
   };
 
   if (showOTPVerification) {
     return (
       <OTPVerificationForm
-        email={registeredEmail}
+        email={verificationEmail}
         onSuccess={handleVerificationSuccess}
         onBack={handleBack}
       />
@@ -83,16 +60,16 @@ export function RegisterForm({ onClose, onShowOTP }: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 mx-auto w-full"
+        className='space-y-4 mx-auto w-full'
       >
         <FormField
           control={form.control}
-          name="name"
+          name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>FullName</FormLabel>
+              <FormLabel>Полное имя</FormLabel>
               <FormControl>
-                <Input placeholder="Your name" {...field} />
+                <Input placeholder='Ваше имя' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,12 +78,12 @@ export function RegisterForm({ onClose, onShowOTP }: Props) {
 
         <FormField
           control={form.control}
-          name="email"
+          name='email'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="you@example.com" type="email" {...field} />
+                <Input placeholder='you@example.com' type='email' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -115,12 +92,12 @@ export function RegisterForm({ onClose, onShowOTP }: Props) {
 
         <FormField
           control={form.control}
-          name="password"
+          name='password'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input placeholder='******' type='password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -129,12 +106,12 @@ export function RegisterForm({ onClose, onShowOTP }: Props) {
 
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name='confirmPassword'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
+              <FormLabel>Подтвердите пароль</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input placeholder='******' type='password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -142,18 +119,18 @@ export function RegisterForm({ onClose, onShowOTP }: Props) {
         />
 
         <Button
-          type="submit"
-          className="w-full cursor-pointer"
+          type='submit'
+          className='w-full cursor-pointer'
           disabled={isPending}
         >
           {isPending ? (
-            <Loader className="w-5 h-5 animate-spin" />
+            <Loader className='w-5 h-5 animate-spin' />
           ) : (
             'Зарегистрироваться'
           )}
         </Button>
 
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
       </form>
     </Form>
   );

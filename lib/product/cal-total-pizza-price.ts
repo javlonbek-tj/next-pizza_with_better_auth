@@ -1,4 +1,4 @@
-import { PizzaSize, PizzaType } from '@/constants/pizza';
+import { PizzaSize, PizzaType } from '@/lib/constants/pizza';
 import { Ingredient, ProductItem } from '@/lib/generated/prisma/client';
 import Decimal from 'decimal.js';
 

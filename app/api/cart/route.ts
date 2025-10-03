@@ -1,10 +1,9 @@
 import { randomUUID } from 'crypto';
-
-import { findOrCreateCart } from '@/lib/cart/find-or-crate-cart';
-
-import { AddToCartDto } from '@/services/dto/cart.dto';
 import { NextRequest, NextResponse } from 'next/server';
+
 import prisma from '@/prisma/prisma-client';
+import { findOrCreateCart } from '@/lib/cart';
+import { AddToCartDto } from '@/services/dto/cart.dto';
 
 export async function GET(req: NextRequest) {
   try {

@@ -15,7 +15,7 @@ export function SortPopup({ className }: Props) {
     >
       <ArrowUpDown size={16} />
       <span>Сортировка:</span>
-      <span className="text-primary">рейтингу</span>
+      <span className='text-primary'>рейтингу</span>
     </div>
   );
 }

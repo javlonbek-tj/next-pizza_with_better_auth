@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+
 import { cn } from '@/lib';
 import { Input } from '../ui/input';
 import { FilterCheckbox } from './Filter-checkbox';

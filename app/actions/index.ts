@@ -1,2 +1,5 @@
 export { registerAction } from './register-action';
 export { loginAction } from './login-action';
+export { verifyEmailAction } from './verify-email-action';
+export { resendVerificationOTP } from './resend-verification-otp';
+export { sendOTPEmail } from './send-email-action';

@@ -1,8 +1,8 @@
+import { Suspense } from 'react';
+
 import { GetSearchParams } from '@/lib/product/find-pizzas';
 import { Container } from './Container';
-
 import { SortPopup } from '../filters/Sort-popup';
-import { Suspense } from 'react';
 import { CategoriesSkeleton } from '../skeletons';
 import { CategoriesLoader } from '../categories/Categories-loader';
 

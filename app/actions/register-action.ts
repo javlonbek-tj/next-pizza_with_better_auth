@@ -1,6 +1,8 @@
 'use server';
+
 import { APIError } from 'better-auth';
 import { headers } from 'next/headers';
+
 import { auth } from '@/lib';
 import { registerSchema, RegisterValues } from '@/components/auth/schemas';
 
@@ -18,7 +20,6 @@ export async function registerAction(values: RegisterValues) {
       body: { name, email, password },
     });
 
-    // After successful signup, user needs to verify email
     return { error: null, requiresVerification: true, email };
   } catch (err) {
     if (err instanceof APIError) {

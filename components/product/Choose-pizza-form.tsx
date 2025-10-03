@@ -1,17 +1,17 @@
 'use client';
 
+import { Loader } from 'lucide-react';
+
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { cn } from '@/lib';
-
 import { PizzaImage } from './Pizza-image';
 import { Title } from '../shared';
-import { PizzaSize, PizzaType, pizzaTypes } from '@/constants';
+import { PizzaSize, PizzaType, pizzaTypes } from '@/lib/constants';
 
-import { usePizzaOptions } from '../hooks';
+import { usePizzaOptions } from '@/hooks';
 import { GroupVariants } from './Group-variants';
 import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
-import { Loader } from 'lucide-react';
 import { InvalidPizzaItems } from './Invalid-pizza-items';
 
 interface Props {
@@ -58,22 +58,22 @@ export function ChoosePizzaForm({
           isModal ? 'bg-[#f7f6f5]' : 'bg-white py-0'
         )}
       >
-        <Title text={product.name} size="md" />
-        <p className="text-gray-400">{description}</p>
+        <Title text={product.name} size='md' />
+        <p className='text-gray-400'>{description}</p>
         <GroupVariants
           variants={allPizzaSizes}
           value={size}
           onClick={(value) => setSize(value as PizzaSize)}
-          className="mt-4"
+          className='mt-4'
         />
         <GroupVariants
           variants={pizzaTypes}
           value={type}
           onClick={(value) => setType(value as PizzaType)}
-          className="mt-3"
+          className='mt-3'
         />
-        <Title text="Ингредиенты" size="xs" className="mt-4" />
-        <div className="gap-2 grid grid-cols-3 mt-4 h-[340px] overflow-y-scroll scrollbar-thin">
+        <Title text='Ингредиенты' size='xs' className='mt-4' />
+        <div className='gap-2 grid grid-cols-3 mt-4 h-[340px] overflow-y-scroll scrollbar-thin'>
           {product.ingredients.map((ingredient) => (
             <IngredientItem
               ingredient={ingredient}
@@ -86,12 +86,12 @@ export function ChoosePizzaForm({
           ))}
         </div>
         <Button
-          className="mt-5 py-5 w-full cursor-pointer"
+          className='mt-5 py-5 w-full cursor-pointer'
           disabled={isPending}
           onClick={onAddToCart}
         >
           {isPending ? (
-            <Loader className="w-5 h-5 animate-spin" />
+            <Loader className='w-5 h-5 animate-spin' />
           ) : (
             <>Добавить в корзину за {totalPrice} ₽</>
           )}
