@@ -8,6 +8,7 @@ export async function GET(req: NextRequest) {
       where: { name: { contains: query, mode: 'insensitive' } },
       take: 5,
     });
+    console.log(products);
     return NextResponse.json(products);
   } catch (error) {
     console.error('[Error fetching ingredients]:', error);

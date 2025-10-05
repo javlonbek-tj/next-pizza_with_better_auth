@@ -12,7 +12,7 @@ export default function HomeLayout({
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
-    <main className='min-h-screen'>
+    <main className="min-h-screen">
       <HomeHeader />
       {children}
       {modal}

@@ -1,7 +1,19 @@
-import { CartItemDto } from '@/services/dto/cart.dto';
 import Decimal from 'decimal.js';
 
-export const calCartItemTotalPrice = (cartItem: CartItemDto): number => {
+// Generic type that works with both Prisma and DTO
+type CartItemCalculation = {
+  quantity: number;
+  productItem: {
+    price: number;
+  };
+  ingredients: {
+    price: number;
+  }[];
+};
+
+export const calCartItemTotalPrice = (
+  cartItem: CartItemCalculation
+): number => {
   const pizzaPrice = new Decimal(cartItem.productItem.price);
 
   const totalIngredientsPrice = cartItem.ingredients.reduce<Decimal>(

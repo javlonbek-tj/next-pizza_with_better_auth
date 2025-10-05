@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition, useRef } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useSet } from 'react-use';
 import qs from 'qs';
@@ -13,6 +13,7 @@ export function useFilterState() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const isInitialMount = useRef(true);
 
   const [ingredientsIds, { toggle: toggleIngredient }] = useSet(
     new Set<string>(
@@ -62,9 +63,15 @@ export function useFilterState() {
 
     const query = qs.stringify(params, { skipNulls: true });
 
-    startTransition(() => {
+    // Skip transition on initial mount
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
       router.push(`?${query}`, { scroll: false });
-    });
+    } else {
+      startTransition(() => {
+        router.push(`?${query}`, { scroll: false });
+      });
+    }
   }, [ingredientsIds, pizzaTypes, pizzaSize, prices, router]);
 
   useEffect(() => {
@@ -87,6 +94,6 @@ export function useFilterState() {
     togglePizzaSize,
     prices,
     handlePriceChange,
-    isPending,
+    isPending: isPending && !isInitialMount.current,
   };
 }

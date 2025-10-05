@@ -39,7 +39,7 @@ export async function PATCH(
       );
     }
 
-    await prisma.cartItem.update({
+    const updatedCart = await prisma.cartItem.update({
       where: {
         id: cartItemId,
       },
@@ -48,26 +48,7 @@ export async function PATCH(
       },
     });
 
-    const cart = await prisma.cart.findFirst({
-      where: {
-        token,
-      },
-      include: {
-        items: {
-          orderBy: { createdAt: 'desc' },
-          include: {
-            productItem: {
-              include: {
-                product: true,
-              },
-            },
-            ingredients: true,
-          },
-        },
-      },
-    });
-
-    return NextResponse.json(cart);
+    return NextResponse.json(updatedCart);
   } catch (error) {
     // TODO REMOVE CONSOLE
     console.error(error);

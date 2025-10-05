@@ -7,14 +7,14 @@ export const getCart = async (): Promise<CartDto> => {
 };
 
 export const updateCartQty = async (
-  id: number,
+  id: string,
   quantity: number
 ): Promise<CartDto> => {
   return (await axiosInstance.patch(`${ApiRoutes.CART}/${id}`, { quantity }))
     .data;
 };
 
-export const removeCartItem = async (id: number): Promise<CartDto> => {
+export const removeCartItem = async (id: string): Promise<CartDto> => {
   return (await axiosInstance.delete(`${ApiRoutes.CART}/${id}`)).data;
 };
 

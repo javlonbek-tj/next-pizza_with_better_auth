@@ -12,7 +12,6 @@ import { useCategoryStore } from '@/store/category';
 interface Props {
   className?: string;
   categoryTitle: string;
-  categoryId: string;
   listClassName?: string;
   products: ProductWithRelations[];
 }
@@ -20,30 +19,29 @@ interface Props {
 export function ProductGroupList({
   className,
   categoryTitle,
-  categoryId,
   listClassName,
   products,
 }: Props) {
-  const setActiveCategoryId = useCategoryStore((state) => state.setActiveId);
+  const setActiveCategoryName = useCategoryStore(
+    (state) => state.setActiveName
+  );
   const intersectionRef = useRef<HTMLDivElement>(null);
   const intersection = useIntersection(
     intersectionRef as React.RefObject<HTMLElement>,
-    { threshold: 0.9 }
+    { threshold: 0.5, rootMargin: '-100px 0px -60% 0px' }
   );
 
   useEffect(() => {
     if (intersection?.isIntersecting) {
-      setActiveCategoryId(categoryId);
+      setActiveCategoryName(categoryTitle);
     }
-  }, [intersection, categoryId, setActiveCategoryId]);
+  }, [intersection, categoryTitle, setActiveCategoryName]);
 
   return (
-    <div
-      className={cn('scroll-mt-20', className)}
-      id={categoryTitle}
-      ref={intersectionRef}
-    >
-      <Title text={categoryTitle} size='lg' className='mb-5 font-extrabold' />
+    <div className={cn('scroll-mt-20', className)} id={categoryTitle}>
+      <div ref={intersectionRef}>
+        <Title text={categoryTitle} size="lg" className="mb-5 font-extrabold" />
+      </div>
 
       <div className={cn('gap-8 grid grid-cols-3', listClassName)}>
         {products.map((product) => (

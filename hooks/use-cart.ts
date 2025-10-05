@@ -8,6 +8,7 @@ import { queryKeys } from '@/lib/constants';
 export function useCart() {
   return useQuery({
     queryKey: queryKeys.cart,
+    retry: false,
     queryFn: async () => {
       const data = await Api.cart.getCart();
       return getCartDetails(data);

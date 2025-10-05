@@ -22,7 +22,6 @@ export async function ProductsContent({ searchParams }: Props) {
             <ProductGroupList
               key={category.id}
               categoryTitle={category.name}
-              categoryId={category.id}
               products={category.products}
             />
           )

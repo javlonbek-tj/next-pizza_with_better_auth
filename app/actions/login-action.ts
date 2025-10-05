@@ -1,6 +1,7 @@
 'use server';
 
 import { APIError } from 'better-auth';
+import { headers } from 'next/headers';
 
 import { loginSchema, LoginValues } from '@/components/auth/schemas';
 import { auth } from '@/lib';
@@ -16,6 +17,7 @@ export async function loginAction(values: LoginValues) {
 
   try {
     await auth.api.signInEmail({
+      headers: await headers(),
       body: { email, password },
     });
     return { error: null, requiresVerification: false };

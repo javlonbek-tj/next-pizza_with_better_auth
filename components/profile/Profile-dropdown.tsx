@@ -1,3 +1,8 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,43 +11,88 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, Settings, User } from 'lucide-react';
-import { signOut } from 'next-auth/react';
+import { LogOut, Settings, User, Loader2 } from 'lucide-react';
 import { Button } from '../ui/button';
+import { signoutAction } from '@/app/actions/signout-action';
+import { cn } from '@/lib/utils';
 
-export function ProfileDropdown() {
-  const session = {
-    user: {
-      name: 'Javlon',
-    },
+interface Props {
+  user: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
   };
+}
+
+export function ProfileDropdown({ user }: Props) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
   const getInitial = () => {
-    const name = /* session?.user?.name || session?.user?.email; */ 'Javlon';
-    return name ? name.charAt(0).toUpperCase() : 'U';
+    const nameOrEmail = user?.name || user?.email;
+    return nameOrEmail ? nameOrEmail.charAt(0).toUpperCase() : 'U';
+  };
+
+  const handleSignOut = async () => {
+    setIsLoggingOut(true);
+    try {
+      const result = await signoutAction();
+
+      if (result.error) {
+        toast.error(result.error);
+      } else {
+        toast.success('Вы вышли из аккаунта');
+        setOpen(false);
+        router.push('/');
+      }
+    } finally {
+      setIsLoggingOut(false);
+    }
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button className='flex justify-center items-center gap-2 bg-primary/80 p-0 focus:border-transparent rounded-full focus:outline-none focus-visible:ring-0 focus:ring-0 w-10 h-10 font-semibold text-lg cursor-pointer'>
+        <Button className="flex justify-center items-center gap-2 bg-primary/80 p-0 rounded-full focus-visible:ring-0 w-10 h-10 font-semibold text-lg cursor-pointer">
           {getInitial()}
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
-        <DropdownMenuLabel>{session?.user?.name ?? 'U'}</DropdownMenuLabel>
+      <DropdownMenuContent
+        align="end"
+        className={cn(
+          'w-48 transition-opacity duration-200',
+          isLoggingOut && 'opacity-60 pointer-events-none'
+        )}
+      >
+        <DropdownMenuLabel>
+          {user?.name ?? user?.email ?? 'Unknown'}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
-          <User className='w-4 h-4' /> Profile
+
+        <DropdownMenuItem disabled={isLoggingOut}>
+          <User className="w-4 h-4" /> Profile
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Settings className='w-4 h-4' /> Settings
+        <DropdownMenuItem disabled={isLoggingOut}>
+          <Settings className="w-4 h-4" /> Settings
         </DropdownMenuItem>
+
         <DropdownMenuItem
-          className='text-destructive'
-          onClick={() => signOut({ callbackUrl: '/' })}
+          className="text-destructive cursor-pointer"
+          onSelect={(e) => {
+            e.preventDefault(); // prevent auto-close
+            handleSignOut();
+          }}
         >
-          <LogOut className='w-4 h-4' /> Logout
+          <>
+            {isLoggingOut ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <LogOut className="w-4 h-4" />
+            )}
+            <span className="ml-2">Выйти</span>
+          </>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

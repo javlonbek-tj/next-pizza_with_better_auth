@@ -14,17 +14,17 @@ export default async function Home({
   const resolvedSearchParams = await searchParams;
   return (
     <>
-      <Container className='mt-10'>
-        <Title text='Все пиццы' size='lg' className='font-extrabold' />
+      <Container className="mt-10">
+        <Title text="Все пиццы" size="lg" className="font-extrabold" />
       </Container>
 
       <TopBarContent searchParams={resolvedSearchParams} />
 
-      <Container className='flex gap-16 mt-10 pb-14'>
-        <div className='w-[250px]'>
+      <Container className="flex gap-16 mt-10 pb-14">
+        <div className="w-[250px]">
           <Filters />
         </div>
-        <div className='flex flex-col flex-1 gap-16'>
+        <div className="flex flex-col flex-1 gap-16">
           <Suspense
             key={JSON.stringify(resolvedSearchParams)}
             fallback={<ProductsSkeleton />}

@@ -10,7 +10,15 @@ interface Props {
 }
 
 export function Categories({ className, categories }: Props) {
-  const categoryActiveId = useCategoryStore((state) => state.activeId);
+  const activeCategoryName = useCategoryStore((state) => state.activeName);
+  const setActiveCategoryName = useCategoryStore(
+    (state) => state.setActiveName
+  );
+
+  const handleClick = (categoryName: string) => {
+    setActiveCategoryName(categoryName);
+  };
+
   return (
     <div
       className={cn(
@@ -22,9 +30,10 @@ export function Categories({ className, categories }: Props) {
         <a
           key={category.name}
           href={`/#${category.name}`}
+          onClick={() => handleClick(category.name)}
           className={cn(
             'hover:bg-white px-5 py-2 rounded-xl font-medium hover:text-primary transition duration-300',
-            categoryActiveId === category.id && 'bg-white text-primary'
+            activeCategoryName === category.name && 'bg-white text-primary'
           )}
         >
           {category.name}

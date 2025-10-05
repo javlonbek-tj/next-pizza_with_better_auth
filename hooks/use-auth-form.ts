@@ -37,14 +37,14 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
       setError(result.error);
       setIsPending(false);
     } else {
+      router.refresh();
       onClose();
-      router.push('/');
     }
   };
 
   const handleVerificationSuccess = () => {
     onClose();
-    router.push('/');
+    router.refresh();
   };
 
   const handleBack = () => {

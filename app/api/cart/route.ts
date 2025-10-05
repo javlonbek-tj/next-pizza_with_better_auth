@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get('cartToken')?.value;
 
     if (!token) {
-      return NextResponse.json({ items: [], totalAmount: 0 });
+      return NextResponse.json({ items: [] });
     }
 
     const cart = await prisma.cart.findFirst({

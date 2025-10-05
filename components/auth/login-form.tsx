@@ -15,13 +15,15 @@ import { loginAction } from '@/app/actions';
 import { loginSchema, LoginValues } from './schemas';
 import { OTPVerificationForm } from './otp-verification-form';
 import { useAuthForm } from '@/hooks';
+import { useEffect } from 'react';
 
 interface Props {
   onClose: () => void;
   onShowOTP?: (show: boolean) => void;
+  onPendingChange?: (isPending: boolean) => void;
 }
 
-export function LoginForm({ onClose, onShowOTP }: Props) {
+export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
   const {
     error,
     isPending,
@@ -31,6 +33,10 @@ export function LoginForm({ onClose, onShowOTP }: Props) {
     handleVerificationSuccess,
     handleBack,
   } = useAuthForm({ onClose, onShowOTP });
+
+  useEffect(() => {
+    onPendingChange?.(isPending);
+  }, [isPending, onPendingChange]);
 
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
@@ -58,16 +64,18 @@ export function LoginForm({ onClose, onShowOTP }: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className='space-y-4 mx-auto w-90'
+        className={`space-y-4 mx-auto w-90 ${
+          isPending ? 'opacity-50 pointer-events-none' : ''
+        }`}
       >
         <FormField
           control={form.control}
-          name='email'
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='you@example.com' type='email' {...field} />
+                <Input placeholder="you@example.com" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -76,12 +84,12 @@ export function LoginForm({ onClose, onShowOTP }: Props) {
 
         <FormField
           control={form.control}
-          name='password'
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder='******' type='password' {...field} />
+                <Input placeholder="******" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,14 +97,14 @@ export function LoginForm({ onClose, onShowOTP }: Props) {
         />
 
         <Button
-          type='submit'
-          className='w-full cursor-pointer'
+          type="submit"
+          className="w-full cursor-pointer"
           disabled={isPending}
         >
-          {isPending ? <Loader className='w-5 h-5 animate-spin' /> : 'Войти'}
+          {isPending ? <Loader className="w-5 h-5 animate-spin" /> : 'Войти'}
         </Button>
 
-        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
       </form>
     </Form>
   );

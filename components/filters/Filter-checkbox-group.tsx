@@ -53,15 +53,15 @@ export function FilterCheckboxGroup({
   return (
     <div
       className={cn(
-        'flex flex-col gap-3 max-h-96 overflow-y-auto pr-2 scrollbar-thin',
+        'flex flex-col gap-3 pr-2 max-h-96 overflow-y-auto scrollbar-thin',
         className
       )}
     >
       {/* Sticky header (title + search) */}
-      <div className='sticky top-0 bg-white z-2 pb-2'>
-        {title && <p className='text-md font-bold'>{title}:</p>}
+      <div className="top-0 z-2 sticky bg-white pb-2">
+        {title && <p className="font-bold text-md">{title}:</p>}
         {showAll && options.length > limit && (
-          <div className='mt-2 px-1'>
+          <div className="mt-2 px-1">
             <Input
               placeholder={searchInputPlaceholder}
               onChange={onChangeSearchInput}
@@ -71,7 +71,7 @@ export function FilterCheckboxGroup({
       </div>
 
       {/* Options list */}
-      <div className='flex flex-col gap-2'>
+      <div className="flex flex-col gap-2">
         {list.map((option) => (
           <FilterCheckbox
             key={option.label}
@@ -85,7 +85,7 @@ export function FilterCheckboxGroup({
 
         {options.length > limit && !searchTerm && (
           <button
-            className='text-sm text-primary cursor-pointer mt-2 self-start'
+            className="self-start mt-2 text-primary text-sm cursor-pointer"
             onClick={() => setShowAll(!showAll)}
           >
             {showAll ? 'Скрыть' : '+ Показать все'}
