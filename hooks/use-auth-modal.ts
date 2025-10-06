@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import toast from 'react-hot-toast';
 import { signInSocialAction } from '@/app/actions';
 
 export function useAuthModal() {
@@ -12,20 +11,20 @@ export function useAuthModal() {
 
   const onSwitchType = () => setType(type === 'login' ? 'register' : 'login');
 
+  const isLoading = !!loadingProvider || formPending;
   const handleAuthSocial = async (provider: 'google' | 'github') => {
-    try {
-      setLoadingProvider(provider);
-      await signInSocialAction(provider);
-    } catch (error) {
-      // TODO REMOVE IN PRODUCTION
-      console.error(error);
-      toast.error(`Ошибка при входе через ${provider}`);
-    } finally {
-      setLoadingProvider(null);
-    }
+    setLoadingProvider(provider);
+    await signInSocialAction(provider);
+
+    setLoadingProvider(null);
   };
 
-  const isLoading = !!loadingProvider || formPending;
+  const resetModalState = () => {
+    setType('login');
+    setShowingOTP(false);
+    setFormPending(false);
+    setLoadingProvider(null);
+  };
 
   return {
     type,
@@ -37,5 +36,6 @@ export function useAuthModal() {
     setShowingOTP,
     setFormPending,
     handleAuthSocial,
+    resetModalState,
   };
 }

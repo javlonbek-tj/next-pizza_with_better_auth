@@ -32,14 +32,14 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
       setVerificationEmail(result.email || fallbackEmail || '');
       setShowOTPVerification(true);
       onShowOTP?.(true);
-      setIsPending(false);
     } else if (result.error) {
       setError(result.error);
-      setIsPending(false);
     } else {
       router.refresh();
       onClose();
     }
+
+    setIsPending(false);
   };
 
   const handleVerificationSuccess = () => {
@@ -49,6 +49,9 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
 
   const handleBack = () => {
     setShowOTPVerification(false);
+    setError(null);
+    setVerificationEmail('');
+    setIsPending(false);
     onShowOTP?.(false);
   };
 

@@ -41,10 +41,10 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      name: 'Javlon',
+      email: 'mrjtabc@gmail.com',
+      password: '123456',
+      confirmPassword: '123456',
     },
   });
 
@@ -72,12 +72,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
       >
         <FormField
           control={form.control}
-          name="name"
+          name='name'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Полное имя</FormLabel>
               <FormControl>
-                <Input placeholder="Ваше имя" {...field} />
+                <Input placeholder='Ваше имя' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -86,12 +86,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name="email"
+          name='email'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="you@example.com" type="email" {...field} />
+                <Input placeholder='you@example.com' type='email' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -100,12 +100,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name="password"
+          name='password'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input placeholder='******' type='password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -114,12 +114,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name='confirmPassword'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Подтвердите пароль</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input placeholder='******' type='password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -127,18 +127,18 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
         />
 
         <Button
-          type="submit"
-          className="w-full cursor-pointer"
+          type='submit'
+          className='w-full cursor-pointer'
           disabled={isPending}
         >
           {isPending ? (
-            <Loader className="w-5 h-5 animate-spin" />
+            <Loader className='w-5 h-5 animate-spin' />
           ) : (
             'Зарегистрироваться'
           )}
         </Button>
 
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
       </form>
     </Form>
   );

@@ -30,6 +30,10 @@ export async function GET(req: NextRequest) {
       },
     });
 
+    if (!cart) {
+      return NextResponse.json({ items: [] });
+    }
+
     return NextResponse.json(cart);
   } catch (error) {
     // TODO REMOVE CONSOLE

@@ -36,31 +36,29 @@ export function ProfileDropdown({ user }: Props) {
 
   const handleSignOut = async () => {
     setIsLoggingOut(true);
-    try {
-      const result = await signoutAction();
+    const result = await signoutAction();
 
-      if (result.error) {
-        toast.error(result.error);
-      } else {
-        toast.success('Вы вышли из аккаунта');
-        setOpen(false);
-        router.push('/');
-      }
-    } finally {
-      setIsLoggingOut(false);
+    if (result.error) {
+      toast.error(result.error);
+    } else {
+      toast.success('Вы вышли из аккаунта');
+      setOpen(false);
+      router.push('/');
     }
+
+    setIsLoggingOut(false);
   };
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
-        <Button className="flex justify-center items-center gap-2 bg-primary/80 p-0 rounded-full focus-visible:ring-0 w-10 h-10 font-semibold text-lg cursor-pointer">
+        <Button className='flex justify-center items-center gap-2 bg-primary/80 p-0 rounded-full focus-visible:ring-0 w-10 h-10 font-semibold text-lg cursor-pointer'>
           {getInitial()}
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        align="end"
+        align='end'
         className={cn(
           'w-48 transition-opacity duration-200',
           isLoggingOut && 'opacity-60 pointer-events-none'
@@ -72,14 +70,14 @@ export function ProfileDropdown({ user }: Props) {
         <DropdownMenuSeparator />
 
         <DropdownMenuItem disabled={isLoggingOut}>
-          <User className="w-4 h-4" /> Profile
+          <User className='w-4 h-4' /> Profile
         </DropdownMenuItem>
         <DropdownMenuItem disabled={isLoggingOut}>
-          <Settings className="w-4 h-4" /> Settings
+          <Settings className='w-4 h-4' /> Settings
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          className="text-destructive cursor-pointer"
+          className='text-destructive cursor-pointer'
           onSelect={(e) => {
             e.preventDefault(); // prevent auto-close
             handleSignOut();
@@ -87,11 +85,11 @@ export function ProfileDropdown({ user }: Props) {
         >
           <>
             {isLoggingOut ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className='w-4 h-4 animate-spin' />
             ) : (
-              <LogOut className="w-4 h-4" />
+              <LogOut className='w-4 h-4' />
             )}
-            <span className="ml-2">Выйти</span>
+            <span className='ml-2'>Выйти</span>
           </>
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -70,12 +70,12 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
       >
         <FormField
           control={form.control}
-          name="email"
+          name='email'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="you@example.com" type="email" {...field} />
+                <Input placeholder='you@example.com' type='email' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -84,12 +84,12 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name="password"
+          name='password'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder="******" type="password" {...field} />
+                <Input placeholder='******' type='password' {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,14 +97,14 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
         />
 
         <Button
-          type="submit"
-          className="w-full cursor-pointer"
+          type='submit'
+          className='w-full cursor-pointer'
           disabled={isPending}
         >
-          {isPending ? <Loader className="w-5 h-5 animate-spin" /> : 'Войти'}
+          {isPending ? <Loader className='w-5 h-5 animate-spin' /> : 'Войти'}
         </Button>
 
-        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
+        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
       </form>
     </Form>
   );

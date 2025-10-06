@@ -22,20 +22,20 @@ export function SocialButtons({
   ] as const;
 
   return (
-    <div className="flex gap-2">
+    <div className='flex gap-2'>
       {buttons.map(({ id, label, icon: Icon }) => (
         <Button
           key={id}
-          variant="secondary"
+          variant='secondary'
           onClick={() => onClick(id)}
-          type="button"
+          type='button'
           disabled={isLoading}
-          className="flex-1 gap-2 p-2 h-10 text-amber-950 cursor-pointer"
+          className='flex-1 gap-2 p-2 h-10 text-amber-950 cursor-pointer'
         >
           {loadingProvider === id ? (
-            <Loader className="w-5 h-5 animate-spin" />
+            <Loader className='w-5 h-5 animate-spin' />
           ) : (
-            <Icon className="w-6 h-6" />
+            <Icon className='w-6 h-6' />
           )}
           {label}
         </Button>
