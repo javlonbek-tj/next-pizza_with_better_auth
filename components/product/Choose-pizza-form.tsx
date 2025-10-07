@@ -20,6 +20,7 @@ interface Props {
   onAddToCart: () => void;
   isPending: boolean;
   isModal: boolean;
+  pizzaOptions: ReturnType<typeof usePizzaOptions>;
 }
 
 export function ChoosePizzaForm({
@@ -28,6 +29,7 @@ export function ChoosePizzaForm({
   onAddToCart,
   isPending,
   isModal,
+  pizzaOptions,
 }: Props) {
   const {
     allPizzaSizes,
@@ -41,7 +43,7 @@ export function ChoosePizzaForm({
     hasValidPizzaItems,
     error,
     totalPrice,
-  } = usePizzaOptions(product);
+  } = pizzaOptions;
   if (!hasValidPizzaItems) {
     return <InvalidPizzaItems error={error} />;
   }

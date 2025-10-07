@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { ChoosePizzaForm } from './Choose-pizza-form';
 import { ChooseProductForm } from './Choose-product-form';
@@ -13,20 +12,24 @@ interface Props {
 }
 
 export function ProductForm({ product, isModal }: Props) {
-  const isPizza = Boolean(product.productItems[0].pizzaType);
-  const { selectedPizzaItemId } = usePizzaOptions(product);
-  const { mutate: addToCart, isPending } = useAddToCart();
   const router = useRouter();
+  const { mutate: addToCart, isPending } = useAddToCart();
 
-  async function handleAddToCart() {
+  const pizzaOptions = usePizzaOptions(product);
+  const isPizza = Boolean(product.productItems[0].pizzaType);
+
+  const handleAddToCart = () => {
     addToCart({
-      productItemId: selectedPizzaItemId ?? product.productItems[0].id,
+      productItemId:
+        pizzaOptions.selectedPizzaItemId ?? product.productItems[0].id,
       quantity: 1,
+      ingredients: Array.from(pizzaOptions.selectedIngredients),
     });
+
     if (isModal) {
       router.back();
     }
-  }
+  };
 
   return isPizza ? (
     <ChoosePizzaForm
@@ -34,6 +37,7 @@ export function ProductForm({ product, isModal }: Props) {
       onAddToCart={handleAddToCart}
       isPending={isPending}
       isModal={isModal}
+      pizzaOptions={pizzaOptions}
     />
   ) : (
     <ChooseProductForm

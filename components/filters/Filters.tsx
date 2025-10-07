@@ -5,7 +5,7 @@ import { Title } from '../shared/Title';
 import { FilterCheckboxGroup } from './Filter-checkbox-group';
 import { PriceRange } from './Price-range';
 import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/lib/constants';
-import { useFilterState } from '@/hooks';
+import { useFilters, useQueryFilters } from '@/hooks';
 import { useIngredients } from '@/hooks';
 import { FilterLoading } from './Filter-loading';
 
@@ -14,17 +14,9 @@ interface Props {
 }
 
 export function Filters({ className }: Props) {
-  const {
-    ingredientsIds,
-    toggleIngredient,
-    pizzaTypes,
-    togglePizzaType,
-    pizzaSize,
-    togglePizzaSize,
-    prices,
-    handlePriceChange,
-    isPending,
-  } = useFilterState();
+  const filters = useFilters();
+
+  const { isPending } = useQueryFilters(filters);
 
   const {
     options,
@@ -46,8 +38,8 @@ export function Filters({ className }: Props) {
         name='pizza-type'
         title='Тип теста'
         className='mb-5'
-        values={pizzaTypes}
-        onClickCheckbox={togglePizzaType}
+        values={filters.pizzaTypes}
+        onClickCheckbox={filters.togglePizzaType}
       />
 
       <FilterCheckboxGroup
@@ -59,8 +51,8 @@ export function Filters({ className }: Props) {
         name='pizza-size'
         title='Размеры'
         className='mb-5'
-        values={pizzaSize}
-        onClickCheckbox={togglePizzaSize}
+        values={filters.pizzaSize}
+        onClickCheckbox={filters.togglePizzaSize}
       />
 
       <PriceRange
@@ -70,10 +62,10 @@ export function Filters({ className }: Props) {
         max={DEFAULT_PRICE_TO}
         step={10}
         value={[
-          prices.priceFrom || DEFAULT_PRICE_FROM,
-          prices.priceTo || DEFAULT_PRICE_TO,
+          filters.prices.priceFrom || DEFAULT_PRICE_FROM,
+          filters.prices.priceTo || DEFAULT_PRICE_TO,
         ]}
-        onValueChange={handlePriceChange}
+        onValueChange={filters.togglePrices}
       />
 
       {!isIngredientsLoading && !isError && options.length > 0 && (
@@ -83,8 +75,8 @@ export function Filters({ className }: Props) {
           title='Ингредиенты'
           limit={6}
           className='mb-5'
-          values={ingredientsIds}
-          onClickCheckbox={toggleIngredient}
+          values={filters.ingredientsIds}
+          onClickCheckbox={filters.toggleIngredient}
         />
       )}
 

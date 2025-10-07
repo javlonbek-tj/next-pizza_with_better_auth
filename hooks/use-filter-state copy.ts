@@ -43,27 +43,44 @@ export function useFilterState() {
   });
 
   const updateURL = useCallback(() => {
-    const params: Record<string, string | number | undefined> = {};
+    const currentParams = Object.fromEntries(searchParams.entries());
+
+    const newParams: Record<string, string | number | undefined> = {
+      ...currentParams,
+    };
 
     if (ingredientsIds.size > 0) {
-      params['ingredients'] = Array.from(ingredientsIds).join(',');
+      newParams['ingredients'] = Array.from(ingredientsIds).join(',');
+    } else {
+      delete newParams['ingredients'];
     }
+
     if (pizzaTypes.size > 0) {
-      params['pizzaTypes'] = Array.from(pizzaTypes).join(',');
+      newParams['pizzaTypes'] = Array.from(pizzaTypes).join(',');
+    } else {
+      delete newParams['pizzaTypes'];
     }
+
     if (pizzaSize.size > 0) {
-      params['pizzaSize'] = Array.from(pizzaSize).join(',');
+      newParams['pizzaSize'] = Array.from(pizzaSize).join(',');
+    } else {
+      delete newParams['pizzaSize'];
     }
+
     if (prices.priceFrom && prices.priceFrom !== DEFAULT_PRICE_FROM) {
-      params['priceFrom'] = prices.priceFrom;
+      newParams['priceFrom'] = prices.priceFrom;
+    } else {
+      delete newParams['priceFrom'];
     }
+
     if (prices.priceTo && prices.priceTo !== DEFAULT_PRICE_TO) {
-      params['priceTo'] = prices.priceTo;
+      newParams['priceTo'] = prices.priceTo;
+    } else {
+      delete newParams['priceTo'];
     }
 
-    const query = qs.stringify(params, { skipNulls: true });
+    const query = qs.stringify(newParams, { skipNulls: true });
 
-    // Skip transition on initial mount
     if (isInitialMount.current) {
       isInitialMount.current = false;
       router.push(`?${query}`, { scroll: false });
@@ -72,7 +89,7 @@ export function useFilterState() {
         router.push(`?${query}`, { scroll: false });
       });
     }
-  }, [ingredientsIds, pizzaTypes, pizzaSize, prices, router]);
+  }, [ingredientsIds, pizzaTypes, pizzaSize, prices, router, searchParams]);
 
   useEffect(() => {
     updateURL();
