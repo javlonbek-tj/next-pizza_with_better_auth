@@ -18,15 +18,10 @@ export interface GetSearchParams {
 }
 
 export const findPizzas = async (params: GetSearchParams) => {
-  const sizes = params.pizzaSize
-    ? params.pizzaSize.split(',').map(Number)
-    : undefined;
-  const pizzaTypes = params.pizzaTypes
-    ? params.pizzaTypes.split(',').map(Number)
-    : undefined;
-  const ingredients = params.ingredients
-    ? params.ingredients.split(',')
-    : undefined;
+  const sizes = params.pizzaSize?.split(',').map(Number);
+  const pizzaTypes = params.pizzaTypes?.split(',').map(Number);
+  const ingredients = params.ingredients?.split(',');
+
   const priceFrom = Number(params.priceFrom) || DEFAULT_PRICE_FROM;
   const priceTo = Number(params.priceTo) || DEFAULT_PRICE_TO;
 

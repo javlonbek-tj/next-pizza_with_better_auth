@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { ChoosePizzaForm } from './Choose-pizza-form';
 import { ChooseProductForm } from './Choose-product-form';
@@ -9,10 +8,10 @@ import { usePizzaOptions, useAddToCart } from '@/hooks';
 interface Props {
   product: ProductWithRelations;
   isModal: boolean;
+  onClose?: () => void;
 }
 
-export function ProductForm({ product, isModal }: Props) {
-  const router = useRouter();
+export function ProductForm({ product, isModal, onClose }: Props) {
   const { mutate: addToCart, isPending } = useAddToCart();
 
   const pizzaOptions = usePizzaOptions(product);
@@ -27,7 +26,7 @@ export function ProductForm({ product, isModal }: Props) {
     });
 
     if (isModal) {
-      router.back();
+      onClose?.();
     }
   };
 

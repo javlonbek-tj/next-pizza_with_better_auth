@@ -20,14 +20,25 @@ export const useQueryFilters = (filters: Filters) => {
       ingredients: Array.from(filters.ingredientsIds),
     };
 
-    const query = qs.stringify(newParams, { skipNulls: true });
+    const newQuery = qs.stringify(newParams, {
+      skipNulls: true,
+      arrayFormat: 'comma',
+    });
+
+    const currentQuery = searchParams.toString();
+
+    // Only update if the query actually changed
+    if (newQuery === currentQuery) {
+      isInitialMount.current = false;
+      return;
+    }
 
     if (isInitialMount.current) {
       isInitialMount.current = false;
-      router.push(`?${query}`, { scroll: false });
+      router.push(`?${newQuery}`, { scroll: false });
     } else {
       startTransition(() => {
-        router.push(`?${query}`, { scroll: false });
+        router.push(`?${newQuery}`, { scroll: false });
       });
     }
   }, [filters, router, searchParams, startTransition]);
