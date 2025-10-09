@@ -4,14 +4,14 @@ export const loginSchema = z.object({
   email: z
     .string()
     .trim()
-    .min(1, 'Email is required')
-    .pipe(z.email('Please enter a valid email address')),
+    .min(1, 'Введите email')
+    .pipe(z.email('Введите корректный адрес электронной почты')),
 
   password: z
     .string()
     .trim()
-    .min(6, 'Password must be at least 6 characters')
-    .max(20, 'Password cannot exceed 20 characters'),
+    .min(6, 'Пароль должен содержать минимум 6 символов')
+    .max(20, 'Пароль не может превышать 20 символов'),
 });
 
 export const registerSchema = loginSchema
@@ -19,14 +19,14 @@ export const registerSchema = loginSchema
     name: z
       .string()
       .trim()
-      .min(1, 'Full name is required')
-      .min(2, 'Full name must be at least 2 characters')
-      .max(100, 'Full name cannot exceed 100 characters'),
+      .min(1, 'Введите имя')
+      .min(2, 'Имя должно содержать минимум 2 символа')
+      .max(100, 'Имя не может превышать 100 символов'),
 
-    confirmPassword: z.string().trim().min(1, 'Please confirm your password'),
+    confirmPassword: z.string().trim().min(1, 'Подтвердите пароль'),
   })
   .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
+    message: 'Пароли не совпадают',
     path: ['confirmPassword'],
   });
 

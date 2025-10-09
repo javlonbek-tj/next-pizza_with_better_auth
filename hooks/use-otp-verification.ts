@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, useEffect, useCallback } from 'react';
 import { OTP_DOWN_SECONDS } from '@/lib';
 

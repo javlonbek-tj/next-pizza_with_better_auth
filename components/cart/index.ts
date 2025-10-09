@@ -3,4 +3,5 @@ export { CartDrawerItem } from './Cart-drawer-item';
 export { CartDrawer } from './Cart-drawer';
 export { CartIconButton } from './Cart-icon-button';
 export { CartItemInfo } from './Cart-item-info';
+export { CartUpdateButtons } from './Cart-update-buttons';
 export { EmptyCart } from './Empty-cart';

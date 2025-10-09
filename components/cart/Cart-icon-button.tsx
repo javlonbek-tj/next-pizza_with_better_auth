@@ -8,9 +8,15 @@ interface Props {
   type: 'minus' | 'plus';
   quantity: number;
   cartItemId: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-export function CartIconButton({ type, quantity, cartItemId }: Props) {
+export function CartIconButton({
+  type,
+  quantity,
+  cartItemId,
+  size = 'sm',
+}: Props) {
   const { mutate: updateQuantity, isPending } = useUpdateCartQuantity();
 
   const handleClick = () => {
@@ -21,14 +27,28 @@ export function CartIconButton({ type, quantity, cartItemId }: Props) {
 
   const isDisabled = isPending || (type === 'minus' && quantity <= 1);
 
+  const sizeClasses = {
+    sm: 'w-6 h-6 text-[10px]',
+    md: 'w-7 h-7 text-xs',
+    lg: 'w-8 h-8 text-sm',
+  }[size];
+
+  const iconSize = {
+    sm: 'size-3',
+    md: 'size-4',
+    lg: 'size-5',
+  }[size];
+
   const buttonClassName = cn(
-    'relative p-2.5 border-2 border-primary rounded-md transition-none cursor-pointer',
-    isDisabled && 'opacity-60'
+    'relative flex justify-center items-center border-2 border-primary rounded-md transition-none cursor-pointer',
+    sizeClasses,
+    isDisabled && 'opacity-60 border-primary/50'
   );
 
   const iconClassName = cn(
-    'top-1/2 left-1/2 absolute size-3 text-primary -translate-x-1/2 -translate-y-1/2',
-    isDisabled && 'opacity-60'
+    'text-primary',
+    iconSize,
+    isDisabled && 'opacity-60 text-primary/50'
   );
 
   return (

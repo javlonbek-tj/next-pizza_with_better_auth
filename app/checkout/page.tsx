@@ -4,9 +4,9 @@ import { Container, Title } from '@/components/shared';
 
 export default function CheckoutPage() {
   return (
-    <Container className='mt-10'>
-      <Title text='Оформление заказа' size='lg' className='font-bold' />
-      <div className='flex gap-6 mt-6'>
+    <Container className="mt-10 pb-10">
+      <Title text="Оформление заказа" size="md" className="font-bold" />
+      <div className="flex gap-6 mt-6">
         <CheckoutDetails />
         <CheckoutTotal />
       </div>
