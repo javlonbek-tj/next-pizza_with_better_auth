@@ -43,7 +43,8 @@ export function ProfileDropdown({ user }: Props) {
     } else {
       toast.success('Вы вышли из аккаунта');
       setOpen(false);
-      router.push('/');
+      const queryString = window.location.search;
+      router.push(`/${queryString}`, { scroll: false });
     }
 
     setIsLoggingOut(false);

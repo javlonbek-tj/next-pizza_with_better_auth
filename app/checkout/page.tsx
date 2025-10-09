@@ -1,9 +1,15 @@
-import { cn } from '@/lib/utils';
+import { CheckoutDetails } from '@/components/checkout/checkout-details';
+import { CheckoutTotal } from '@/components/checkout/checkout-total';
+import { Container, Title } from '@/components/shared';
 
-interface Props {
-  className?: string;
-}
-
-export default function CheckoutPage({ className }: Props) {
-  return <div className={cn(className)}>Hello</div>;
+export default function CheckoutPage() {
+  return (
+    <Container className='mt-10'>
+      <Title text='Оформление заказа' size='lg' className='font-bold' />
+      <div className='flex gap-6 mt-6'>
+        <CheckoutDetails />
+        <CheckoutTotal />
+      </div>
+    </Container>
+  );
 }
