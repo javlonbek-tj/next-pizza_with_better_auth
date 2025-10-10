@@ -1,8 +1,8 @@
 'use client';
 
 import { ProductWithRelations } from '@/prisma/@types/prisma';
-import { ChoosePizzaForm } from './Choose-pizza-form';
-import { ChooseProductForm } from './Choose-product-form';
+import { ChoosePizzaForm } from './choose-pizza-form';
+import { ChooseProductForm } from './choose-product-form';
 import { usePizzaOptions, useAddToCart } from '@/hooks';
 
 interface Props {

@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { cn } from '@/lib';
 import { Input } from '../ui/input';
-import { FilterCheckbox } from './Filter-checkbox';
+import { FilterCheckbox } from './filter-checkbox';
 
 interface Props {
   options: { label: string; value: string }[];
@@ -58,10 +58,10 @@ export function FilterCheckboxGroup({
       )}
     >
       {/* Sticky header (title + search) */}
-      <div className="top-0 z-2 sticky bg-white pb-2">
-        {title && <p className="font-bold text-md">{title}:</p>}
+      <div className='top-0 z-2 sticky bg-white pb-2'>
+        {title && <p className='font-bold text-md'>{title}:</p>}
         {showAll && options.length > limit && (
-          <div className="mt-2 px-1">
+          <div className='mt-2 px-1'>
             <Input
               placeholder={searchInputPlaceholder}
               onChange={onChangeSearchInput}
@@ -71,7 +71,7 @@ export function FilterCheckboxGroup({
       </div>
 
       {/* Options list */}
-      <div className="flex flex-col gap-2">
+      <div className='flex flex-col gap-2'>
         {list.map((option) => (
           <FilterCheckbox
             key={option.label}
@@ -85,7 +85,7 @@ export function FilterCheckboxGroup({
 
         {options.length > limit && !searchTerm && (
           <button
-            className="self-start mt-2 text-primary text-sm cursor-pointer"
+            className='self-start mt-2 text-primary text-sm cursor-pointer'
             onClick={() => setShowAll(!showAll)}
           >
             {showAll ? 'Скрыть' : '+ Показать все'}

@@ -1,3 +1,3 @@
-export { SimpleHeader } from './Simple-header';
-export { HomeHeader } from './Home-header';
-export { Header } from './Header';
+export { SimpleHeader } from './simple-header';
+export { HomeHeader } from './home-header';
+export { Header } from './header';

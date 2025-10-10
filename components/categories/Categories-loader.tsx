@@ -1,5 +1,5 @@
 import { findPizzas, GetSearchParams } from '@/lib/product/find-pizzas';
-import { Categories } from './Categories';
+import { Categories } from './categories';
 
 export async function CategoriesLoader({
   searchParams,

@@ -1,4 +1,4 @@
-import { CartIconButton } from './Cart-icon-button';
+import { CartIconButton } from './cart-icon-button';
 
 interface Props {
   id: string;
@@ -8,16 +8,16 @@ interface Props {
 
 export function CartUpdateButtons({ id, quantity, cartBtnSize }: Props) {
   return (
-    <div className="flex items-center gap-3">
+    <div className='flex items-center gap-3'>
       <CartIconButton
-        type="minus"
+        type='minus'
         quantity={quantity}
         cartItemId={id}
         size={cartBtnSize}
       />
-      <span className="text-sm">{quantity}</span>
+      <span className='text-sm'>{quantity}</span>
       <CartIconButton
-        type="plus"
+        type='plus'
         quantity={quantity}
         cartItemId={id}
         size={cartBtnSize}

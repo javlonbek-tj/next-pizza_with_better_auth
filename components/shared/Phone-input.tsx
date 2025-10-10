@@ -12,16 +12,16 @@ interface Props {
 
 export function PhoneInput({ value, onChange, error, className }: Props) {
   return (
-    <div className="relative">
+    <div className='relative'>
       {/* Prefix +998 */}
-      <span className="top-1/2 left-3 absolute text-gray-500 text-sm -translate-y-1/2">
+      <span className='top-1/2 left-3 absolute text-gray-500 text-sm -translate-y-1/2'>
         +998
       </span>
 
       <IMaskInput
-        mask="00 000-00-00"
+        mask='00 000-00-00'
         lazy={false}
-        placeholder="__ ___-__-__"
+        placeholder='__ ___-__-__'
         value={value}
         onAccept={(val) => onChange?.(val)}
         className={cn(

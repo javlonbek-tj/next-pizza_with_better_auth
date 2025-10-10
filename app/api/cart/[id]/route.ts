@@ -10,7 +10,12 @@ export async function PATCH(
     const token = req.cookies.get('cartToken')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: 'Cart not found.' }, { status: 404 });
+      return NextResponse.json(
+        { success: false, message: 'Cart not found.' },
+        {
+          status: 404,
+        }
+      );
     }
 
     const { quantity } = (await req.json()) as {
@@ -18,7 +23,12 @@ export async function PATCH(
     };
 
     if (!Number.isInteger(quantity) || quantity < 1) {
-      return NextResponse.json({ error: 'Invalid quantity' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, message: 'Invalid quantity' },
+        {
+          status: 400,
+        }
+      );
     }
 
     const param = await params;
@@ -34,12 +44,17 @@ export async function PATCH(
 
     if (!cartItem) {
       return NextResponse.json(
-        { error: 'Cart item not found' },
-        { status: 404 }
+        {
+          success: false,
+          message: 'Product not found',
+        },
+        {
+          status: 404,
+        }
       );
     }
 
-    const updatedCart = await prisma.cartItem.update({
+    await prisma.cartItem.update({
       where: {
         id: cartItemId,
       },
@@ -48,12 +63,15 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(updatedCart);
+    return NextResponse.json({
+      success: true,
+      message: 'Quantity updated successfully',
+    });
   } catch (error) {
     // TODO REMOVE CONSOLE
     console.error(error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -67,7 +85,10 @@ export async function DELETE(
     const token = req.cookies.get('cartToken')?.value;
 
     if (!token) {
-      return NextResponse.json({ error: 'Cart not found.' }, { status: 404 });
+      return NextResponse.json(
+        { success: false, message: 'Cart not found.' },
+        { status: 404 }
+      );
     }
 
     const param = await params;
@@ -83,7 +104,7 @@ export async function DELETE(
 
     if (!cartItem) {
       return NextResponse.json(
-        { error: 'Cart item not found' },
+        { success: false, message: 'Product not found' },
         { status: 404 }
       );
     }
@@ -95,14 +116,14 @@ export async function DELETE(
     });
 
     return NextResponse.json(
-      { message: 'Cart item deleted successfully', id: cartItemId },
+      { success: true, message: 'Product removed from cart' },
       { status: 200 }
     );
   } catch (error) {
     // TODO REMOVE CONSOLE
     console.error(error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }

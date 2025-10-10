@@ -1,4 +1,4 @@
-import { ProductCardSkeleton } from './Product-card-skeleton';
+import { ProductCardSkeleton } from './product-card-skeleton';
 
 export function ProductsSkeleton() {
   return (

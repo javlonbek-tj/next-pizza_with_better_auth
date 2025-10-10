@@ -1,100 +1,28 @@
 'use client';
 
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormControl,
-} from '@/components/ui/form';
-import { personalInfoSchema, PersonalInfoValues } from './schemas';
-import { Input } from '../ui/input';
-import { PhoneInput } from '../shared/Phone-input';
+import { CheckoutCard } from './checkout-card';
+import { FormField } from '../form/form-field';
 
 export function CheckoutPersonalInfo() {
-  const form = useForm<PersonalInfoValues>({
-    resolver: zodResolver(personalInfoSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-    },
-  });
-
-  const onSubmit = (data: PersonalInfoValues) => {
-    console.log(data);
-  };
-
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="gap-5 grid grid-cols-2"
-      >
+    <CheckoutCard title='2. Персональные данные'>
+      <div className='grid grid-cols-2 gap-5'>
+        <FormField label='Имя' name='firstName' placeholder='Имя' required />
         <FormField
-          control={form.control}
-          name="firstName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Имя</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Введите имя" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label='Фамилия'
+          name='lastName'
+          placeholder='Фамилия'
+          required
         />
-
+        <FormField label='Email' name='email' placeholder='Email' required />
         <FormField
-          control={form.control}
-          name="lastName"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Фамилия</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="Введите фамилию" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label='Телефон'
+          name='phone'
+          placeholder='Телефон'
+          isPhone
+          required
         />
-
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input {...field} placeholder="example@mail.com" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Телефон</FormLabel>
-              <FormControl>
-                <PhoneInput
-                  value={field.value}
-                  onChange={field.onChange}
-                  error={!!form.formState.errors.phone}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-      </form>
-    </Form>
+      </div>
+    </CheckoutCard>
   );
 }

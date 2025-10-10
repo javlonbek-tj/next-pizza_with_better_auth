@@ -10,7 +10,14 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get('cartToken')?.value;
 
     if (!token) {
-      return NextResponse.json({ items: [] });
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Cart not found',
+          data: { items: [] },
+        },
+        { status: 404 }
+      );
     }
 
     const cart = await prisma.cart.findFirst({
@@ -31,15 +38,25 @@ export async function GET(req: NextRequest) {
     });
 
     if (!cart) {
-      return NextResponse.json({ items: [] });
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Cart not found',
+          data: { items: [] },
+        },
+        { status: 404 }
+      );
     }
 
-    return NextResponse.json(cart);
+    return NextResponse.json({
+      success: true,
+      data: cart,
+    });
   } catch (error) {
     // TODO REMOVE CONSOLE
     console.error(error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -102,21 +119,10 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const updatedCart = await prisma.cart.findUnique({
-      where: { id: userCart.id },
-      include: {
-        items: {
-          include: {
-            productItem: {
-              include: { product: true },
-            },
-            ingredients: true,
-          },
-        },
-      },
+    const resp = NextResponse.json({
+      success: true,
+      message: 'Product added to cart',
     });
-
-    const resp = NextResponse.json(updatedCart);
     resp.cookies.set('cartToken', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
@@ -127,6 +133,53 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     // TODO REMOVE CONSOLE
     console.error('Error adding to cart:', error);
+    return NextResponse.json(
+      { success: false, error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const token = req.cookies.get('cartToken')?.value;
+
+    if (!token) {
+      return NextResponse.json(
+        { success: false, message: 'Cart not found.' },
+        { status: 404 }
+      );
+    }
+
+    const userCart = await prisma.cart.findFirst({
+      where: { token },
+    });
+
+    if (!userCart) {
+      return NextResponse.json(
+        { success: false, message: 'Cart not found.' },
+        { status: 404 }
+      );
+    }
+
+    await prisma.cartItem.deleteMany({
+      where: {
+        cartId: userCart.id,
+      },
+    });
+
+    await prisma.cart.delete({
+      where: {
+        id: userCart.id,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      message: 'Cart deleted successfully',
+    });
+  } catch (error) {
+    // TODO REMOVE CONSOLE
+    console.error('Error deleting cart:', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }

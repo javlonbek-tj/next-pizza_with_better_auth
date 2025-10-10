@@ -1,13 +1,13 @@
 'use client';
 
 import { cn } from '@/lib';
-import { Title } from '../shared/Title';
-import { FilterCheckboxGroup } from './Filter-checkbox-group';
-import { PriceRange } from './Price-range';
+import { Title } from '../shared/title';
+import { FilterCheckboxGroup } from './filter-checkbox-group';
+import { PriceRange } from './price-range';
 import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/lib/constants';
 import { useFilters, useQueryFilters } from '@/hooks';
 import { useIngredients } from '@/hooks';
-import { FilterLoading } from './Filter-loading';
+import { FilterLoading } from './filter-loading';
 
 interface Props {
   className?: string;

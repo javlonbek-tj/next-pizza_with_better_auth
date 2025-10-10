@@ -4,13 +4,13 @@ import { Loader } from 'lucide-react';
 
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { cn } from '@/lib';
-import { PizzaImage } from './Pizza-image';
+import { PizzaImage } from './pizza-image';
 import { Title } from '../shared';
 import { PizzaSize, PizzaType, pizzaTypes } from '@/lib/constants';
 
 import { usePizzaOptions } from '@/hooks';
-import { GroupVariants } from './Group-variants';
-import { IngredientItem } from './Ingredient';
+import { GroupVariants } from './group-variants';
+import { IngredientItem } from './ingredient';
 import { Button } from '../ui/button';
 import { InvalidPizzaItems } from './Invalid-pizza-items';
 

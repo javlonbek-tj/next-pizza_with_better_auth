@@ -12,14 +12,14 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { CartDrawerItem } from '../cart';
+import { CartDrawerItem } from './cart-drawer-item';
 
 import { calculateTotalAmount, getCartItemDetails } from '@/lib/cart';
 import { useCart } from '@/hooks';
 import { cn } from '@/lib';
 
 import { queryKeys } from '@/lib/constants';
-import { EmptyCart } from './Empty-cart';
+import { EmptyCart } from './index';
 
 export function CartDrawer({ children }: PropsWithChildren) {
   const { data } = useCart();

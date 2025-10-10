@@ -5,10 +5,10 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { auth, cn } from '@/lib';
-import { Container } from '../shared/Container';
-import { SearchInput } from '../filters/Search-input';
+import { Container } from '../shared/container';
+import { SearchInput } from '../filters/search-input';
 import { CartButton } from '../cart';
-import { ProfileButton } from '../profile/Profile-button';
+import { ProfileButton } from '../profile/profile-button';
 import { AuthModal } from '../modals/auth-modal';
 
 export type Session = typeof auth.$Infer.Session;
@@ -29,13 +29,13 @@ export function Header({
   const [openAuthModal, setOpenAuthModal] = useState(false);
   return (
     <header className={cn('border border-b', className)}>
-      <Container className="flex justify-between items-center py-5">
+      <Container className='flex justify-between items-center py-5'>
         <Link href={'/'}>
-          <div className="flex items-center gap-4">
-            <Image src="/logo.png" alt="logo" width={35} height={35} />
+          <div className='flex items-center gap-4'>
+            <Image src='/logo.png' alt='logo' width={35} height={35} />
             <div>
-              <h1 className="font-black text-2xl uppercase">Next Pizza</h1>
-              <p className="text-gray-400 text-sm leading-3">
+              <h1 className='font-black text-2xl uppercase'>Next Pizza</h1>
+              <p className='text-gray-400 text-sm leading-3'>
                 вкусней уже некуда
               </p>
             </div>
@@ -44,7 +44,7 @@ export function Header({
 
         {hasSearch && <SearchInput />}
 
-        <div className="flex items-center gap-4">
+        <div className='flex items-center gap-4'>
           {hasCartBtn && <CartButton />}
           <AuthModal
             open={openAuthModal}

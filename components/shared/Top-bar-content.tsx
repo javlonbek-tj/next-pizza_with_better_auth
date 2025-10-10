@@ -1,10 +1,10 @@
 import { Suspense } from 'react';
 
 import { GetSearchParams } from '@/lib/product/find-pizzas';
-import { Container } from './Container';
-import { SortPopup } from '../filters/Sort-popup';
+import { Container } from './container';
+import { SortPopup } from '../filters/sort-popup';
 import { CategoriesSkeleton } from '../skeletons';
-import { CategoriesLoader } from '../categories/Categories-loader';
+import { CategoriesLoader } from '../categories/categories-loader';
 
 interface TopBarContentProps {
   searchParams: GetSearchParams;

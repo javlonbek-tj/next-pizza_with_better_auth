@@ -5,7 +5,7 @@ import { useIntersection } from 'react-use';
 
 import { cn } from '@/lib';
 import { Title } from '../shared';
-import { ProductCard } from './Product-card';
+import { ProductCard } from './product-card';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { useCategoryStore } from '@/store/category';
 
@@ -40,7 +40,7 @@ export function ProductGroupList({
   return (
     <div className={cn('scroll-mt-20', className)} id={categoryTitle}>
       <div ref={intersectionRef}>
-        <Title text={categoryTitle} size="lg" className="mb-5 font-extrabold" />
+        <Title text={categoryTitle} size='lg' className='mb-5 font-extrabold' />
       </div>
 
       <div className={cn('gap-8 grid grid-cols-3', listClassName)}>

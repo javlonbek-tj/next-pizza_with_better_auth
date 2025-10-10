@@ -10,8 +10,8 @@ export function useCart() {
     queryKey: queryKeys.cart,
     retry: false,
     queryFn: async () => {
-      const data = await Api.cart.getCart();
-      return getCartDetails(data);
+      const res = await Api.cart.getCart();
+      return getCartDetails(res.data);
     },
   });
 }
