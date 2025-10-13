@@ -1,3 +1,4 @@
+export { BackButton } from './back-button';
 export { Container } from './container';
 export { ErrorText } from './error-text';
 export { PhoneInput } from './phone-input';

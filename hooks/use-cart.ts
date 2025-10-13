@@ -10,8 +10,8 @@ export function useCart() {
     queryKey: queryKeys.cart,
     retry: false,
     queryFn: async () => {
-      const res = await Api.cart.getCart();
-      return getCartDetails(res.data);
+      const data = await Api.cart.getCart();
+      return getCartDetails(data);
     },
   });
 }
@@ -44,6 +44,19 @@ export function useRemoveCartItem() {
     },
     onError: () => {
       toast.error('Не удалось удалить товар из корзины');
+    },
+  });
+}
+
+export function useClearCart() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => Api.cart.clearCart(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+    },
+    onError: () => {
+      toast.error('Не удалось очистить корзину');
     },
   });
 }

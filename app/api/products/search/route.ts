@@ -8,12 +8,14 @@ export async function GET(req: NextRequest) {
       where: { name: { contains: query, mode: 'insensitive' } },
       take: 5,
     });
-    console.log(products);
-    return NextResponse.json(products);
+    return NextResponse.json({
+      success: true,
+      data: products,
+    });
   } catch (error) {
     console.error('[Error fetching ingredients]:', error);
     return NextResponse.json(
-      { success: false, error: 'Error while fetching ingredients' },
+      { success: false, error: 'Internal server error' },
       { status: 500 }
     );
   }

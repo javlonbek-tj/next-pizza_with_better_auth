@@ -5,20 +5,14 @@ import { FormField } from '../form/form-field';
 
 export function CheckoutPersonalInfo() {
   return (
-    <CheckoutCard title='2. Персональные данные'>
-      <div className='grid grid-cols-2 gap-5'>
-        <FormField label='Имя' name='firstName' placeholder='Имя' required />
+    <CheckoutCard title="2. Персональные данные">
+      <div className="gap-5 grid grid-cols-2">
+        <FormField label="Имя" name="firstName" placeholder="Имя" required />
+
         <FormField
-          label='Фамилия'
-          name='lastName'
-          placeholder='Фамилия'
-          required
-        />
-        <FormField label='Email' name='email' placeholder='Email' required />
-        <FormField
-          label='Телефон'
-          name='phone'
-          placeholder='Телефон'
+          label="Телефон"
+          name="phone"
+          placeholder="Телефон"
           isPhone
           required
         />

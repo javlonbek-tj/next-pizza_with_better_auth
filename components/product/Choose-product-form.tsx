@@ -42,21 +42,21 @@ export function ChooseProductForm({
       </div>
       <div
         className={cn(
-          'flex-1 bg-[#f7f6f5] p-7 flex flex-col justify-between',
+          'flex flex-col flex-1 justify-between bg-[#f7f6f5] p-7',
           !isModal && 'bg-white py-0'
         )}
       >
-        <Title text={name} size='md' />
+        <Title text={name} size="md" />
         <Button
           className={cn(
-            'w-full cursor-pointer mt-5',
+            'mt-5 w-full cursor-pointer',
             isModal ? 'py-5 text-base' : 'py-3 text-sm max-w-xs mx-auto'
           )}
           disabled={isPending}
           onClick={onAddToCart}
         >
           {isPending ? (
-            <Loader className='w-5 h-5 animate-spin' />
+            <Loader className="w-5 h-5 animate-spin" />
           ) : (
             `Добавить в корзину за ${price} ₽`
           )}

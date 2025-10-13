@@ -57,6 +57,7 @@ export function CartIconButton({
       onClick={handleClick}
       disabled={isDisabled}
       aria-label={type === 'plus' ? 'Increase quantity' : 'Decrease quantity'}
+      type="button"
     >
       {type === 'minus' && <Minus className={iconClassName} />}
       {type === 'plus' && <Plus className={iconClassName} />}

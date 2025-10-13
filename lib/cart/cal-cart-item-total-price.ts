@@ -1,6 +1,5 @@
 import Decimal from 'decimal.js';
 
-// Generic type that works with both Prisma and DTO
 type CartItemCalculation = {
   quantity: number;
   productItem: {

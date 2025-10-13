@@ -2,37 +2,68 @@ import { Package, Truck } from 'lucide-react';
 import { CheckoutCard } from './checkout-card';
 import { CheckoutPriceInfo } from './checkout-price-info';
 import { Button } from '../ui/button';
+import { calculateTotalAmount, DELIVERY_PRICE } from '@/lib';
+import { CartItemModel } from '../cart/cart-item-type';
+import { cn } from '@/lib';
 
-export function CheckoutTotal() {
+interface Props {
+  cartItems: CartItemModel[];
+  isProcessing?: boolean;
+}
+
+export function CheckoutTotal({ cartItems, isProcessing }: Props) {
+  const totalCartPrice = calculateTotalAmount(cartItems);
+  const totalPriceWithDelivery = totalCartPrice + DELIVERY_PRICE;
+  const isDisabled = isProcessing || cartItems.length === 0;
+
   return (
-    <div className='basis-1/3'>
+    <div className="basis-1/3">
       <CheckoutCard
-        title='Итого:'
-        endAdornment={<span className='font-extrabold text-2xl'>123 ₽</span>}
+        title="Итого:"
+        endAdornment={
+          <span
+            className={cn(
+              'font-extrabold text-2xl transition-opacity',
+              isProcessing && 'opacity-50'
+            )}
+          >
+            {totalPriceWithDelivery} ₽
+          </span>
+        }
       >
-        <div className='flex flex-col gap-5 my-5'>
+        <div
+          className={cn(
+            'flex flex-col gap-5 my-5 transition-opacity duration-200',
+            isProcessing && 'opacity-50'
+          )}
+        >
           <CheckoutPriceInfo
             title={
-              <div className='flex items-center gap-2'>
-                <Package size={18} className=' text-gray-400' />
+              <div className="flex items-center gap-2">
+                <Package size={18} className="text-gray-400" />
                 Стоимость корзины:
               </div>
             }
-            value='123 ₽'
+            value={<span className="font-semibold">{totalCartPrice} ₽</span>}
           />
 
           <CheckoutPriceInfo
             title={
-              <div className='flex items-center gap-2'>
-                <Truck size={18} className=' text-gray-400' />
+              <div className="flex items-center gap-2">
+                <Truck size={18} className="text-gray-400" />
                 Доставка:
               </div>
             }
-            value='123 ₽'
+            value={<span className="font-semibold">{DELIVERY_PRICE} ₽</span>}
           />
-          <hr className='-mx-7 mt-5 border-gray-100' />
 
-          <Button className='h-12 rounded-2xl mt-6 text-base font-bold cursor-pointer'>
+          <hr className="-mx-7 mt-5 border-gray-100" />
+
+          <Button
+            type="submit"
+            className="mt-6 rounded-2xl h-12 font-bold text-base cursor-pointer"
+            disabled={isDisabled}
+          >
             Оформить заказ
           </Button>
         </div>

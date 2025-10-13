@@ -2,7 +2,7 @@ export { ChoosePizzaForm } from './choose-pizza-form';
 export { ChooseProductForm } from './choose-product-form';
 export { GroupVariants } from './group-variants';
 export { IngredientItem } from './ingredient';
-export { InvalidPizzaItems } from './Invalid-pizza-items';
+export { InvalidPizzaItems } from './invalid-pizza-items';
 export { PizzaImage } from './pizza-image';
 export { ProductCard } from './product-card';
 export { ProductForm } from './product-form';

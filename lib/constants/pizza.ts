@@ -30,3 +30,4 @@ export type PizzaType = keyof typeof mapPizzaType;
 
 export const DEFAULT_PRICE_FROM = 0;
 export const DEFAULT_PRICE_TO = 1000;
+export const DELIVERY_PRICE = 100;

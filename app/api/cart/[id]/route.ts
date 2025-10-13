@@ -11,7 +11,7 @@ export async function PATCH(
 
     if (!token) {
       return NextResponse.json(
-        { success: false, message: 'Cart not found.' },
+        { success: false, message: 'Token not found.' },
         {
           status: 404,
         }
@@ -115,10 +115,10 @@ export async function DELETE(
       },
     });
 
-    return NextResponse.json(
-      { success: true, message: 'Product removed from cart' },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      success: true,
+      message: 'Product removed from cart',
+    });
   } catch (error) {
     // TODO REMOVE CONSOLE
     console.error(error);

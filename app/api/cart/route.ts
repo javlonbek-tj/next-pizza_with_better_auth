@@ -10,14 +10,11 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get('cartToken')?.value;
 
     if (!token) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Cart not found',
-          data: { items: [] },
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: true,
+        message: 'Token not found. New user',
+        data: { items: [] },
+      });
     }
 
     const cart = await prisma.cart.findFirst({
@@ -134,7 +131,7 @@ export async function POST(req: NextRequest) {
     // TODO REMOVE CONSOLE
     console.error('Error adding to cart:', error);
     return NextResponse.json(
-      { success: false, error: 'Internal server error' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -168,14 +165,9 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    await prisma.cart.delete({
-      where: {
-        id: userCart.id,
-      },
-    });
     return NextResponse.json({
       success: true,
-      message: 'Cart deleted successfully',
+      message: 'Cart deleted.',
     });
   } catch (error) {
     // TODO REMOVE CONSOLE

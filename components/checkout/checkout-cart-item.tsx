@@ -1,33 +1,37 @@
 import Image from 'next/image';
 import { CartItemModel } from '../cart/cart-item-type';
 import { CartUpdateButtons } from '../cart';
+import { cn } from '@/lib';
 
 interface Props {
   cartItem: CartItemModel;
+  className?: string;
 }
 
-export function CheckoutCartItem({ cartItem }: Props) {
+export function CheckoutCartItem({ cartItem, className }: Props) {
   return (
-    <div className='flex justify-between items-center gap-3 py-3'>
+    <div
+      className={cn('flex justify-between items-center gap-3 py-3', className)}
+    >
       {/* Left: image + details */}
-      <div className='flex flex-1 items-center gap-3 min-w-0'>
+      <div className="flex flex-1 items-center gap-3 min-w-0">
         <Image
           src={cartItem.imageUrl}
           alt={cartItem.name}
           width={60}
           height={60}
-          className='flex-shrink-0 rounded-full'
+          className="flex-shrink-0 rounded-full"
         />
         <div>
-          <p className='font-bold'>{cartItem.name}</p>
-          <p className='text-gray-400 text-sm'>
+          <p className="font-bold">{cartItem.name}</p>
+          <p className="text-gray-400 text-sm">
             {cartItem.ingredients.map((ing) => ing.name).join(', ')}
           </p>
         </div>
       </div>
 
       {/* Center: price */}
-      <p className='w-20 font-bold text-gray-900 text-base text-center'>
+      <p className="w-20 font-bold text-gray-900 text-base text-center">
         {cartItem.totalCartItemPrice} ₽
       </p>
 
@@ -35,7 +39,7 @@ export function CheckoutCartItem({ cartItem }: Props) {
       <CartUpdateButtons
         id={cartItem.id}
         quantity={cartItem.quantity}
-        cartBtnSize='md'
+        cartBtnSize="md"
       />
     </div>
   );

@@ -75,7 +75,7 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Полное имя</FormLabel>
+              <FormLabel>Имяilo</FormLabel>
               <FormControl>
                 <Input placeholder="Ваше имя" {...field} />
               </FormControl>
