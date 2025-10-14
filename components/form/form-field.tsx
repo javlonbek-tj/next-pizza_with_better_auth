@@ -16,6 +16,8 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   type?: string;
   isPhone?: boolean;
   isTextArea?: boolean;
+  hasClearBtn?: boolean;
+  suffix?: React.ReactNode;
 }
 
 export function FormField({
@@ -25,6 +27,8 @@ export function FormField({
   className,
   isPhone = false,
   isTextArea = false,
+  hasClearBtn = true,
+  suffix,
   ...props
 }: Props) {
   const {
@@ -80,9 +84,14 @@ export function FormField({
           <Input
             {...register(name)}
             {...props}
-            className={cn('h-10 text-md', className)}
+            className={cn('h-10 text-md pr-20', className)} // Add padding for suffix
           />
-          {value && <ClearButton onClick={onClear} />}
+          {value && !suffix && hasClearBtn && <ClearButton onClick={onClear} />}
+          {suffix && (
+            <div className='absolute right-2 top-1/2 transform -translate-y-1/2'>
+              {suffix}
+            </div>
+          )}
         </div>
       )}
 

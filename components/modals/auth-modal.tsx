@@ -5,13 +5,15 @@ import { RegisterForm, LoginForm, AuthSwitch } from '../auth';
 import { useAuthModal } from '@/hooks/use-auth-modal';
 import { SocialButtons } from '../auth';
 import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
 
 interface Props {
   open: boolean;
   onClose: () => void;
+  callbackUrl?: string;
 }
 
-export function AuthModal({ open, onClose }: Props) {
+export function AuthModal({ open, onClose, callbackUrl }: Props) {
   const {
     type,
     onSwitchType,
@@ -35,6 +37,12 @@ export function AuthModal({ open, onClose }: Props) {
     onClose();
     setShowingOTP(false);
   };
+  const handleLoginSuccess = () => {
+    onClose();
+    if (callbackUrl) {
+      redirect(callbackUrl);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -50,13 +58,13 @@ export function AuthModal({ open, onClose }: Props) {
 
           {type === 'login' ? (
             <LoginForm
-              onClose={onClose}
+              onClose={handleLoginSuccess}
               onShowOTP={setShowingOTP}
               onPendingChange={setFormPending}
             />
           ) : (
             <RegisterForm
-              onClose={onClose}
+              onClose={handleLoginSuccess}
               onShowOTP={setShowingOTP}
               onPendingChange={setFormPending}
             />

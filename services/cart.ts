@@ -8,8 +8,6 @@ export const getCart = async () => {
     await axiosInstance.get<ApiResponse<CartDto>>(ApiRoutes.CART)
   ).data;
 
-  console.log('🚀 ~ getCart ~ data:', data);
-
   return data;
 };
 
