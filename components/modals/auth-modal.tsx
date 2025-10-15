@@ -1,11 +1,12 @@
 'use client';
 
+import { useEffect } from 'react';
+import { redirect } from 'next/navigation';
+
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { RegisterForm, LoginForm, AuthSwitch } from '../auth';
 import { useAuthModal } from '@/hooks/use-auth-modal';
 import { SocialButtons } from '../auth';
-import { useEffect } from 'react';
-import { redirect } from 'next/navigation';
 
 interface Props {
   open: boolean;
@@ -46,9 +47,9 @@ export function AuthModal({ open, onClose, callbackUrl }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='bg-white p-7 w-[450px]'>
+      <DialogContent className="bg-white p-7 w-[450px]">
         <div className={isLoading ? 'opacity-70 pointer-events-none' : ''}>
-          <DialogTitle className='font-semibold text-xl text-center'>
+          <DialogTitle className="font-semibold text-xl text-center">
             {showingOTP
               ? 'Подтверждение почты'
               : type === 'login'
@@ -72,7 +73,7 @@ export function AuthModal({ open, onClose, callbackUrl }: Props) {
 
           {!showingOTP && (
             <>
-              <hr className='my-3' />
+              <hr className="my-3" />
               <SocialButtons
                 loadingProvider={loadingProvider}
                 isLoading={isLoading}
@@ -81,7 +82,7 @@ export function AuthModal({ open, onClose, callbackUrl }: Props) {
               <AuthSwitch
                 type={type}
                 onSwitch={onSwitchType}
-                className='mt-4'
+                className="mt-4"
               />
             </>
           )}

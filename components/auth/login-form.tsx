@@ -46,7 +46,12 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
     },
   });
 
-  const onSubmit = async (values: LoginValues) => {
+  const onSubmit = async (
+    values: LoginValues,
+    e?: React.BaseSyntheticEvent
+  ) => {
+    e?.preventDefault(); // Prevent default
+    e?.stopPropagation(); // Stop propagation to parent forms
     await handleAuthSubmit(() => loginAction(values), values.email);
   };
 
@@ -63,19 +68,22 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          e.stopPropagation(); // Stop propagation
+          form.handleSubmit(onSubmit)(e);
+        }}
         className={`space-y-4 mx-auto w-90 ${
           isPending ? 'opacity-50 pointer-events-none' : ''
         }`}
       >
         <FormField
           control={form.control}
-          name='email'
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='you@example.com' type='email' {...field} />
+                <Input placeholder="you@example.com" type="email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -84,12 +92,12 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name='password'
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder='******' type='password' {...field} />
+                <Input placeholder="******" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -97,14 +105,15 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
         />
 
         <Button
-          type='submit'
-          className='w-full cursor-pointer'
+          type="submit"
+          className="w-full cursor-pointer"
           disabled={isPending}
+          onClick={(e) => e.stopPropagation()} // Also stop propagation on button click
         >
-          {isPending ? <Loader className='w-5 h-5 animate-spin' /> : 'Войти'}
+          {isPending ? <Loader className="w-5 h-5 animate-spin" /> : 'Войти'}
         </Button>
 
-        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
+        {error && <p className="text-red-500 text-sm text-center">{error}</p>}
       </form>
     </Form>
   );

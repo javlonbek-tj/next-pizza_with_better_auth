@@ -48,7 +48,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
     },
   });
 
-  const onSubmit = async (values: RegisterValues) => {
+  const onSubmit = async (
+    values: RegisterValues,
+    e?: React.BaseSyntheticEvent
+  ) => {
+    e?.preventDefault(); // Prevent default
+    e?.stopPropagation(); // Stop propagation to parent forms
     await handleAuthSubmit(() => registerAction(values), values.email);
   };
 
@@ -65,7 +70,10 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={(e) => {
+          e.stopPropagation(); // Stop propagation
+          form.handleSubmit(onSubmit)(e);
+        }}
         className={`space-y-4 mx-auto w-90 ${
           isPending ? 'opacity-50 pointer-events-none' : ''
         }`}
@@ -75,7 +83,7 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Имяilo</FormLabel>
+              <FormLabel>Имя</FormLabel>
               <FormControl>
                 <Input placeholder="Ваше имя" {...field} />
               </FormControl>
@@ -130,6 +138,7 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
           type="submit"
           className="w-full cursor-pointer"
           disabled={isPending}
+          onClick={(e) => e.stopPropagation()}
         >
           {isPending ? (
             <Loader className="w-5 h-5 animate-spin" />

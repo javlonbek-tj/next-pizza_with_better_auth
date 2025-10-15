@@ -46,7 +46,7 @@ export function ChooseProductForm({
           !isModal && 'bg-white py-0'
         )}
       >
-        <Title text={name} size='md' />
+        <Title text={name} size="md" />
         <Button
           className={cn(
             'mt-5 w-full cursor-pointer',
@@ -56,7 +56,7 @@ export function ChooseProductForm({
           onClick={onAddToCart}
         >
           {isPending ? (
-            <Loader className='w-5 h-5 animate-spin' />
+            <Loader className="w-5 h-5 animate-spin" />
           ) : (
             `Добавить в корзину за ${price} ₽`
           )}

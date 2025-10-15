@@ -46,13 +46,13 @@ export function FormField({
 
   const Label = () =>
     label ? (
-      <p className='font-medium mb-2'>
+      <p className="mb-2 font-medium">
         {label} {required && <RequiredSymbol />}
       </p>
     ) : null;
 
   const Error = () =>
-    errorText ? <ErrorText text={errorText} className='mt-2' /> : null;
+    errorText ? <ErrorText text={errorText} className="mt-2" /> : null;
 
   return (
     <div className={className}>
@@ -68,7 +68,7 @@ export function FormField({
               value={field.value || ''}
               onChange={(val) => field.onChange(val)}
               error={!!errorText}
-              className='h-10 text-md'
+              className="h-10 text-md"
             />
           )}
         />
@@ -80,15 +80,24 @@ export function FormField({
         />
       ) : (
         // Regular Input
-        <div className='relative'>
+        <div className="relative">
           <Input
             {...register(name)}
             {...props}
-            className={cn('h-10 text-md pr-20', className)} // Add padding for suffix
+            className={cn('pr-20 h-10 text-md', className)}
           />
+
+          {/* Clear button */}
           {value && !suffix && hasClearBtn && <ClearButton onClick={onClear} />}
+
+          {/* Suffix area — clickable */}
           {suffix && (
-            <div className='absolute right-2 top-1/2 transform -translate-y-1/2'>
+            <div
+              className={cn(
+                'top-1/2 right-2 absolute -translate-y-1/2',
+                'pointer-events-auto'
+              )}
+            >
               {suffix}
             </div>
           )}

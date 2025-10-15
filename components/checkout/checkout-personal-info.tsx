@@ -1,92 +1,96 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { useFormContext } from 'react-hook-form';
+
 import { CheckoutCard } from './checkout-card';
 import { FormField } from '../form/form-field';
 import { authClient } from '@/lib/auth-client';
 import { AuthModal } from '../modals/auth-modal';
 import { Button } from '@/components/ui/button';
+import { CheckoutPersonalInfoSkeleton } from '../skeletons/checkout-personal-info-skeleton';
+import { cn } from '@/lib';
 
 export function CheckoutPersonalInfo() {
   const [authOpen, setAuthOpen] = useState(false);
-  const [isRefetching, setIsRefetching] = useState(false);
   const { data: session, isPending, refetch } = authClient.useSession();
   const { setValue } = useFormContext();
-  const router = useRouter();
+
   const isAuthenticated = !!session?.user;
   const userEmail = session?.user?.email || '';
+  const userName = session?.user?.name || '';
 
+  // Auto-fill form with user data when authenticated
   useEffect(() => {
-    if (isAuthenticated && userEmail) {
-      setValue('email', userEmail, { shouldValidate: true });
+    if (isAuthenticated) {
+      if (userEmail) {
+        setValue('email', userEmail, { shouldValidate: true });
+      }
+      if (userName) {
+        setValue('firstName', userName, { shouldValidate: true });
+      }
     }
-  }, [isAuthenticated, userEmail, setValue]);
+  }, [isAuthenticated, userEmail, userName, setValue]);
 
   const handleAuthModalClose = async () => {
     setAuthOpen(false);
-    setIsRefetching(true);
     try {
-      await refetch(); // Update client-side session
-      router.refresh(); // Refresh server components
+      await refetch();
     } catch (error) {
       console.error('Session refetch failed:', error);
-    } finally {
-      setIsRefetching(false);
     }
   };
 
+  // Show skeleton while checking authentication
   if (isPending) {
-    return <div>Loading...</div>;
+    return <CheckoutPersonalInfoSkeleton />;
   }
 
   return (
     <>
-      <CheckoutCard title='2. Персональные данные'>
-        <div className='gap-5 grid grid-cols-2'>
-          <FormField label='Имя' name='firstName' placeholder='Имя' required />
+      <CheckoutCard title="2. Персональные данные">
+        <div className="gap-5 grid grid-cols-2">
+          <FormField label="Имя" name="firstName" placeholder="Имя" required />
           <FormField
-            label='Фамилия'
-            name='lastName'
-            placeholder='Фамилия'
+            label="Фамилия"
+            name="lastName"
+            placeholder="Фамилия"
             required
           />
           <FormField
-            label='Электронная почта'
-            name='email'
-            placeholder='user@gmail.com'
+            label="Электронная почта"
+            name="email"
+            placeholder="user@gmail.com"
             hasClearBtn={false}
             required
-            disabled={isAuthenticated || isRefetching}
+            className={cn(
+              !isAuthenticated &&
+                'pointer-events-none opacity-80 cursor-not-allowed'
+            )}
+            disabled={isAuthenticated}
             suffix={
               !isAuthenticated ? (
                 <Button
-                  variant='link'
-                  size='sm'
-                  className='text-blue-600 h-6 px-2'
+                  variant="link"
+                  size="sm"
+                  type="button"
+                  className="px-2 h-6 text-primary hover:underline cursor-pointer"
                   onClick={() => setAuthOpen(true)}
-                  disabled={isRefetching}
                 >
-                  {isRefetching ? 'Loading...' : 'Войти'}
+                  Войти
                 </Button>
-              ) : null
+              ) : (
+                <span className="font-medium text-green-600 text-xs">
+                  ✓ Авторизован
+                </span>
+              )
             }
           />
-          <FormField
-            label='Телефон'
-            name='phone'
-            placeholder='Телефон'
-            isPhone
-            required
-          />
+          <FormField label="Телефон" name="phone" isPhone required />
         </div>
       </CheckoutCard>
-      <AuthModal
-        open={authOpen}
-        onClose={handleAuthModalClose}
-        callbackUrl='/checkout'
-      />
+
+      <AuthModal open={authOpen} onClose={handleAuthModalClose} />
     </>
   );
 }
