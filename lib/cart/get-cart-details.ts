@@ -1,7 +1,7 @@
 import { Ingredient } from '@/lib/generated/prisma/client';
 import { CartDto } from '@/services/dto/cart.dto';
 import { calCartItemTotalPrice } from './cal-cart-item-total-price';
-import { CartItemModel } from '@/components/cart/cart-item-type';
+import { CartItemModel } from '@/components/cart/CartItemType';
 
 export const getCartDetails = (data: CartDto): CartItemModel[] =>
   data.items.map((item) => ({

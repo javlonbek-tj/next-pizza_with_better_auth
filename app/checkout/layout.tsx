@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 
-import { SimpleHeader } from '@/components/header/simple-header';
+import { SimpleHeader } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Checkout',

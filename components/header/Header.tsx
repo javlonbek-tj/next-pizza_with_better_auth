@@ -5,11 +5,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 import { auth, cn } from '@/lib';
-import { Container } from '../shared/container';
-import { SearchInput } from '../filters/search-input';
+import { Container } from '../shared/';
+import { SearchInput } from '../filters/SearchInput';
 import { CartButton } from '../cart';
-import { ProfileButton } from '../profile/profile-button';
-import { AuthModal } from '../modals/auth-modal';
+import { ProfileButton } from '../profile/ProfileButton';
+import { AuthModal } from '../modals/AuthModal';
 
 export type Session = typeof auth.$Infer.Session;
 

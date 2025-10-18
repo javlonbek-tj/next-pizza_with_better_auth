@@ -1,2 +1,2 @@
-export { Categories } from './categories';
+export { Categories } from './Categories';
 export { CategoriesLoader } from './categories-loader';

@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { Filters } from '@/components/filters/filters';
+import { Filters } from '@/components/filters/Filters';
 import { ProductsContent } from '@/components/product';
 import { Container, Title, TopBarContent } from '@/components/shared';
 import { CategoriesSkeleton, ProductsSkeleton } from '@/components/skeletons';

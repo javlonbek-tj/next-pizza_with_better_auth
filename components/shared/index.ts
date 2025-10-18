@@ -1,6 +1,7 @@
-export { BackButton } from './back-button';
-export { Container } from './container';
-export { ErrorText } from './error-text';
-export { PhoneInput } from './phone-input';
-export { Title } from './title';
-export { TopBarContent } from './top-bar-content';
+export { BackButton } from './BackButton';
+export { Container } from './Container';
+export { DeleteDialog } from './DeleteDialog';
+export { ErrorText } from './ErrorText';
+export { PhoneInput } from './PhoneInput';
+export { Title } from './Title';
+export { TopBarContent } from './TopBarContent';

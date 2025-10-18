@@ -1,6 +1,6 @@
-export { FilterCheckboxGroup } from './filter-checkbox-group';
-export { FilterCheckbox } from './filter-checkbox';
-export { Filters } from './filters';
-export { PriceRange } from './price-range';
-export { SearchInput } from './search-input';
-export { SortPopup } from './sort-popup';
+export { FilterCheckboxGroup } from './FilterCheckboxGroup';
+export { FilterCheckbox } from './FilterCheckbox';
+export { Filters } from './Filters';
+export { PriceRange } from './PriceRange';
+export { SearchInput } from './SearchInput';
+export { SortPopup } from './SortPopup';

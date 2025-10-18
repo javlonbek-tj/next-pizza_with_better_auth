@@ -1,6 +1,6 @@
-export { CartButton } from './cart-button';
-export { CartDrawer } from './cart-drawer';
-export { CartIconButton } from './cart-icon-button';
-export { CartItemInfo } from './cart-item-info';
-export { CartUpdateButtons } from './cart-update-buttons';
-export { EmptyCart } from './empty-cart';
+export { CartButton } from './CartButton';
+export { CartDrawer } from './CartDrawer';
+export { CartIconButton } from './CartIconButton';
+export { CartItemInfo } from './CartItemInfo';
+export { CartUpdateButtons } from './CartUpdateButtons';
+export { EmptyCart } from './EmptyCart';

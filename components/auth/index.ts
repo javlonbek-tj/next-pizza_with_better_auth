@@ -1,6 +1,6 @@
-export { AuthSwitch } from './auth-switch';
-export { LoginForm } from './login-form';
-export { RegisterForm } from './register-form';
-export { OTPVerificationForm } from './otp-verification-form';
+export { AuthSwitch } from './AuthSwitch';
+export { LoginForm } from './LoginForm';
+export { RegisterForm } from './RegisterForm';
+export { OTPVerificationForm } from './OTPVerificationForm';
 export { loginSchema, registerSchema } from './schemas';
-export { SocialButtons } from './social-buttons';
+export { SocialButtons } from './SocialButtons';
