@@ -6,13 +6,13 @@ import Link from 'next/link';
 
 export default function ProductsPage() {
   return (
-    <div className='space-y-6'>
-      <div className='flex items-center justify-between'>
-        <h1 className='text-3xl font-bold'>Products</h1>
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <h1 className="font-bold text-3xl">Товары</h1>
         <Button asChild>
-          <Link href='/admin/products/new'>
-            <Plus className='w-4 h-4 mr-2' />
-            Add Product
+          <Link href="/admin/products/new">
+            <Plus className="mr-2 w-4 h-4" />
+            Добавить товар
           </Link>
         </Button>
       </div>

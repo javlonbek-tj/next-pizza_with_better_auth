@@ -1,7 +1,7 @@
-// app/api/admin/categories/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
 import prisma from '@/prisma/prisma-client';
+import { categorySchema } from '@/components/admin';
 
 export async function PUT(
   req: NextRequest,
@@ -14,18 +14,49 @@ export async function PUT(
     } */
 
     const { id } = await params;
-    const { name } = await req.json();
+    const body = await req.json();
+
+    const validationResult = categorySchema.safeParse(body);
+
+    if (!validationResult.success) {
+      return NextResponse.json(
+        { success: false, message: 'Invalid data' },
+        { status: 400 }
+      );
+    }
+
+    const { name, slug } = validationResult.data;
+
+    const existingCategory = await prisma.category.findFirst({
+      where: {
+        OR: [
+          { name: { equals: name, mode: 'insensitive' } },
+          { slug: { equals: slug, mode: 'insensitive' } },
+        ],
+        NOT: { id },
+      },
+    });
+
+    if (existingCategory) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Категория "${name}"  уже существует`,
+        },
+        { status: 409 }
+      );
+    }
 
     const category = await prisma.category.update({
       where: { id },
-      data: { name },
+      data: { name, slug },
     });
 
-    return NextResponse.json(category);
+    return NextResponse.json({ success: true, data: category });
   } catch (error) {
     console.error('[ADMIN_CATEGORY_PUT]', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }
@@ -50,7 +81,7 @@ export async function DELETE(
 
     if (productsCount > 0) {
       return NextResponse.json(
-        { error: 'Cannot delete category with products' },
+        { success: false, message: 'Can not delete category with products' },
         { status: 400 }
       );
     }
@@ -59,11 +90,11 @@ export async function DELETE(
       where: { id },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, data: null });
   } catch (error) {
     console.error('[ADMIN_CATEGORY_DELETE]', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { success: false, message: 'Internal server error' },
       { status: 500 }
     );
   }

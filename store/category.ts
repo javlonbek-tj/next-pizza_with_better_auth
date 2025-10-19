@@ -6,6 +6,6 @@ interface CategoryState {
 }
 
 export const useCategoryStore = create<CategoryState>((set) => ({
-  activeName: 'Пиццы',
+  activeName: 'pitsi',
   setActiveName: (activeName: string) => set({ activeName }),
 }));

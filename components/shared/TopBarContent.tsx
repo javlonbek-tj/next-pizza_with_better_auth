@@ -12,8 +12,8 @@ interface TopBarContentProps {
 
 export async function TopBarContent({ searchParams }: TopBarContentProps) {
   return (
-    <div className='top-0 z-10 sticky bg-white shadow-black/5 shadow-lg py-5'>
-      <Container className='flex justify-between items-center gap-5'>
+    <div className="top-0 z-10 sticky bg-white shadow-black/5 shadow-lg py-5">
+      <Container className="flex justify-between items-center gap-5">
         <Suspense fallback={<CategoriesSkeleton />}>
           <CategoriesLoader searchParams={searchParams} />
         </Suspense>

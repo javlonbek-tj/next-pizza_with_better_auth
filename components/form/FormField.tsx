@@ -3,8 +3,8 @@
 import { Controller, useFormContext } from 'react-hook-form';
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
-import { RequiredSymbol } from './required-symbol';
-import { ClearButton } from './clear-button';
+import { RequiredSymbol } from './RequiredSymbol';
+import { ClearButton } from './ClearButton';
 import { ErrorText, PhoneInput } from '../shared';
 import { cn } from '@/lib/utils';
 

@@ -1,9 +1,9 @@
-export { CheckoutCard } from './checkout-card';
-export { CheckoutAddress } from './checkout-address';
-export { CheckoutCartItem } from './checkout-cart-item';
-export { CheckoutCartItems } from './checkout-cart-items';
-export { CheckoutDetails } from './checkout-details';
-export { CheckoutPersonalInfo } from './checkout-personal-info';
-export { CheckoutPriceInfo } from './checkout-price-info';
-export { CheckoutTotal } from './checkout-total';
+export { CheckoutCard } from './CheckoutCard';
+export { CheckoutAddress } from './CheckoutAddress';
+export { CheckoutCartItem } from './CheckoutCartItem';
+export { CheckoutCartItems } from './CheckoutCartItems';
+export { CheckoutDetails } from './CheckoutDetails';
+export { CheckoutPersonalInfo } from './CheckoutPersonalInfo';
+export { CheckoutPriceInfo } from './CheckoutPriceInfo';
+export { CheckoutTotal } from './CheckoutTotal';
 export * from './schemas';

@@ -12,6 +12,7 @@ import { useCategoryStore } from '@/store/category';
 interface Props {
   className?: string;
   categoryTitle: string;
+  categorySlug: string;
   listClassName?: string;
   products: ProductWithRelations[];
 }
@@ -19,6 +20,7 @@ interface Props {
 export function ProductGroupList({
   className,
   categoryTitle,
+  categorySlug,
   listClassName,
   products,
 }: Props) {
@@ -38,9 +40,9 @@ export function ProductGroupList({
   }, [intersection, categoryTitle, setActiveCategoryName]);
 
   return (
-    <div className={cn('scroll-mt-20', className)} id={categoryTitle}>
+    <div className={cn('scroll-mt-20', className)} id={categorySlug}>
       <div ref={intersectionRef}>
-        <Title text={categoryTitle} size='lg' className='mb-5 font-extrabold' />
+        <Title text={categoryTitle} size="lg" className="mb-5 font-extrabold" />
       </div>
 
       <div className={cn('gap-8 grid grid-cols-3', listClassName)}>

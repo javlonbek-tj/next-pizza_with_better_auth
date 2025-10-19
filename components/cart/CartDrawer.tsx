@@ -28,7 +28,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
 
   const isDeleting =
     useIsMutating({
-      mutationKey: queryKeys.removeCartItem,
+      mutationKey: queryKeys.cart,
     }) > 0;
 
   const handleClick = async () => {
@@ -75,7 +75,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
 
           {totalAmount > 0 && (
             <>
-              <div className='flex flex-col gap-4 overflow-auto scrollbar-thin'>
+              <div className="flex flex-col gap-4 overflow-auto scrollbar-thin">
                 {data?.map((item) => (
                   <CartDrawerItem
                     key={item.id}
@@ -94,13 +94,13 @@ export function CartDrawer({ children }: PropsWithChildren) {
                   'opacity-60 pointer-events-none': isDeleting,
                 })}
               >
-                <div className='flex justify-between items-center gap-4 mb-4'>
+                <div className="flex justify-between items-center gap-4 mb-4">
                   <span>Итого</span>
-                  <span className='top-1 relative flex-1 border-b border-b-neutral-200 border-dashed'></span>
-                  <span className='font-bold'>{totalAmount} ₽</span>
+                  <span className="top-1 relative flex-1 border-b border-b-neutral-200 border-dashed"></span>
+                  <span className="font-bold">{totalAmount} ₽</span>
                 </div>
-                <Button className='h-12 cursor-pointer' onClick={handleClick}>
-                  <span className='flex items-center gap-2'>
+                <Button className="h-12 cursor-pointer" onClick={handleClick}>
+                  <span className="flex items-center gap-2">
                     Оформить заказ
                     <ArrowRight />
                   </span>
@@ -109,7 +109,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
               <AuthModal
                 open={authOpen}
                 onClose={() => setAuthOpen(false)}
-                callbackUrl='/checkout'
+                callbackUrl="/checkout"
               />
             </>
           )}

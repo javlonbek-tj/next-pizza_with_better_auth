@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import { Loader2, Trash2 } from 'lucide-react';
-import { CheckoutCard } from './checkout-card';
-import { CheckoutCartItem } from './checkout-cart-item';
+import { CheckoutCard } from './CheckoutCard';
+import { CheckoutCartItem } from './CheckoutCartItem';
 import { useClearCart } from '@/hooks';
 import { cn } from '@/lib';
 import { CartItemModel } from '../cart/CartItemType';
@@ -26,7 +26,7 @@ export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
 
   return (
     <CheckoutCard
-      title='1. Корзина'
+      title="1. Корзина"
       endAdornment={
         cartItems.length > 0 && (
           <button
@@ -36,19 +36,19 @@ export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
             )}
             onClick={() => clearCart()}
             disabled={isDisabled}
-            type='button'
+            type="button"
           >
             {isClearing ? (
-              <Loader2 className='w-4 h-4 text-gray-500 animate-spin' />
+              <Loader2 className="w-4 h-4 text-gray-500 animate-spin" />
             ) : (
-              <Trash2 className='w-4 h-4' />
+              <Trash2 className="w-4 h-4" />
             )}
             <span>Удалить корзину</span>
           </button>
         )
       }
     >
-      <div className='flex flex-col divide-y divide-gray-100'>
+      <div className="flex flex-col divide-y divide-gray-100">
         {cartItems.map((cartItem) => (
           <CheckoutCartItem
             key={cartItem.id}

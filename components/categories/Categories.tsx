@@ -29,11 +29,11 @@ export function Categories({ className, categories }: Props) {
       {categories.map((category) => (
         <a
           key={category.name}
-          href={`/#${category.name}`}
-          onClick={() => handleClick(category.name)}
+          href={`/#${category.slug}`}
+          onClick={() => handleClick(category.slug)}
           className={cn(
             'hover:bg-white px-5 py-2 rounded-xl font-medium hover:text-primary transition duration-300',
-            activeCategoryName === category.name && 'bg-white text-primary'
+            activeCategoryName === category.slug && 'bg-white text-primary'
           )}
         >
           {category.name}

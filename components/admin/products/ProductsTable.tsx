@@ -76,10 +76,10 @@ export function ProductsTable() {
   if (isPending) {
     return (
       <Card>
-        <CardContent className='p-6'>
-          <div className='space-y-4'>
+        <CardContent className="p-6">
+          <div className="space-y-4">
             {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className='h-16 w-full' />
+              <Skeleton key={i} className="w-full h-16" />
             ))}
           </div>
         </CardContent>
@@ -88,22 +88,22 @@ export function ProductsTable() {
   }
 
   return (
-    <Card className='overflow-hidden'>
-      <CardContent className='p-6'>
-        <div className='space-y-6'>
-          <div className='flex items-center gap-4'>
-            <div className='relative flex-1 max-w-md'>
-              <Search className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+    <Card className="overflow-hidden">
+      <CardContent className="p-6">
+        <div className="space-y-6">
+          <div className="flex items-center gap-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="top-1/2 left-3 absolute w-4 h-4 text-muted-foreground -translate-y-1/2" />
               <Input
-                placeholder='Search products by name...'
+                placeholder="Search products by name..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className='pl-10 border-border focus-visible:ring-primary'
+                className="pl-10 border-border"
               />
             </div>
           </div>
 
-          <div className='overflow-x-auto'>
+          <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -111,7 +111,7 @@ export function ProductsTable() {
                   <TableHead>Name</TableHead>
                   <TableHead>Category</TableHead>
                   <TableHead>Price</TableHead>
-                  <TableHead className='text-right'>Actions</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -124,35 +124,35 @@ export function ProductsTable() {
                           alt={product.name}
                           width={50}
                           height={50}
-                          className='rounded-md object-cover'
+                          className="rounded-md object-cover"
                         />
                       </TableCell>
-                      <TableCell className='font-medium'>
+                      <TableCell className="font-medium">
                         {product.name}
                       </TableCell>
                       <TableCell>{product.category.name}</TableCell>
                       <TableCell>
                         ${product.productItems[0]?.price?.toFixed(2) || '0.00'}
                       </TableCell>
-                      <TableCell className='text-right space-x-2'>
-                        <Button variant='outline' size='sm' asChild>
+                      <TableCell className="space-x-2 text-right">
+                        <Button variant="outline" size="sm" asChild>
                           <Link href={`/admin/products/${product.id}/edit`}>
-                            <Edit className='w-4 h-4' />
+                            <Edit className="w-4 h-4" />
                           </Link>
                         </Button>
                         <Button
-                          variant='destructive'
-                          size='sm'
+                          variant="destructive"
+                          size="sm"
                           onClick={() => setDeleteId(product.id)}
                         >
-                          <Trash2 className='w-4 h-4' />
+                          <Trash2 className="w-4 h-4" />
                         </Button>
                       </TableCell>
                     </TableRow>
                   ))
                 ) : (
                   <TableRow>
-                    <TableCell colSpan={5} className='text-center py-4'>
+                    <TableCell colSpan={5} className="py-4 text-center">
                       No products found.
                     </TableCell>
                   </TableRow>
@@ -162,11 +162,11 @@ export function ProductsTable() {
           </div>
 
           {totalPages > 1 && (
-            <Pagination className='justify-end'>
+            <Pagination className="justify-end">
               <PaginationContent>
                 <PaginationItem>
                   <PaginationPrevious
-                    href='#'
+                    href="#"
                     onClick={(e) => {
                       e.preventDefault();
                       if (page > 1) handlePageChange(page - 1);
@@ -179,7 +179,7 @@ export function ProductsTable() {
                 {[...Array(totalPages)].map((_, i) => (
                   <PaginationItem key={i}>
                     <PaginationLink
-                      href='#'
+                      href="#"
                       onClick={(e) => {
                         e.preventDefault();
                         handlePageChange(i + 1);
@@ -192,7 +192,7 @@ export function ProductsTable() {
                 ))}
                 <PaginationItem>
                   <PaginationNext
-                    href='#'
+                    href="#"
                     onClick={(e) => {
                       e.preventDefault();
                       if (page < totalPages) handlePageChange(page + 1);

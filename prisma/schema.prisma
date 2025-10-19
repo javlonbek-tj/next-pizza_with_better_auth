@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
@@ -11,19 +9,19 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(uuid())
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @default(now()) @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean @default(false)
   image         String?
 
   Cart Cart?
 
-  sessions      Session[]
-  accounts      Account[]
+  sessions Session[]
+  accounts Account[]
 
   @@unique([email])
   @@map("users")
@@ -39,17 +37,17 @@ model Session {
   ipAddress String?
   userAgent String?
 
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([token])
   @@map("sessions")
 }
 
 model Account {
-  id                    String    @id @default(uuid())
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   accountId             String
   providerId            String
@@ -67,9 +65,9 @@ model Account {
 }
 
 model Verification {
-  id         String   @id @default(uuid())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @default(now()) @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
 
   identifier String
   value      String
@@ -78,9 +76,8 @@ model Verification {
   @@map("verifications")
 }
 
-
 model Product {
-  id       String @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -88,18 +85,18 @@ model Product {
   imageUrl String
 
   productItems ProductItem[]
-  ingredients Ingredient[]
+  ingredients  Ingredient[]
 
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId String?
 
-  @@map ("products")
+  @@map("products")
 }
 
 model ProductItem {
-  id       String @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   price     Float
   size      Int?
@@ -114,11 +111,13 @@ model ProductItem {
 }
 
 model Category {
-  id   String @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   name String @unique
+
+  slug String @unique
 
   products Product[]
 
@@ -126,11 +125,11 @@ model Category {
 }
 
 model Ingredient {
-  id   String @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  name String @unique
+  name     String @unique
   price    Float
   imageUrl String
 
@@ -141,7 +140,7 @@ model Ingredient {
 }
 
 model Cart {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -156,12 +155,11 @@ model Cart {
 }
 
 model CartItem {
-  id String @id @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-
-  quantity      Int         @default(1)
+  quantity    Int          @default(1)
   ingredients Ingredient[]
 
   productItem   ProductItem @relation(fields: [productItemId], references: [id])

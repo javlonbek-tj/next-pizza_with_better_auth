@@ -1,4 +1,4 @@
-// components/admin/products/DeleteProductDialog.tsx
+// components/admin/products/DeleteDialog.tsx
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -16,29 +16,41 @@ interface Props {
   onClose: () => void;
   onConfirm: () => void;
   isDeleting: boolean;
+  title: string;
+  description: string;
 }
 
-export function DeleteDialog({ open, onClose, onConfirm, isDeleting }: Props) {
+export function DeleteDialog({
+  open,
+  onClose,
+  onConfirm,
+  isDeleting,
+  title,
+  description,
+}: Props) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Confirm Deletion</DialogTitle>
-          <DialogDescription>
-            Are you sure you want to delete this product? This action cannot be
-            undone.
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant='outline' onClick={onClose} disabled={isDeleting}>
-            Cancel
+          <Button
+            variant="outline"
+            onClick={onClose}
+            disabled={isDeleting}
+            className="cursor-pointer"
+          >
+            Отмена
           </Button>
           <Button
-            variant='destructive'
+            variant="destructive"
             onClick={onConfirm}
             disabled={isDeleting}
+            className="cursor-pointer"
           >
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            {isDeleting ? 'Удаление...' : 'Удалить'}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { RegisterForm, LoginForm, AuthSwitch } from '../auth';
-import { useAuthModal } from '@/hooks/use-auth-modal';
+import { useAuthModal } from '@/hooks/auth/use-auth-modal';
 import { SocialButtons } from '../auth';
 
 interface Props {

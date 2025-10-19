@@ -1,6 +1,6 @@
 import { Package, Truck } from 'lucide-react';
-import { CheckoutCard } from './checkout-card';
-import { CheckoutPriceInfo } from './checkout-price-info';
+import { CheckoutCard } from './CheckoutCard';
+import { CheckoutPriceInfo } from './CheckoutPriceInfo';
 import { Button } from '../ui/button';
 import { calculateTotalAmount, DELIVERY_PRICE } from '@/lib';
 import { CartItemModel } from '../cart/CartItemType';
@@ -17,9 +17,9 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
   const isDisabled = isProcessing || cartItems.length === 0;
 
   return (
-    <div className='basis-1/3'>
+    <div className="basis-1/3">
       <CheckoutCard
-        title='Итого:'
+        title="Итого:"
         endAdornment={
           <span
             className={cn(
@@ -39,29 +39,29 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
         >
           <CheckoutPriceInfo
             title={
-              <div className='flex items-center gap-2'>
-                <Package size={18} className='text-gray-400' />
+              <div className="flex items-center gap-2">
+                <Package size={18} className="text-gray-400" />
                 Стоимость корзины:
               </div>
             }
-            value={<span className='font-semibold'>{totalCartPrice} ₽</span>}
+            value={<span className="font-semibold">{totalCartPrice} ₽</span>}
           />
 
           <CheckoutPriceInfo
             title={
-              <div className='flex items-center gap-2'>
-                <Truck size={18} className='text-gray-400' />
+              <div className="flex items-center gap-2">
+                <Truck size={18} className="text-gray-400" />
                 Доставка:
               </div>
             }
-            value={<span className='font-semibold'>{DELIVERY_PRICE} ₽</span>}
+            value={<span className="font-semibold">{DELIVERY_PRICE} ₽</span>}
           />
 
-          <hr className='-mx-7 mt-5 border-gray-100' />
+          <hr className="-mx-7 mt-5 border-gray-100" />
 
           <Button
-            type='submit'
-            className='mt-6 rounded-2xl h-12 font-bold text-base cursor-pointer'
+            type="submit"
+            className="mt-6 rounded-2xl h-12 font-bold text-base cursor-pointer"
             disabled={isDisabled}
           >
             Оформить заказ

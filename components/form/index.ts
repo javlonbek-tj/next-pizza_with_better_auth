@@ -1,3 +1,3 @@
-export { ClearButton } from './clear-button';
-export { FormField } from './form-field';
-export { RequiredSymbol } from './required-symbol';
+export { ClearButton } from './ClearButton';
+export { FormField } from './FormField';
+export { RequiredSymbol } from './RequiredSymbol';

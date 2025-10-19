@@ -1,4 +1,3 @@
-// components/admin/layout/AdminSidebar.tsx
 'use client';
 
 import Link from 'next/link';
@@ -13,22 +12,23 @@ import {
 } from 'lucide-react';
 
 const navItems = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/products', label: 'Products', icon: Package },
-  { href: '/admin/categories', label: 'Categories', icon: FolderTree },
-  { href: '/admin/variants', label: 'Variants', icon: Settings },
-  { href: '/admin/orders', label: 'Orders', icon: ShoppingCart },
+  { href: '/admin', label: 'Панель управления', icon: LayoutDashboard },
+  { href: '/admin/products', label: 'Товары', icon: Package },
+  { href: '/admin/categories', label: 'Категории', icon: FolderTree },
+  { href: '/admin/ingredients', label: 'Ингредиенты', icon: FolderTree },
+  { href: '/admin/variants', label: 'Вариации', icon: Settings },
+  { href: '/admin/orders', label: 'Заказы', icon: ShoppingCart },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className='w-64 bg-white border-r'>
-      <div className='p-6'>
-        <h2 className='text-2xl font-bold text-gray-800'>Admin Panel</h2>
+    <aside className="bg-white border-r w-64">
+      <div className="p-6">
+        <h2 className="font-bold text-gray-800 text-2xl">Админ-панель</h2>
       </div>
-      <nav className='px-4 space-y-2'>
+      <nav className="space-y-2 px-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -46,8 +46,8 @@ export function AdminSidebar() {
                   : 'hover:bg-gray-100'
               )}
             >
-              <Icon className='w-5 h-5' />
-              <span className='font-medium'>{item.label}</span>
+              <Icon className="w-5 h-5" />
+              <span className="font-medium">{item.label}</span>
             </Link>
           );
         })}

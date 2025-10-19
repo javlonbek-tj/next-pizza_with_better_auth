@@ -1,10 +1,8 @@
-// components/admin/categories/CategoryFormDialog.tsx
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import {
   Dialog,
   DialogContent,
@@ -25,22 +23,20 @@ import {
   useCreateCategory,
   useUpdateCategory,
 } from '@/hooks/admin/use-categories';
-import { Loader2 } from 'lucide-react';
-
-const categorySchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-});
-
-type CategoryFormValues = z.infer<typeof categorySchema>;
+import { Category } from '@/lib/generated/prisma';
+import { CategoryFormValues, categorySchema } from '../schemas';
+import { generateSlug } from '@/lib';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  category?: any;
+  category?: Category | null;
 }
 
 export function CategoryFormDialog({ open, onClose, category }: Props) {
   const isEditing = !!category;
+  const [isSlugManual, setIsSlugManual] = useState(false);
+
   const { mutate: createCategory, isPending: isCreating } = useCreateCategory();
   const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory();
   const isPending = isCreating || isUpdating;
@@ -49,6 +45,7 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: '',
+      slug: '',
     },
   });
 
@@ -56,22 +53,43 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
     if (category) {
       form.reset({
         name: category.name,
+        slug: category.slug,
       });
+      setIsSlugManual(false);
     } else {
       form.reset({
         name: '',
+        slug: '',
       });
+      setIsSlugManual(false);
     }
-  }, [category, form]);
+  }, [category, form, open]);
+
+  // Auto-generate slug from name
+  const handleNameChange = (value: string) => {
+    form.setValue('name', value);
+
+    // Only auto-generate if user hasn't manually edited the slug
+    if (!isSlugManual) {
+      const generatedSlug = generateSlug(value);
+      form.setValue('slug', generatedSlug, { shouldValidate: true });
+    }
+  };
+
+  const handleSlugChange = (value: string) => {
+    setIsSlugManual(true);
+    form.setValue('slug', value);
+  };
 
   const onSubmit = (data: CategoryFormValues) => {
     if (isEditing) {
       updateCategory(
-        { id: category.id, ...data },
+        { id: category.id, dto: data },
         {
           onSuccess: () => {
             onClose();
             form.reset();
+            setIsSlugManual(false);
           },
         }
       );
@@ -80,6 +98,7 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
         onSuccess: () => {
           onClose();
           form.reset();
+          setIsSlugManual(false);
         },
       });
     }
@@ -87,41 +106,87 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {isEditing ? 'Edit Category' : 'Create Category'}
+            {isEditing ? 'Редактировать категорию' : 'Создать категорию'}
           </DialogTitle>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* Name Field */}
             <FormField
               control={form.control}
-              name='name'
+              name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>Название</FormLabel>
                   <FormControl>
-                    <Input placeholder='Category name' {...field} />
+                    <Input
+                      placeholder="Введите название категории на кириллице"
+                      {...field}
+                      onChange={(e) => handleNameChange(e.target.value)}
+                      autoComplete="off"
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <div className='flex justify-end gap-2'>
+            {/* Slug Field */}
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug (URL)</FormLabel>
+                  <div className="flex gap-2">
+                    <FormControl>
+                      <Input
+                        placeholder="автоматически генерируется"
+                        {...field}
+                        onChange={(e) => handleSlugChange(e.target.value)}
+                        className="font-mono text-sm"
+                        autoComplete="off"
+                      />
+                    </FormControl>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Preview */}
+            {form.watch('slug') && (
+              <div className="bg-gray-50 p-3 border border-gray-200 rounded-lg">
+                <p className="mb-1 font-medium text-gray-600 text-xs">
+                  Предпросмотр URL:
+                </p>
+                <code className="font-mono text-violet-600 text-sm">
+                  /categories/{form.watch('slug')}
+                </code>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex justify-end gap-2 pt-4">
               <Button
-                type='button'
-                variant='outline'
+                type="button"
+                variant="outline"
                 onClick={onClose}
                 disabled={isPending}
+                className="cursor-pointer"
               >
-                Cancel
+                Отмена
               </Button>
-              <Button type='submit' disabled={isPending}>
-                {isPending && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
-                {isEditing ? 'Update' : 'Create'}
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="cursor-pointer"
+              >
+                {isEditing ? 'Изменить' : 'Создать'}
               </Button>
             </div>
           </form>

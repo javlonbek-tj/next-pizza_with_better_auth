@@ -1,17 +1,15 @@
-// hooks/admin/use-categories.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { CategoryFormValues } from '@/components/admin';
+import { queryKeys } from '@/lib';
+import { Api } from '@/services/api-client';
+import { ApiResponse } from '@/services/api-response';
 
-const QUERY_KEY = ['admin', 'categories'];
-
-export function useCategories() {
+export function useGetCategories() {
   return useQuery({
-    queryKey: QUERY_KEY,
-    queryFn: async () => {
-      const res = await fetch('/api/admin/categories');
-      if (!res.ok) throw new Error('Failed to fetch categories');
-      return res.json();
-    },
+    queryKey: queryKeys.categories,
+    queryFn: Api.admin.getCategories,
   });
 }
 
@@ -19,21 +17,19 @@ export function useCreateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { name: string }) => {
-      const res = await fetch('/api/admin/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
-      });
-      if (!res.ok) throw new Error('Failed to create category');
-      return res.json();
-    },
+    mutationFn: (vars: CategoryFormValues) => Api.admin.createCategory(vars),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
-      toast.success('Category created successfully');
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories });
+      toast.success('Категория успешно создана');
     },
-    onError: () => {
-      toast.error('Failed to create category');
+    onError: (error: AxiosError<ApiResponse<null>>) => {
+      if (error.response?.status === 409) {
+        return toast.error(
+          error.response.data.message ||
+            'Категория с таким именем уже существует'
+        );
+      }
+      toast.error('Не удалось создать категорию');
     },
   });
 }
@@ -42,21 +38,22 @@ export function useUpdateCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: { id: string; name: string }) => {
-      const res = await fetch(`/api/admin/categories/${data.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: data.name }),
-      });
-      if (!res.ok) throw new Error('Failed to update category');
-      return res.json();
-    },
+    mutationFn: async (data: { id: string; dto: CategoryFormValues }) =>
+      await Api.admin.updateCategory(data.id, data.dto),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
-      toast.success('Category updated successfully');
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories });
+      toast.success('Категория успешно изменена');
     },
-    onError: () => {
-      toast.error('Failed to update category');
+
+    onError: (error: AxiosError<ApiResponse<null>>) => {
+      console.log(error);
+      if (error.response?.status === 409) {
+        return toast.error(
+          error.response.data.message ||
+            'Категория с таким именем уже существует'
+        );
+      }
+      toast.error('Не удалось изменить категорию');
     },
   });
 }
@@ -65,19 +62,13 @@ export function useDeleteCategory() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
-      const res = await fetch(`/api/admin/categories/${id}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) throw new Error('Failed to delete category');
-      return res.json();
-    },
+    mutationFn: async (id: string) => Api.admin.deleteCategory(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: QUERY_KEY });
-      toast.success('Category deleted successfully');
+      queryClient.invalidateQueries({ queryKey: queryKeys.categories });
+      toast.success('Категория успешно удалена');
     },
     onError: () => {
-      toast.error('Failed to delete category');
+      toast.error('Не удалось удалить категорию');
     },
   });
 }

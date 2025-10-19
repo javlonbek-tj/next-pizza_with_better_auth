@@ -7,12 +7,12 @@ import { auth } from '@/lib';
 import { registerSchema, RegisterValues } from '@/components/auth/schemas';
 
 export async function registerAction(values: RegisterValues) {
-  const parsed = registerSchema.safeParse(values);
-  if (!parsed.success) {
+  const validationResult = registerSchema.safeParse(values);
+  if (!validationResult.success) {
     return { error: 'Invalid input data', requiresVerification: false };
   }
 
-  const { name, email, password } = parsed.data;
+  const { name, email, password } = validationResult.data;
 
   try {
     await auth.api.signUpEmail({

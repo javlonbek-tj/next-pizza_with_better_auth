@@ -35,7 +35,6 @@ type RemoveCartItemVars = { id: string };
 export function useRemoveCartItem() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: queryKeys.removeCartItem,
     mutationFn: async ({ id }: RemoveCartItemVars) =>
       Api.cart.removeCartItem(id),
 

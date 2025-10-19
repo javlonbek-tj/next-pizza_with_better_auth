@@ -8,12 +8,12 @@ import { auth } from '@/lib';
 import { resendVerificationOTP } from './resend-verification-otp';
 
 export async function loginAction(values: LoginValues) {
-  const parsed = loginSchema.safeParse(values);
-  if (!parsed.success) {
+  const validationResult = loginSchema.safeParse(values);
+  if (!validationResult.success) {
     return { error: 'Invalid input data', requiresVerification: false };
   }
 
-  const { email, password } = parsed.data;
+  const { email, password } = validationResult.data;
 
   try {
     await auth.api.signInEmail({

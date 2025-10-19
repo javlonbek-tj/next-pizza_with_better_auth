@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useTransition } from 'react';
 import qs from 'qs';
-import { Filters } from './use-filters';
+import { Filters } from './filter/use-filters';
 
 export const useQueryFilters = (filters: Filters) => {
   const isInitialMount = useRef(true);

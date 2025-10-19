@@ -35,14 +35,11 @@ export async function GET(req: NextRequest) {
     });
 
     if (!cart) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Cart not found',
-          data: { items: [] },
-        },
-        { status: 404 }
-      );
+      return NextResponse.json({
+        success: false,
+        message: 'Cart not found, returning empty cart',
+        data: { items: [] },
+      });
     }
 
     return NextResponse.json({
