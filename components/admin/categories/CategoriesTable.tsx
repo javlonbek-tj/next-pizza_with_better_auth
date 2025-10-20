@@ -53,46 +53,49 @@ export function CategoriesTable() {
 
   if (isPending) {
     return (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="w-full h-16" />
+          <Skeleton key={i} className='w-full h-16' />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={() => setIsFormOpen(true)} className="cursor-pointer">
-          <Plus className="mr-2 w-4 h-4" />
+    <div className='space-y-4'>
+      <div className='flex justify-end'>
+        <Button onClick={() => setIsFormOpen(true)} className='cursor-pointer'>
+          <Plus className='mr-2 w-4 h-4' />
           Добавить категорию
         </Button>
       </div>
 
       {!categories?.length ? (
-        <div className="mt-10 text-muted-foreground text-2xl text-center">
+        <div className='mt-10 text-muted-foreground text-2xl text-center'>
           Категории не найдены
         </div>
       ) : (
-        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
-          <CardContent className="p-6">
+        <Card className='shadow-md border border-gray-200 rounded-xl overflow-x-auto'>
+          <CardContent className='p-6'>
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50 hover:bg-gray-50">
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                <TableRow className='bg-gray-50 hover:bg-gray-50'>
+                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
+                    №
+                  </TableHead>
+                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
                     Название
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
                     Слаг
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
                     Количество продуктов
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
                     Дата создания
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide'>
                     Действия
                   </TableHead>
                 </TableRow>
@@ -102,25 +105,24 @@ export function CategoriesTable() {
                   (category: CategoryWithProductCount, index: number) => (
                     <TableRow
                       key={category.id}
-                      className="hover:bg-gray-50 transition-colors"
+                      className='hover:bg-gray-50 transition-colors'
                     >
-                      <TableCell className="py-4">
-                        <div className="flex items-center gap-3">
-                          <div className="flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
-                            {index + 1}
-                          </div>
-
-                          <span className="font-semibold text-gray-900">
-                            {category.name}
-                          </span>
+                      <TableCell className='py-4'>
+                        <div className='flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white'>
+                          {index + 1}
                         </div>
                       </TableCell>
-                      <TableCell className="py-4">
-                        <code className="bg-gray-100 px-2 py-1 rounded font-mono text-gray-700 text-sm">
+                      <TableCell className='py-4'>
+                        <span className='font-semibold text-gray-900'>
+                          {category.name}
+                        </span>
+                      </TableCell>
+                      <TableCell className='py-4'>
+                        <code className='bg-gray-100 px-2 py-1 rounded font-mono text-gray-700 text-sm'>
                           {category.slug}
                         </code>
                       </TableCell>
-                      <TableCell className="py-4 text-center">
+                      <TableCell className='py-4 text-center'>
                         <Badge
                           variant={
                             category._count?.products > 0
@@ -136,7 +138,7 @@ export function CategoriesTable() {
                           {category._count?.products || 0}
                         </Badge>
                       </TableCell>
-                      <TableCell className="py-4 text-gray-600 text-center">
+                      <TableCell className='py-4 text-gray-600 text-center'>
                         {new Date(category.createdAt).toLocaleDateString(
                           'ru-RU',
                           {
@@ -146,23 +148,23 @@ export function CategoriesTable() {
                           }
                         )}
                       </TableCell>
-                      <TableCell className="space-x-2 text-right">
+                      <TableCell className='space-x-2 text-right'>
                         <Button
-                          className="cursor-pointer"
-                          variant="outline"
-                          size="sm"
+                          className='cursor-pointer'
+                          variant='outline'
+                          size='sm'
                           onClick={() => handleEdit(category)}
                         >
-                          <Edit className="w-4 h-4" />
+                          <Edit className='w-4 h-4' />
                         </Button>
                         <Button
-                          className="cursor-pointer"
-                          variant="destructive"
-                          size="sm"
+                          className='cursor-pointer'
+                          variant='destructive'
+                          size='sm'
                           onClick={() => setDeleteId(category.id)}
                           disabled={category._count?.products > 0}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className='w-4 h-4' />
                         </Button>
                       </TableCell>
                     </TableRow>
@@ -185,8 +187,8 @@ export function CategoriesTable() {
         onClose={() => setDeleteId(null)}
         onConfirm={handleDelete}
         isDeleting={isDeleting}
-        title="Удалить категорию"
-        description="Вы уверены, что хотите удалить эту категорию? Это действие нельзя отменить."
+        title='Удалить категорию'
+        description='Вы уверены, что хотите удалить эту категорию? Это действие нельзя отменить.'
       />
     </div>
   );

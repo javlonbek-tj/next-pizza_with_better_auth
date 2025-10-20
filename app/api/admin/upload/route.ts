@@ -1,14 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { writeFile } from 'fs/promises';
 import path from 'path';
-
-const MAX_UPLOAD_SIZE = 1024 * 1024 * 5; // 5MB
-const ACCEPTED_IMAGE_TYPES = [
-  'image/jpeg',
-  'image/png',
-  'image/jpg',
-  'image/webp',
-];
+import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from '@/lib';
 
 export async function POST(req: NextRequest) {
   try {
@@ -17,7 +10,7 @@ export async function POST(req: NextRequest) {
 
     if (!file) {
       return NextResponse.json(
-        { success: false, message: 'No file provided' },
+        { success: false, message: 'Загрузите изображение' },
         { status: 400 }
       );
     }
@@ -26,7 +19,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: 'Invalid file type. Only JPG, PNG, and WebP are allowed',
+          message:
+            'URL должен указывать на изображение (png, jpg, jpeg, gif, webp)',
         },
         { status: 400 }
       );
@@ -34,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     if (file.size > MAX_UPLOAD_SIZE) {
       return NextResponse.json(
-        { success: false, message: 'File size exceeds 5MB limit' },
+        { success: false, message: 'Файл слишком большой. Максимум 5MB' },
         { status: 400 }
       );
     }
@@ -60,7 +54,8 @@ export async function POST(req: NextRequest) {
     const imageUrl = `/uploads/ingredients/${filename}`;
     return NextResponse.json({ success: true, data: { imageUrl } });
   } catch (error) {
-    console.error('[UPLOAD_ERROR]', error);
+    // TODO REMOVE IN PRODUCTION
+    console.error('[ADMIN_UPLOAD_POST]', error);
     return NextResponse.json(
       { success: false, message: 'Failed to upload file' },
       { status: 500 }

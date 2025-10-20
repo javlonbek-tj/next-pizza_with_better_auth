@@ -9,8 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { sortOptions } from '@/lib/constants/sort-options';
-import { cn } from '@/lib';
+import { cn, sortOptions } from '@/lib';
 
 interface Props {
   className?: string;

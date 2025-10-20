@@ -1,12 +1,11 @@
 'use client';
 
-import { mapPizzaType, PizzaSize } from '@/lib/constants/pizza';
-import { ProductWithRelations } from '@/prisma/@types/prisma';
-import { pizzaSizes, PizzaType } from '@/lib/constants/pizza';
-import { Variant } from '@/components/product/group-variants';
-import { useSet } from 'react-use';
 import { useState } from 'react';
+import { useSet } from 'react-use';
+import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { totalPizzaPrice } from '@/lib/product';
+import { mapPizzaType, PizzaSize, pizzaSizes, PizzaType } from '@/lib';
+import { Variant } from '@/components/product/GroupVariants';
 
 interface ReturnProps {
   type: PizzaType;

@@ -53,46 +53,49 @@ export function IngredientsTable() {
 
   if (isPending) {
     return (
-      <div className="space-y-4">
+      <div className='space-y-4'>
         {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className="w-full h-16" />
+          <Skeleton key={i} className='w-full h-16' />
         ))}
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <Button onClick={() => setIsFormOpen(true)} className="cursor-pointer">
-          <Plus className="mr-2 w-4 h-4" />
+    <div className='space-y-4'>
+      <div className='flex justify-end'>
+        <Button onClick={() => setIsFormOpen(true)} className='cursor-pointer'>
+          <Plus className='mr-2 w-4 h-4' />
           Добавить ингредиент
         </Button>
       </div>
 
       {!ingredients?.length ? (
-        <div className="mt-10 text-muted-foreground text-2xl text-center">
+        <div className='mt-10 text-muted-foreground text-2xl text-center'>
           Ингредиенты не найдены
         </div>
       ) : (
-        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
-          <CardContent className="p-6">
+        <Card className='shadow-md border border-gray-200 rounded-xl overflow-x-auto'>
+          <CardContent className='p-6'>
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50 hover:bg-gray-50">
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                <TableRow className='bg-gray-50 hover:bg-gray-50'>
+                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
+                    №
+                  </TableHead>
+                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
                     Изображение
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
                     Название
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
                     Цена
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
                     Дата создания
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide'>
                     Действия
                   </TableHead>
                 </TableRow>
@@ -101,45 +104,46 @@ export function IngredientsTable() {
                 {ingredients?.map((ingredient: Ingredient, index: number) => (
                   <TableRow
                     key={ingredient.id}
-                    className="hover:bg-gray-50 transition-colors"
+                    className='hover:bg-gray-50 transition-colors'
                   >
+                    {/* Number */}
+                    <TableCell className='py-4'>
+                      <div className='flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white'>
+                        {index + 1}
+                      </div>
+                    </TableCell>
+
                     {/* Image */}
-                    <TableCell className="py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
-                          {index + 1}
-                        </div>
-                        <div className="relative border border-gray-200 rounded-lg w-16 h-16 overflow-hidden">
-                          <Image
-                            src={ingredient.imageUrl}
-                            alt={ingredient.name}
-                            fill
-                            className="object-cover"
-                            sizes="64px"
-                          />
-                        </div>
+                    <TableCell className='py-4'>
+                      <div className='relative border border-gray-200 rounded-lg w-18 h-18 overflow-hidden'>
+                        <Image
+                          src={ingredient.imageUrl}
+                          alt={ingredient.name}
+                          fill
+                          className='object-cover'
+                        />
                       </div>
                     </TableCell>
 
                     {/* Name */}
-                    <TableCell className="py-4">
-                      <span className="font-semibold text-gray-900">
+                    <TableCell className='py-4'>
+                      <span className='font-semibold text-gray-900'>
                         {ingredient.name}
                       </span>
                     </TableCell>
 
                     {/* Price */}
-                    <TableCell className="py-4 text-center">
-                      <div className="inline-flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
-                        <span className="font-semibold text-green-700">
+                    <TableCell className='py-4 text-center'>
+                      <div className='inline-flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full'>
+                        <span className='font-semibold text-green-700'>
                           {ingredient.price.toLocaleString('ru-RU')}
                         </span>
-                        <span className="text-green-600 text-sm">сум</span>
+                        <span className='text-green-600 text-sm'>₽</span>
                       </div>
                     </TableCell>
 
                     {/* Created Date */}
-                    <TableCell className="py-4 text-gray-600 text-center">
+                    <TableCell className='py-4 text-gray-600 text-center'>
                       {new Date(ingredient.createdAt).toLocaleDateString(
                         'ru-RU',
                         {
@@ -151,22 +155,22 @@ export function IngredientsTable() {
                     </TableCell>
 
                     {/* Actions */}
-                    <TableCell className="space-x-2 text-right">
+                    <TableCell className='space-x-2 text-right'>
                       <Button
-                        className="cursor-pointer"
-                        variant="outline"
-                        size="sm"
+                        className='cursor-pointer'
+                        variant='outline'
+                        size='sm'
                         onClick={() => handleEdit(ingredient)}
                       >
-                        <Edit className="w-4 h-4" />
+                        <Edit className='w-4 h-4' />
                       </Button>
                       <Button
-                        className="cursor-pointer"
-                        variant="destructive"
-                        size="sm"
+                        className='cursor-pointer'
+                        variant='destructive'
+                        size='sm'
                         onClick={() => setDeleteId(ingredient.id)}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className='w-4 h-4' />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -188,8 +192,8 @@ export function IngredientsTable() {
         onClose={() => setDeleteId(null)}
         onConfirm={handleDelete}
         isDeleting={isDeleting}
-        title="Удалить ингредиент"
-        description="Вы уверены, что хотите удалить этот ингредиент? Это действие нельзя отменить."
+        title='Удалить ингредиент'
+        description='Вы уверены, что хотите удалить этот ингредиент? Это действие нельзя отменить.'
       />
     </div>
   );

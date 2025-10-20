@@ -78,7 +78,7 @@ export const deleteIngredient = async (id: string) => {
 export const uploadImage = async (formData: FormData) => {
   const { data } = (
     await axiosInstance.post<ApiResponse<{ imageUrl: string }>>(
-      '/api/upload',
+      `${ApiRoutes.ADMIN}/upload`,
       formData,
       {
         headers: {

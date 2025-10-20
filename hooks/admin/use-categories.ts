@@ -46,7 +46,6 @@ export function useUpdateCategory() {
     },
 
     onError: (error: AxiosError<ApiResponse<null>>) => {
-      console.log(error);
       if (error.response?.status === 409) {
         return toast.error(
           error.response.data.message ||
