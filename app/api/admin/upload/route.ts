@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile } from 'fs/promises';
+import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from '@/lib';
+import { existsSync } from 'fs';
 
 export async function POST(req: NextRequest) {
   try {
@@ -45,6 +46,12 @@ export async function POST(req: NextRequest) {
       'uploads',
       'ingredients'
     );
+
+    // Create directory if it doesn't exist
+    if (!existsSync(uploadDir)) {
+      await mkdir(uploadDir, { recursive: true });
+    }
+
     const filepath = path.join(uploadDir, filename);
 
     // Save file

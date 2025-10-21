@@ -107,15 +107,15 @@ export function IngredientsTable() {
                     className='hover:bg-gray-50 transition-colors'
                   >
                     {/* Number */}
-                    <TableCell className='py-4'>
+                    <TableCell className='py-2'>
                       <div className='flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white'>
                         {index + 1}
                       </div>
                     </TableCell>
 
                     {/* Image */}
-                    <TableCell className='py-4'>
-                      <div className='relative border border-gray-200 rounded-lg w-18 h-18 overflow-hidden'>
+                    <TableCell className='py-2'>
+                      <div className='relative border border-gray-200 rounded-lg w-12 h-12 overflow-hidden'>
                         <Image
                           src={ingredient.imageUrl}
                           alt={ingredient.name}
@@ -126,14 +126,14 @@ export function IngredientsTable() {
                     </TableCell>
 
                     {/* Name */}
-                    <TableCell className='py-4'>
+                    <TableCell className='py-2'>
                       <span className='font-semibold text-gray-900'>
                         {ingredient.name}
                       </span>
                     </TableCell>
 
                     {/* Price */}
-                    <TableCell className='py-4 text-center'>
+                    <TableCell className='py-2 text-center'>
                       <div className='inline-flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full'>
                         <span className='font-semibold text-green-700'>
                           {ingredient.price.toLocaleString('ru-RU')}
@@ -143,7 +143,7 @@ export function IngredientsTable() {
                     </TableCell>
 
                     {/* Created Date */}
-                    <TableCell className='py-4 text-gray-600 text-center'>
+                    <TableCell className='py-2 text-gray-600 text-center'>
                       {new Date(ingredient.createdAt).toLocaleDateString(
                         'ru-RU',
                         {

@@ -12,8 +12,8 @@ export const ingredientSchema = z.object({
     .positive('Цена должна быть больше 0')
     .max(10000, 'Цена не должна превышать 10,000')
     .refine((val) => {
-      // Ensure it has at most 2 decimal places
-      return Number.isInteger(val * 100);
+      const decimalPlaces = (val.toString().split('.')[1] || '').length;
+      return decimalPlaces <= 2;
     }, 'Цена должна иметь максимум 2 знака после запятой'),
 
   imageUrl: z

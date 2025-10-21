@@ -124,6 +124,18 @@ model Category {
   @@map("categories")
 }
 
+model PizzaSize {
+  id    String @id @default(uuid())
+  name  String
+  value Int
+}
+
+model PizzaType {
+  id    String @id @default(uuid())
+  name  String
+  value Int
+}
+
 model Ingredient {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())

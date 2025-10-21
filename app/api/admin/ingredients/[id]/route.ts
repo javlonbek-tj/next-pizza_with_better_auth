@@ -1,4 +1,5 @@
 import { ingredientSchema } from '@/components/admin';
+import { deleteImageFile } from '@/lib/admin';
 import prisma from '@/prisma/prisma-client';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -20,6 +21,17 @@ export async function PUT(
 
     const { name, price, imageUrl } = validationResult.data;
 
+    const currentIngredient = await prisma.ingredient.findUnique({
+      where: { id },
+    });
+
+    if (!currentIngredient) {
+      return NextResponse.json(
+        { success: false, message: 'Ингредиент не найден' },
+        { status: 404 }
+      );
+    }
+
     const existingIngredient = await prisma.ingredient.findFirst({
       where: {
         name,
@@ -35,6 +47,11 @@ export async function PUT(
         },
         { status: 409 }
       );
+    }
+
+    // Delete old image if it changed
+    if (currentIngredient.imageUrl !== imageUrl) {
+      await deleteImageFile(currentIngredient.imageUrl);
     }
 
     const ingredient = await prisma.ingredient.update({
@@ -59,9 +76,23 @@ export async function DELETE(
   try {
     const { id } = await params;
 
+    const ingredient = await prisma.ingredient.findUnique({
+      where: { id },
+    });
+
+    if (!ingredient) {
+      return NextResponse.json(
+        { success: false, message: 'Ингредиент не найден' },
+        { status: 404 }
+      );
+    }
+
     await prisma.ingredient.delete({
       where: { id },
     });
+
+    // Delete image file
+    await deleteImageFile(ingredient.imageUrl);
 
     return NextResponse.json({ success: true, data: null });
   } catch (error) {
