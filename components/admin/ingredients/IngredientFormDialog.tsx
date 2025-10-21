@@ -42,6 +42,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
   const isEditing = !!ingredient;
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
+  const [priceInput, setPriceInput] = useState<string>('');
 
   const { mutate: createIngredient, isPending: isCreating } =
     useCreateIngredient();
@@ -66,6 +67,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         price: ingredient.price,
         imageUrl: ingredient.imageUrl,
       });
+      setPriceInput(ingredient.price.toString());
       setPreviewUrl(ingredient.imageUrl);
     } else {
       form.reset({
@@ -73,6 +75,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         price: 0,
         imageUrl: '',
       });
+      setPriceInput('');
       setPreviewUrl('');
     }
   }, [ingredient, form, open]);
@@ -110,7 +113,6 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
       form.setValue('imageUrl', result.imageUrl, { shouldValidate: true });
       setPreviewUrl(result.imageUrl);
     } catch (error) {
-      // TODO REMOVE IN PRODUCTION
       console.error('Upload error:', error);
       toast.error('Не удалось загрузить изображение');
     } finally {
@@ -131,6 +133,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
           onSuccess: () => {
             onClose();
             form.reset();
+            setPriceInput('');
             setPreviewUrl('');
           },
         }
@@ -140,6 +143,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         onSuccess: () => {
           onClose();
           form.reset();
+          setPriceInput('');
           setPreviewUrl('');
         },
       });
@@ -148,7 +152,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-[500px]'>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать ингредиент' : 'Создать ингредиент'}
@@ -156,59 +160,59 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Image Upload */}
             <FormField
               control={form.control}
-              name='imageUrl'
+              name="imageUrl"
               render={() => (
                 <FormItem>
                   <FormLabel>Изображение</FormLabel>
                   <FormControl>
-                    <div className='space-y-4'>
+                    <div className="space-y-4">
                       {previewUrl ? (
-                        <div className='group relative border rounded-lg w-full h-48 overflow-hidden'>
+                        <div className="group relative border rounded-lg w-full h-48 overflow-hidden">
                           <Image
                             src={previewUrl}
-                            alt='Preview'
+                            alt="Preview"
                             fill
-                            className='object-cover'
+                            className="object-cover"
                           />
                           <button
-                            type='button'
+                            type="button"
                             onClick={handleRemoveImage}
-                            className='cursor-pointer top-2 right-2 absolute bg-red-500 opacity-0 group-hover:opacity-100 p-2 rounded-full text-white transition-opacity'
+                            className="top-2 right-2 absolute bg-red-500 opacity-0 group-hover:opacity-100 p-2 rounded-full text-white transition-opacity cursor-pointer"
                           >
-                            <X className='w-4 h-4' />
+                            <X className="w-4 h-4" />
                           </button>
                         </div>
                       ) : (
-                        <label className='flex flex-col justify-center items-center border-2 border-gray-300 hover:border-primary border-dashed rounded-lg w-full h-48 transition-colors cursor-pointer'>
-                          <div className='flex flex-col justify-center items-center pt-5 pb-6'>
-                            <Upload className='mb-3 w-10 h-10 text-gray-400' />
-                            <p className='text-gray-600 text-sm'>
-                              <span className='font-semibold'>
+                        <label className="flex flex-col justify-center items-center border-2 border-gray-300 hover:border-primary border-dashed rounded-lg w-full h-48 transition-colors cursor-pointer">
+                          <div className="flex flex-col justify-center items-center pt-5 pb-6">
+                            <Upload className="mb-3 w-10 h-10 text-gray-400" />
+                            <p className="text-gray-600 text-sm">
+                              <span className="font-semibold">
                                 Нажмите для загрузки
                               </span>{' '}
                               или перетащите
                             </p>
-                            <p className='mt-1 text-gray-500 text-xs'>
+                            <p className="mt-1 text-gray-500 text-xs">
                               PNG, JPG, WebP (макс. 5MB)
                             </p>
                           </div>
                           <input
-                            type='file'
-                            className='hidden'
-                            accept='image/png,image/jpeg,image/jpg,image/webp'
+                            type="file"
+                            className="hidden"
+                            accept="image/png,image/jpeg,image/jpg,image/webp"
                             onChange={handleImageUpload}
                             disabled={isUploading}
                           />
                         </label>
                       )}
                       {isUploading && (
-                        <div className='flex justify-center items-center'>
-                          <Loader2 className='w-6 h-6 animate-spin' />
-                          <span className='ml-2 text-gray-600 text-sm'>
+                        <div className="flex justify-center items-center">
+                          <Loader2 className="w-6 h-6 animate-spin" />
+                          <span className="ml-2 text-gray-600 text-sm">
                             Загрузка...
                           </span>
                         </div>
@@ -223,12 +227,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Name Field */}
             <FormField
               control={form.control}
-              name='name'
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название (на русском)</FormLabel>
                   <FormControl>
-                    <Input placeholder='Например: Сыр моцарелла' {...field} />
+                    <Input placeholder="Например: Сыр моцарелла" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -238,39 +242,50 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Price Field */}
             <FormField
               control={form.control}
-              name='price'
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Цена</FormLabel>
                   <FormControl>
                     <Input
-                      type='text'
-                      placeholder='5000'
-                      value={field.value === 0 ? '' : field.value}
+                      type="text"
+                      placeholder="5000.00"
+                      value={priceInput}
                       onChange={(e) => {
                         const value = e.target.value;
 
-                        // Allow empty string or valid numbers
+                        // Allow empty string
                         if (value === '') {
+                          setPriceInput('');
                           field.onChange(0);
                           return;
                         }
 
-                        // Only allow digits and decimal point
-                        if (!/^\d*\.?\d*$/.test(value)) {
+                        // Allow only valid number format with max 2 decimals
+                        if (!/^\d*\.?\d{0,2}$/.test(value)) {
                           return;
                         }
 
-                        // Convert to number
-                        const numValue = parseFloat(value);
+                        // Update local state (keep string with decimal point)
+                        setPriceInput(value);
 
-                        // Update field with number or 0 if invalid
+                        // Update form state with number (for validation)
+                        const numValue = parseFloat(value);
                         field.onChange(isNaN(numValue) ? 0 : numValue);
                       }}
                       onBlur={() => {
-                        // Ensure we have a valid number on blur
-                        if (field.value === 0 || !field.value) {
+                        // Format to 2 decimal places on blur
+                        if (priceInput === '' || priceInput === '.') {
+                          setPriceInput('');
                           field.onChange(0);
+                          return;
+                        }
+
+                        const numValue = parseFloat(priceInput);
+                        if (!isNaN(numValue)) {
+                          const formatted = numValue.toFixed(2);
+                          setPriceInput(formatted);
+                          field.onChange(parseFloat(formatted));
                         }
                       }}
                     />
@@ -281,22 +296,22 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             />
 
             {/* Actions */}
-            <div className='flex justify-end gap-2 pt-4'>
+            <div className="flex justify-end gap-2 pt-4">
               <Button
-                type='button'
-                variant='outline'
+                type="button"
+                variant="outline"
                 onClick={onClose}
                 disabled={isPending || isUploading}
-                className='cursor-pointer'
+                className="cursor-pointer"
               >
                 Отмена
               </Button>
               <Button
-                type='submit'
+                type="submit"
                 disabled={isPending || isUploading}
-                className='cursor-pointer'
+                className="cursor-pointer"
               >
-                {isPending && <Loader2 className='mr-2 w-4 h-4 animate-spin' />}
+                {isPending && <Loader2 className="mr-2 w-4 h-4 animate-spin" />}
                 {isEditing ? 'Изменить' : 'Создать'}
               </Button>
             </div>

@@ -9,8 +9,12 @@ export const ingredientSchema = z.object({
 
   price: z
     .number('Цена должна быть числом')
-    .min(1, 'Цена должна быть больше 0')
-    .max(10000, 'Цена не должна превышать 10,000'),
+    .positive('Цена должна быть больше 0')
+    .max(10000, 'Цена не должна превышать 10,000')
+    .refine((val) => {
+      // Ensure it has at most 2 decimal places
+      return Number.isInteger(val * 100);
+    }, 'Цена должна иметь максимум 2 знака после запятой'),
 
   imageUrl: z
     .string()
