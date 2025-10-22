@@ -13,6 +13,7 @@ export const categorySchema = z.object({
     )
     .transform((val) => val.toLowerCase())
     .transform((val) => val.charAt(0).toUpperCase() + val.slice(1)),
+
   slug: z
     .string()
     .trim()

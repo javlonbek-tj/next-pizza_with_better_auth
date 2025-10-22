@@ -20,6 +20,7 @@ export const queryKeys = {
   ingredients: ['ingredients'] as const,
   categories: ['categories'] as const,
   ['pizza-sizes']: ['pizza-sizes'] as const,
+  ['pizza-types']: ['pizza-types'] as const,
 };
 
 // ==============================

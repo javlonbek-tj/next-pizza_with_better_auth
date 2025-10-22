@@ -16,7 +16,8 @@ const navItems = [
   { href: '/admin/products', label: 'Товары', icon: Package },
   { href: '/admin/categories', label: 'Категории', icon: FolderTree },
   { href: '/admin/ingredients', label: 'Ингредиенты', icon: FolderTree },
-  { href: '/admin/variants', label: 'Вариации', icon: Settings },
+  { href: '/admin/pizza-sizes', label: 'Размеры', icon: Settings },
+  { href: '/admin/pizza-types', label: 'Типы пиццы', icon: Settings },
   { href: '/admin/orders', label: 'Заказы', icon: ShoppingCart },
 ];
 

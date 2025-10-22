@@ -143,8 +143,7 @@ model PizzaType {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  label       String
-  type        Int
+  type        String
   ProductItem ProductItem[]
 }
 
