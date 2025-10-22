@@ -2,8 +2,13 @@ import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { ApiResponse } from './api-response';
 import { Category, Ingredient } from '@/lib/generated/prisma';
-import { CategoryFormValues, IngredientFormValues } from '@/components/admin';
+import {
+  CategoryFormValues,
+  IngredientFormValues,
+  PizzaSizeFormValues,
+} from '@/components/admin';
 import { CategoryWithProductCount } from '@/prisma/@types/prisma';
+import { PizzaSize } from '@/lib';
 
 export const getCategories = async () => {
   const { data } = (
@@ -88,4 +93,43 @@ export const uploadImage = async (formData: FormData) => {
     )
   ).data;
   return data;
+};
+
+export const getPizzaSizes = async () => {
+  const { data } = (
+    await axiosInstance.get<ApiResponse<PizzaSize[]>>(
+      `${ApiRoutes.ADMIN}/pizza-sizes`
+    )
+  ).data;
+
+  return data;
+};
+
+// ✅ Create pizza size
+export const createPizzaSize = async (dto: PizzaSizeFormValues) => {
+  const { data } = (
+    await axiosInstance.post<ApiResponse<PizzaSize>>(
+      `${ApiRoutes.ADMIN}/pizza-sizes`,
+      dto
+    )
+  ).data;
+
+  return data;
+};
+
+// ✅ Update pizza size
+export const updatePizzaSize = async (id: string, dto: PizzaSizeFormValues) => {
+  const { data } = (
+    await axiosInstance.put<ApiResponse<PizzaSize>>(
+      `${ApiRoutes.ADMIN}/pizza-sizes/${id}`,
+      dto
+    )
+  ).data;
+
+  return data;
+};
+
+// ✅ Delete pizza size
+export const deletePizzaSize = (id: string) => {
+  return axiosInstance.delete(`${ApiRoutes.ADMIN}/pizza-sizes/${id}`);
 };

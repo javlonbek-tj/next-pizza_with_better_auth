@@ -126,14 +126,14 @@ model Category {
 
 model PizzaSize {
   id    String @id @default(uuid())
-  name  String
-  value Int
+  size Int
+  label  String
 }
 
 model PizzaType {
   id    String @id @default(uuid())
-  name  String
-  value Int
+  label  String
+  type Int
 }
 
 model Ingredient {

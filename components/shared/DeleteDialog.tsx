@@ -10,6 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Loader2 } from 'lucide-react';
 
 interface Props {
   open: boolean;
@@ -40,7 +41,9 @@ export function DeleteDialog({
             variant="outline"
             onClick={onClose}
             disabled={isDeleting}
-            className="cursor-pointer"
+            className={`cursor-pointer min-w-[90px] transition-colors ${
+              isDeleting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-muted'
+            }`}
           >
             Отмена
           </Button>
@@ -48,9 +51,13 @@ export function DeleteDialog({
             variant="destructive"
             onClick={onConfirm}
             disabled={isDeleting}
-            className="cursor-pointer"
+            className="min-w-[100px] cursor-pointer"
           >
-            {isDeleting ? 'Удаление...' : 'Удалить'}
+            {isDeleting ? (
+              <Loader2 className="mx-auto w-4 h-4 animate-spin" />
+            ) : (
+              'Удалить'
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>

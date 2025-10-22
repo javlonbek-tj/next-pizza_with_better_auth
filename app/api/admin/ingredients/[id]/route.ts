@@ -1,7 +1,7 @@
 import { ingredientSchema } from '@/components/admin';
-import { deleteImageFile } from '@/lib/admin';
 import prisma from '@/prisma/prisma-client';
 import { NextRequest, NextResponse } from 'next/server';
+import { deleteImageFile } from '@/app/actions';
 
 export async function PUT(
   req: NextRequest,

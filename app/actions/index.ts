@@ -1,3 +1,4 @@
+export { deleteImageFile } from './delete-image-file';
 export { registerAction } from './register-action';
 export { loginAction } from './login-action';
 export { verifyEmailAction } from './verify-email-action';
