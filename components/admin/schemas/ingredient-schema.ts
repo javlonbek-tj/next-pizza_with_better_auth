@@ -12,10 +12,12 @@ export const ingredientSchema = z.object({
     .number('Цена должна быть числом')
     .positive('Цена должна быть больше 0')
     .max(10000, 'Цена не должна превышать 10,000')
-    .refine((val) => {
-      const decimalPlaces = (val.toString().split('.')[1] || '').length;
-      return decimalPlaces <= 2;
-    }, 'Цена должна иметь максимум 2 знака после запятой'),
+    .refine(
+      (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
+      {
+        message: 'Цена должна иметь максимум 2 знака после запятой',
+      }
+    ),
 
   imageUrl: z
     .string()

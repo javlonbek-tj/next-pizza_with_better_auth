@@ -19,8 +19,9 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { DeleteDialog } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import { PizzaSize } from '@/lib/generated/prisma';
+import { PizzaSizeFormDialog } from './PizzaSizeFormDialog';
 
-export function PizzaSizesTable() {
+export function PizzaSizeTable() {
   const [editingSize, setEditingSize] = useState<PizzaSize | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -106,11 +107,11 @@ export function PizzaSizesTable() {
                     </TableCell>
                     <TableCell className="py-4">
                       <span className="font-semibold text-gray-900">
-                        {size.name}
+                        {size.label}
                       </span>
                     </TableCell>
                     <TableCell className="py-4 text-gray-700 text-center">
-                      {size.value}
+                      {size.size}
                     </TableCell>
                     <TableCell className="py-4 text-gray-600 text-center">
                       {new Date(size.createdAt).toLocaleDateString('ru-RU', {
@@ -148,7 +149,7 @@ export function PizzaSizesTable() {
       <PizzaSizeFormDialog
         open={isFormOpen}
         onClose={handleCloseForm}
-        size={editingSize}
+        pizzaSize={editingSize}
       />
 
       <DeleteDialog

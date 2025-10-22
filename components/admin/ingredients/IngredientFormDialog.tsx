@@ -190,7 +190,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className='sm:max-w-[500px]'>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать ингредиент' : 'Создать ингредиент'}
@@ -198,35 +198,35 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Image Upload */}
             <FormField
               control={form.control}
-              name="imageUrl"
+              name='imageUrl'
               render={() => (
                 <FormItem>
                   <FormLabel>Изображение</FormLabel>
                   <FormControl>
-                    <div className="space-y-4">
+                    <div className='space-y-4'>
                       {previewUrl ? (
-                        <div className="group relative flex justify-center items-center bg-gray-50 border rounded-lg w-full h-48 overflow-hidden">
+                        <div className='group relative flex justify-center items-center bg-gray-50 border rounded-lg w-full h-48 overflow-hidden'>
                           <Image
                             src={previewUrl}
-                            alt="Preview"
+                            alt='Preview'
                             fill
-                            className="object-contain"
+                            className='object-contain'
                           />
                           <button
-                            type="button"
+                            type='button'
                             onClick={handleRemoveImage}
-                            className="top-2 right-2 absolute bg-red-500 opacity-0 group-hover:opacity-100 p-2 rounded-full text-white transition-opacity cursor-pointer"
+                            className='top-2 right-2 absolute bg-red-500 opacity-0 group-hover:opacity-100 p-2 rounded-full text-white transition-opacity cursor-pointer'
                           >
-                            <X className="w-4 h-4" />
+                            <X className='w-4 h-4' />
                           </button>
                         </div>
                       ) : (
                         <label
-                          className="flex flex-col justify-center items-center border-2 border-gray-300 hover:border-primary border-dashed rounded-lg w-full h-48 transition-colors cursor-pointer"
+                          className='flex flex-col justify-center items-center border-2 border-gray-300 hover:border-primary border-dashed rounded-lg w-full h-48 transition-colors cursor-pointer'
                           onDragOver={(e) => {
                             e.preventDefault(); // Prevent default to allow drop
                             e.currentTarget.classList.add('border-primary'); // Optional: Add visual feedback
@@ -291,31 +291,31 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
                             }
                           }}
                         >
-                          <div className="flex flex-col justify-center items-center pt-5 pb-6">
-                            <Upload className="mb-3 w-10 h-10 text-gray-400" />
-                            <p className="text-gray-600 text-sm">
-                              <span className="font-semibold">
+                          <div className='flex flex-col justify-center items-center pt-5 pb-6'>
+                            <Upload className='mb-3 w-10 h-10 text-gray-400' />
+                            <p className='text-gray-600 text-sm'>
+                              <span className='font-semibold'>
                                 Нажмите для загрузки
                               </span>{' '}
                               или перетащите
                             </p>
-                            <p className="mt-1 text-gray-500 text-xs">
+                            <p className='mt-1 text-gray-500 text-xs'>
                               PNG, JPG, WebP (макс. 5MB)
                             </p>
                           </div>
                           <input
-                            type="file"
-                            className="hidden"
-                            accept="image/png,image/jpeg,image/jpg,image/webp"
+                            type='file'
+                            className='hidden'
+                            accept='image/png,image/jpeg,image/jpg,image/webp'
                             onChange={handleImageUpload}
                             disabled={isUploading}
                           />
                         </label>
                       )}
                       {isUploading && (
-                        <div className="flex justify-center items-center">
-                          <Loader2 className="w-6 h-6 animate-spin" />
-                          <span className="ml-2 text-gray-600 text-sm">
+                        <div className='flex justify-center items-center'>
+                          <Loader2 className='w-6 h-6 animate-spin' />
+                          <span className='ml-2 text-gray-600 text-sm'>
                             Загрузка...
                           </span>
                         </div>
@@ -330,12 +330,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Name Field */}
             <FormField
               control={form.control}
-              name="name"
+              name='name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название (на русском)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Например: Сыр моцарелла" {...field} />
+                    <Input placeholder='Например: Сыр моцарелла' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -345,14 +345,17 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Price Field */}
             <FormField
               control={form.control}
-              name="price"
+              name='price'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Цена</FormLabel>
                   <FormControl>
                     <Input
-                      type="text"
-                      placeholder="5000.00"
+                      type='text'
+                      inputMode='decimal'
+                      autoComplete='off'
+                      pattern='[0-9]*[.,]?[0-9]{0.2}'
+                      placeholder='5000.00'
                       value={priceInput}
                       onChange={(e) => {
                         const value = e.target.value;
@@ -402,10 +405,10 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             />
 
             {/* Actions */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className='flex justify-end gap-2 pt-4'>
               <Button
-                type="button"
-                variant="outline"
+                type='button'
+                variant='outline'
                 onClick={() => handleClose(false)}
                 disabled={isPending || isUploading}
                 className={`cursor-pointer min-w-[90px] transition-colors ${
@@ -418,12 +421,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
               </Button>
 
               <Button
-                type="submit"
+                type='submit'
                 disabled={isPending || isUploading}
-                className="min-w-[110px] cursor-pointer"
+                className='min-w-[110px] cursor-pointer'
               >
                 {isPending ? (
-                  <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                  <Loader2 className='mr-2 w-4 h-4 animate-spin' />
                 ) : (
                   <>{isEditing ? 'Изменить' : 'Создать'}</>
                 )}

@@ -1,14 +1,14 @@
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { ApiResponse } from './api-response';
-import { Category, Ingredient } from '@/lib/generated/prisma';
+import { Category, Ingredient, PizzaSize } from '@/lib/generated/prisma';
 import {
   CategoryFormValues,
   IngredientFormValues,
   PizzaSizeFormValues,
 } from '@/components/admin';
 import { CategoryWithProductCount } from '@/prisma/@types/prisma';
-import { PizzaSize } from '@/lib';
+
 
 export const getCategories = async () => {
   const { data } = (
@@ -105,7 +105,6 @@ export const getPizzaSizes = async () => {
   return data;
 };
 
-// ✅ Create pizza size
 export const createPizzaSize = async (dto: PizzaSizeFormValues) => {
   const { data } = (
     await axiosInstance.post<ApiResponse<PizzaSize>>(

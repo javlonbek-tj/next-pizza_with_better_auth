@@ -6,7 +6,6 @@ import { Api } from '@/services/api-client';
 import { ApiResponse } from '@/services/api-response';
 import { PizzaSizeFormValues } from '@/components/admin';
 
-// ✅ Get all pizza sizes
 export function useGetPizzaSizes() {
   return useQuery({
     queryKey: queryKeys['pizza-sizes'],
@@ -14,7 +13,6 @@ export function useGetPizzaSizes() {
   });
 }
 
-// ✅ Create a new pizza size
 export function useCreatePizzaSize() {
   const queryClient = useQueryClient();
 
@@ -36,7 +34,6 @@ export function useCreatePizzaSize() {
   });
 }
 
-// ✅ Update existing pizza size
 export function useUpdatePizzaSize() {
   const queryClient = useQueryClient();
 
@@ -58,8 +55,6 @@ export function useUpdatePizzaSize() {
     },
   });
 }
-
-// ✅ Delete pizza size
 export function useDeletePizzaSize() {
   const queryClient = useQueryClient();
 

@@ -98,9 +98,13 @@ model ProductItem {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  price     Float
-  size      Int?
-  pizzaType Int?
+  price Float
+
+  sizeId String?
+  size   PizzaSize? @relation(fields: [sizeId], references: [id], onDelete: SetNull)
+
+  typeId String?
+  type   PizzaType? @relation(fields: [typeId], references: [id], onDelete: SetNull)
 
   cartItems CartItem[]
 
@@ -125,15 +129,23 @@ model Category {
 }
 
 model PizzaSize {
-  id    String @id @default(uuid())
-  size Int
-  label  String
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  size        Int
+  label       String
+  ProductItem ProductItem[]
 }
 
 model PizzaType {
-  id    String @id @default(uuid())
-  label  String
-  type Int
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  label       String
+  type        Int
+  ProductItem ProductItem[]
 }
 
 model Ingredient {

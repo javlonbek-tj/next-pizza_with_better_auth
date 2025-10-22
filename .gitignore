@@ -43,3 +43,6 @@ next-env.d.ts
 generated/prisma
 
 /lib/generated/prisma
+
+# Ignore uploaded images
+/public/uploads
