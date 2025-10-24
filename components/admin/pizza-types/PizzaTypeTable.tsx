@@ -83,9 +83,6 @@ export function PizzaTypeTable() {
                     Название
                   </TableHead>
                   <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
-                    Диаметр (см)
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
                     Дата создания
                   </TableHead>
                   <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
@@ -109,9 +106,6 @@ export function PizzaTypeTable() {
                       <span className="font-semibold text-gray-900">
                         {type.type}
                       </span>
-                    </TableCell>
-                    <TableCell className="py-4 text-gray-700 text-center">
-                      {type.type}
                     </TableCell>
                     <TableCell className="py-4 text-gray-600 text-center">
                       {new Date(type.createdAt).toLocaleDateString('ru-RU', {

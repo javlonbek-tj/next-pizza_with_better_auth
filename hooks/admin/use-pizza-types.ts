@@ -8,7 +8,7 @@ import { PizzaTypeFormValues } from '@/components/admin';
 
 export function useGetPizzaTypes() {
   return useQuery({
-    queryKey: queryKeys['pizza-sizes'],
+    queryKey: queryKeys['pizza-types'],
     queryFn: Api.admin.getPizzaTypes,
   });
 }

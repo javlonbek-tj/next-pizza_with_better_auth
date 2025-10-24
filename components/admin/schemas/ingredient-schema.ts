@@ -6,7 +6,9 @@ export const ingredientSchema = z.object({
     .trim()
     .min(1, 'Введите название ингредиента')
     .min(2, 'Название должно содержать не менее 2 символов')
-    .max(50, 'Название не должно превышать 50 символов'),
+    .max(50, 'Название не должно превышать 50 символов')
+    .transform((val) => val.toLowerCase())
+    .transform((val) => val.charAt(0).toUpperCase() + val.slice(1)),
 
   price: z
     .number('Цена должна быть числом')

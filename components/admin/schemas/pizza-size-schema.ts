@@ -5,7 +5,9 @@ export const pizzaSizeSchema = z.object({
     .string()
     .trim()
     .min(1, 'Введите название размера')
-    .max(50, 'Название не должно превышать 50 символов'),
+    .max(50, 'Название не должно превышать 50 символов')
+    .transform((val) => val.toLowerCase())
+    .transform((val) => val.charAt(0).toUpperCase() + val.slice(1)),
 
   size: z
     .number('Размер должна быть числом')

@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
 
     const existingType = await prisma.pizzaType.findFirst({
       where: {
-        type,
+        type: { equals: type, mode: 'insensitive' },
       },
     });
 

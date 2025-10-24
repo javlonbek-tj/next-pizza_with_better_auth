@@ -12,7 +12,7 @@ export async function PUT(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     } */
 
-    const { id } = params;
+    const { id } = await params;
     const body = await req.json();
 
     const validationResult = pizzaTypeSchema.safeParse({ body });
@@ -29,10 +29,12 @@ export async function PUT(
     // Check for duplicates (excluding current ID)
     const existingType = await prisma.pizzaType.findFirst({
       where: {
-        type,
+        type: { equals: type, mode: 'insensitive' },
         NOT: { id },
       },
     });
+
+    console.log('existingType', existingType);
 
     if (existingType) {
       return NextResponse.json(
