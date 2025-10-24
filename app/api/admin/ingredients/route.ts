@@ -1,6 +1,7 @@
-import { ingredientSchema } from '@/components/admin';
 import prisma from '@/prisma/prisma-client';
 import { NextRequest, NextResponse } from 'next/server';
+
+import { ingredientSchema } from '@/components';
 
 export async function GET() {
   try {

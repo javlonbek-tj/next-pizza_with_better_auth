@@ -1,4 +1,3 @@
-// app/admin/page.tsx
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default async function AdminDashboard() {

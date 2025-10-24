@@ -1,8 +1,8 @@
 'use server';
 
-import { auth } from '@/lib';
 import { APIError } from 'better-auth';
 import { headers } from 'next/headers';
+import { auth } from '@/lib';
 
 export async function signoutAction() {
   try {

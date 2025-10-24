@@ -6,3 +6,6 @@ export * from './form';
 export * from './header';
 export * from './modals';
 export * from './product';
+export * from './profile';
+export * from './shared';
+export * from './skeletons';

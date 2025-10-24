@@ -1,9 +1,14 @@
 import { Suspense } from 'react';
 
-import { Filters } from '@/components/filters/Filters';
-import { ProductsContent } from '@/components/product';
-import { Container, Title, TopBarContent } from '@/components/shared';
-import { CategoriesSkeleton, ProductsSkeleton } from '@/components/skeletons';
+import {
+  Filters,
+  ProductsContent,
+  Container,
+  Title,
+  TopBarContent,
+  CategoriesSkeleton,
+  ProductsSkeleton,
+} from '@/components';
 import { GetSearchParams } from '@/lib/product/find-pizzas';
 
 export default async function Home({

@@ -1,8 +1,7 @@
 import { notFound } from 'next/navigation';
-
 import prisma from '@/prisma/prisma-client';
-import { ProductForm } from '@/components/product';
-import { Container } from '@/components/shared';
+
+import { ProductForm, Container } from '@/components';
 
 export default async function ProductPage({
   params,

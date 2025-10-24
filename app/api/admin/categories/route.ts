@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-
 import prisma from '@/prisma/prisma-client';
-import { categorySchema } from '@/components/admin';
+
+import { categorySchema } from '@/components';
 
 export async function GET(req: NextRequest) {
   try {
