@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 
-import { HomeHeader } from '@/components';
+import { HomeHeader } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Главная',

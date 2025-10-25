@@ -1,7 +1,15 @@
-// components/admin/categories/CategoriesTable.tsx
 'use client';
 
-import { useState } from 'react';
+import { Edit, Trash2 } from 'lucide-react';
+
+import { CategoryWithProductCount } from '@/prisma/@types/prisma';
+import { CategoryFormDialog } from './CategoryFormDialog';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AddButton, DeleteDialog } from '@/components/shared';
+import { Category } from '@/lib/generated/prisma';
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   useDeleteCategory,
   useGetCategories,
@@ -14,21 +22,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Edit, Trash2, Plus } from 'lucide-react';
-import { CategoryFormDialog } from './CategoryFormDialog';
-
-import { Skeleton } from '@/components/ui/skeleton';
-import { DeleteDialog } from '@/components/shared';
-import { Category } from '@/lib/generated/prisma';
-import { CategoryWithProductCount } from '@/prisma/@types/prisma';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { useTableActions } from '@/hooks';
 
 export function CategoriesTable() {
-  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
-  const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
+  const {
+    editingItem: editingCategory,
+    deleteId,
+    isFormOpen,
+    handleEdit,
+    handleCreate,
+    handleCloseForm,
+    handleOpenDelete,
+    handleCloseDelete,
+  } = useTableActions<Category>();
 
   const { data: categories, isPending } = useGetCategories();
   const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
@@ -36,45 +42,33 @@ export function CategoriesTable() {
   const handleDelete = () => {
     if (deleteId) {
       deleteCategory(deleteId, {
-        onSuccess: () => setDeleteId(null),
+        onSuccess: handleCloseDelete,
       });
     }
   };
 
-  const handleEdit = (category: Category) => {
-    setEditingCategory(category);
-    setIsFormOpen(true);
-  };
-
-  const handleCloseForm = () => {
-    setIsFormOpen(false);
-    setEditingCategory(null);
-  };
-
-  if (isPending) {
-    return (
-      <div className='space-y-4'>
-        {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className='w-full h-16' />
-        ))}
-      </div>
-    );
-  }
-
   return (
     <div className='space-y-4'>
       <div className='flex justify-end'>
-        <Button onClick={() => setIsFormOpen(true)} className='cursor-pointer'>
-          <Plus className='mr-2 w-4 h-4' />
-          Добавить категорию
-        </Button>
+        <AddButton onClick={handleCreate} text='категория' />
       </div>
 
-      {!categories?.length ? (
+      {isPending ? (
+        // 1️⃣ Loading
+        <Card className='shadow-md border border-gray-200 rounded-xl'>
+          <CardContent className='p-6 space-y-4'>
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className='w-full h-16' />
+            ))}
+          </CardContent>
+        </Card>
+      ) : !categories?.length ? (
+        // 2️⃣ No data
         <div className='mt-10 text-muted-foreground text-2xl text-center'>
-          Категории не найдены
+          Категории не найдены
         </div>
       ) : (
+        // 3️⃣ Data loaded
         <Card className='shadow-md border border-gray-200 rounded-xl overflow-x-auto'>
           <CardContent className='p-6'>
             <Table>
@@ -161,7 +155,7 @@ export function CategoriesTable() {
                           className='cursor-pointer'
                           variant='destructive'
                           size='sm'
-                          onClick={() => setDeleteId(category.id)}
+                          onClick={() => handleOpenDelete(category.id)}
                           disabled={category._count?.products > 0}
                         >
                           <Trash2 className='w-4 h-4' />
@@ -184,7 +178,7 @@ export function CategoriesTable() {
 
       <DeleteDialog
         open={!!deleteId}
-        onClose={() => setDeleteId(null)}
+        onClose={handleCloseDelete}
         onConfirm={handleDelete}
         isDeleting={isDeleting}
         title='Удалить категорию'

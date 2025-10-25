@@ -1,4 +1,4 @@
-import { IngredientsTable } from '@/components';
+import { IngredientsTable } from '@/components/admin';
 
 export default function CategoriesPage() {
   return (

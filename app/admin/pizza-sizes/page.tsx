@@ -1,4 +1,4 @@
-import { PizzaSizeTable } from '@/components';
+import { PizzaSizeTable } from '@/components/admin';
 
 export default function CategoriesPage() {
   return (

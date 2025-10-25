@@ -1,4 +1,4 @@
-import { CategoriesTable } from '@/components';
+import { CategoriesTable } from '@/components/admin';
 
 export default function CategoriesPage() {
   return (

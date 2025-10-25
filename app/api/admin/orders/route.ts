@@ -1,4 +1,3 @@
-// app/api/admin/orders/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/prisma/prisma-client';
 

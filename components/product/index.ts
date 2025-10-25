@@ -7,4 +7,5 @@ export { PizzaImage } from './PizzaImage';
 export { ProductCard } from './ProductCard';
 export { ProductForm } from './ProductForm';
 export { ProductGroupList } from './ProductGroupList';
+export { ProductNotFound } from './ProductNotFound';
 export { ProductsContent } from './ProductsContent';

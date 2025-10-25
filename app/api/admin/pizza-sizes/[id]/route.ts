@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/prisma/prisma-client';
+
 import { pizzaSizeSchema } from '@/components/admin';
 
-// ✅ PUT — update pizza size
 export async function PUT(
   req: NextRequest,
   { params }: { params: { id: string } }
@@ -64,7 +64,6 @@ export async function PUT(
   }
 }
 
-// ✅ DELETE — remove pizza size
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }

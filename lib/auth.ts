@@ -1,8 +1,9 @@
-import { sendOTPEmail } from '@/app/actions/send-email-action';
-import prisma from '@/prisma/prisma-client';
 import { betterAuth } from 'better-auth';
-import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { nextCookies } from 'better-auth/next-js';
+import { prismaAdapter } from 'better-auth/adapters/prisma';
+
+import prisma from '@/prisma/prisma-client';
+import { sendOTPEmail } from '@/app/actions/send-email-action';
 import { emailOTP } from 'better-auth/plugins';
 
 export const auth = betterAuth({

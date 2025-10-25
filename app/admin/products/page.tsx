@@ -1,7 +1,6 @@
 import { Plus } from 'lucide-react';
 import Link from 'next/link';
 
-import { ProductsTable } from '@/components';
 import { Button } from '@/components/ui/button';
 
 export default function ProductsPage() {
@@ -16,7 +15,7 @@ export default function ProductsPage() {
           </Link>
         </Button>
       </div>
-      <ProductsTable />
+      {/* <ProductsTable /> */}
     </div>
   );
 }

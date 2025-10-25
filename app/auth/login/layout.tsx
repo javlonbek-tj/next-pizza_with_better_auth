@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { ArrowLeft } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { SimpleHeader } from '@/components/header/simple-header';
+import { SimpleHeader } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Логин',

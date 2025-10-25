@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from '@/prisma/prisma-client';
-import { pizzaSizeSchema } from '@/components/admin/schemas/pizza-size-schema';
 
-// ✅ GET — fetch all pizza sizes
+import { pizzaSizeSchema } from '@/components/admin';
+
 export async function GET(req: NextRequest) {
   try {
     /* const session = await auth();
@@ -24,7 +24,6 @@ export async function GET(req: NextRequest) {
   }
 }
 
-// ✅ POST — create a new pizza size
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();

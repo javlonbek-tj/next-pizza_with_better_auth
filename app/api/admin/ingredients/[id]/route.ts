@@ -2,7 +2,7 @@ import prisma from '@/prisma/prisma-client';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { deleteImageFile } from '@/app/actions';
-import { ingredientSchema } from '@/components';
+import { ingredientSchema } from '@/components/admin';
 
 export async function PUT(
   req: NextRequest,

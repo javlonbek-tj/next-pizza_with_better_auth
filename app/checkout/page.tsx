@@ -3,12 +3,11 @@
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Riple } from 'react-loading-indicators';
 
+import { useCart } from '@/hooks';
 import { checkoutSchema, CheckoutValues } from '@/components/checkout';
 import { CheckoutDetails, CheckoutTotal } from '@/components/checkout';
 import { BackButton, Container, Title } from '@/components/shared';
-import { useCart } from '@/hooks';
 import { cn } from '@/lib';
 import { useCheckoutState } from '@/store/checkout-state';
 
@@ -40,7 +39,7 @@ export default function CheckoutPage() {
       <Container className='mt-10 pb-10'>
         <Title text='Оформление заказа' size='md' className='mb-2 font-bold' />
         <div className='mt-10 text-center'>
-          <Riple color='#32cd32' size='large' />
+          <div className='w-7 h-7 border-[3px] border-secondary border-t-primary rounded-full animate-spin' />
         </div>
       </Container>
     );
