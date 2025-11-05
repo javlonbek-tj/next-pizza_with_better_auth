@@ -13,7 +13,6 @@ export function useGetPizzaTypes() {
   });
 }
 
-// ✅ Create Pizza Type
 export function useCreatePizzaType() {
   const queryClient = useQueryClient();
 
@@ -35,7 +34,6 @@ export function useCreatePizzaType() {
   });
 }
 
-// ✅ Update Pizza Type
 export function useUpdatePizzaType() {
   const queryClient = useQueryClient();
 
@@ -58,7 +56,6 @@ export function useUpdatePizzaType() {
   });
 }
 
-// ✅ Delete Pizza Type
 export function useDeletePizzaType() {
   const queryClient = useQueryClient();
 

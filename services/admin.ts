@@ -13,7 +13,11 @@ import {
   PizzaSizeFormValues,
   PizzaTypeFormValues,
 } from '@/components/admin';
-import { CategoryWithProductCount } from '@/prisma/@types/prisma';
+import {
+  CategoryWithProductCount,
+  PizzaSizeWithProductCount,
+  PizzaTypeWithProductCount,
+} from '@/prisma/@types/prisma';
 
 export const getCategories = async () => {
   const { data } = (
@@ -102,7 +106,7 @@ export const uploadImage = async (formData: FormData) => {
 
 export const getPizzaSizes = async () => {
   const { data } = (
-    await axiosInstance.get<ApiResponse<PizzaSize[]>>(
+    await axiosInstance.get<ApiResponse<PizzaSizeWithProductCount[]>>(
       `${ApiRoutes.ADMIN}/pizza-sizes`
     )
   ).data;
@@ -121,7 +125,6 @@ export const createPizzaSize = async (dto: PizzaSizeFormValues) => {
   return data;
 };
 
-// ✅ Update pizza size
 export const updatePizzaSize = async (id: string, dto: PizzaSizeFormValues) => {
   const { data } = (
     await axiosInstance.put<ApiResponse<PizzaSize>>(
@@ -133,15 +136,13 @@ export const updatePizzaSize = async (id: string, dto: PizzaSizeFormValues) => {
   return data;
 };
 
-// ✅ Delete pizza size
 export const deletePizzaSize = (id: string) => {
   return axiosInstance.delete(`${ApiRoutes.ADMIN}/pizza-sizes/${id}`);
 };
 
-// ✅ Get all pizza types
 export const getPizzaTypes = async () => {
   const { data } = (
-    await axiosInstance.get<ApiResponse<PizzaType[]>>(
+    await axiosInstance.get<ApiResponse<PizzaTypeWithProductCount[]>>(
       `${ApiRoutes.ADMIN}/pizza-types`
     )
   ).data;
@@ -149,7 +150,6 @@ export const getPizzaTypes = async () => {
   return data;
 };
 
-// ✅ Create new pizza type
 export const createPizzaType = async (dto: PizzaTypeFormValues) => {
   const { data } = (
     await axiosInstance.post<ApiResponse<PizzaType>>(
@@ -161,7 +161,6 @@ export const createPizzaType = async (dto: PizzaTypeFormValues) => {
   return data;
 };
 
-// ✅ Update existing pizza type
 export const updatePizzaType = async (id: string, dto: PizzaTypeFormValues) => {
   const { data } = (
     await axiosInstance.put<ApiResponse<PizzaType>>(
@@ -173,7 +172,6 @@ export const updatePizzaType = async (id: string, dto: PizzaTypeFormValues) => {
   return data;
 };
 
-// ✅ Delete pizza type
 export const deletePizzaType = (id: string) => {
   return axiosInstance.delete(`${ApiRoutes.ADMIN}/pizza-types/${id}`);
 };

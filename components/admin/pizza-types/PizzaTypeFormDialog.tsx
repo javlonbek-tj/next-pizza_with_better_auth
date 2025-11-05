@@ -89,7 +89,7 @@ export function PizzaTypeFormDialog({ open, onClose, pizzaType }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className='sm:max-w-[400px]'>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать размер пиццы' : 'Создать размер пиццы'}
@@ -97,19 +97,19 @@ export function PizzaTypeFormDialog({ open, onClose, pizzaType }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Name Field */}
             <FormField
               control={form.control}
-              name="type"
+              name='type'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Например: Тонкое, Традиционное"
+                      placeholder='Например: Тонкое, Традиционное'
                       {...field}
-                      autoComplete="off"
+                      autoComplete='off'
                     />
                   </FormControl>
                   <FormMessage />
@@ -118,20 +118,20 @@ export function PizzaTypeFormDialog({ open, onClose, pizzaType }: Props) {
             />
 
             {/* Actions */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className='flex justify-end gap-2 pt-4'>
               <Button
-                type="button"
-                variant="outline"
+                type='button'
+                variant='outline'
                 onClick={onClose}
                 disabled={isPending}
-                className="cursor-pointer"
+                className='cursor-pointer'
               >
                 Отмена
               </Button>
               <Button
-                type="submit"
+                type='submit'
                 disabled={isPending}
-                className="cursor-pointer"
+                className='cursor-pointer'
               >
                 {isEditing ? 'Изменить' : 'Создать'}
               </Button>

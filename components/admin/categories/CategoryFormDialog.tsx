@@ -1,13 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-
 import { Category } from '@/lib/generated/prisma';
-import { CategoryFormValues, categorySchema } from '../schemas';
-import { generateSlug } from '@/lib';
-import { useCreateCategory, useUpdateCategory } from '@/hooks/admin';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
@@ -24,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import { useCategoryForm } from '@/hooks';
 
 interface Props {
   open: boolean;
@@ -32,65 +26,14 @@ interface Props {
 }
 
 export function CategoryFormDialog({ open, onClose, category }: Props) {
-  const isEditing = !!category;
-
-  const { mutate: createCategory, isPending: isCreating } = useCreateCategory();
-  const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory();
-  const isPending = isCreating || isUpdating;
-
-  const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(categorySchema),
-    defaultValues: {
-      name: '',
-      slug: '',
-    },
-  });
-
-  useEffect(() => {
-    if (category) {
-      form.reset({
-        name: category.name,
-        slug: category.slug,
-      });
-    } else {
-      form.reset({
-        name: '',
-        slug: '',
-      });
-    }
-  }, [category, form, open]);
-
-  const handleNameChange = (value: string) => {
-    form.setValue('name', value);
-
-    const generatedSlug = generateSlug(value);
-    form.setValue('slug', generatedSlug, { shouldValidate: true });
-  };
-
-  const handleSlugChange = (value: string) => {
-    form.setValue('slug', value);
-  };
-
-  const onSubmit = (data: CategoryFormValues) => {
-    if (isEditing) {
-      updateCategory(
-        { id: category.id, dto: data },
-        {
-          onSuccess: () => {
-            onClose();
-            form.reset();
-          },
-        }
-      );
-    } else {
-      createCategory(data, {
-        onSuccess: () => {
-          onClose();
-          form.reset();
-        },
-      });
-    }
-  };
+  const {
+    form,
+    isEditing,
+    isPending,
+    handleNameChange,
+    handleSlugChange,
+    onSubmit,
+  } = useCategoryForm(category, open, onClose);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

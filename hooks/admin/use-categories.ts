@@ -1,8 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
-import { CategoryFormValues } from '@/components/admin';
-import { queryKeys } from '@/lib';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Category } from '@/lib/generated/prisma';
+import { CategoryFormValues, categorySchema } from '@/components/admin';
+import { generateSlug, queryKeys } from '@/lib';
 import { Api } from '@/services/api-client';
 import { ApiResponse } from '@/services/api-response';
 
@@ -70,4 +74,85 @@ export function useDeleteCategory() {
       toast.error('Не удалось удалить категорию');
     },
   });
+}
+
+/**
+ * Hook to manage category form state and submission
+ */
+export function useCategoryForm(
+  category: Category | null | undefined,
+  open: boolean,
+  onClose: () => void
+) {
+  const isEditing = !!category;
+
+  const { mutate: createCategory, isPending: isCreating } = useCreateCategory();
+  const { mutate: updateCategory, isPending: isUpdating } = useUpdateCategory();
+  const isPending = isCreating || isUpdating;
+
+  const form = useForm<CategoryFormValues>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: '',
+      slug: '',
+    },
+  });
+
+  useEffect(() => {
+    if (category) {
+      form.reset({
+        name: category.name,
+        slug: category.slug,
+      });
+    } else {
+      form.reset({
+        name: '',
+        slug: '',
+      });
+    }
+  }, [category, form, open]);
+
+  const handleNameChange = (value: string) => {
+    form.setValue('name', value);
+
+    // Auto-generate slug only when creating new category
+    if (!isEditing) {
+      const generatedSlug = generateSlug(value);
+      form.setValue('slug', generatedSlug, { shouldValidate: true });
+    }
+  };
+
+  const handleSlugChange = (value: string) => {
+    form.setValue('slug', value);
+  };
+
+  const onSubmit = (data: CategoryFormValues) => {
+    if (isEditing) {
+      updateCategory(
+        { id: category.id, dto: data },
+        {
+          onSuccess: () => {
+            onClose();
+            form.reset();
+          },
+        }
+      );
+    } else {
+      createCategory(data, {
+        onSuccess: () => {
+          onClose();
+          form.reset();
+        },
+      });
+    }
+  };
+
+  return {
+    form,
+    isEditing,
+    isPending,
+    handleNameChange,
+    handleSlugChange,
+    onSubmit,
+  };
 }

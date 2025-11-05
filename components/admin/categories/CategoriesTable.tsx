@@ -54,7 +54,6 @@ export function CategoriesTable() {
       </div>
 
       {isPending ? (
-        // 1️⃣ Loading
         <Card className='shadow-md border border-gray-200 rounded-xl'>
           <CardContent className='p-6 space-y-4'>
             {[...Array(5)].map((_, i) => (
@@ -63,12 +62,10 @@ export function CategoriesTable() {
           </CardContent>
         </Card>
       ) : !categories?.length ? (
-        // 2️⃣ No data
         <div className='mt-10 text-muted-foreground text-2xl text-center'>
           Категории не найдены
         </div>
       ) : (
-        // 3️⃣ Data loaded
         <Card className='shadow-md border border-gray-200 rounded-xl overflow-x-auto'>
           <CardContent className='p-6'>
             <Table>

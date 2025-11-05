@@ -1,8 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
   DialogContent,
@@ -19,13 +16,8 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-import {
-  useCreatePizzaSize,
-  useUpdatePizzaSize,
-} from '@/hooks/admin/use-pizza-sizes';
 import { PizzaSize } from '@/lib/generated/prisma';
-import { PizzaSizeFormValues, pizzaSizeSchema } from '../schemas';
+import { usePizzaSizeForm, useSizeInput } from '@/hooks';
 
 interface Props {
   open: boolean;
@@ -34,65 +26,20 @@ interface Props {
 }
 
 export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
-  const [sizeInput, setSizeInput] = useState('');
-  const isEditing = !!pizzaSize;
+  const { form, isEditing, isPending, onSubmit } = usePizzaSizeForm(
+    pizzaSize,
+    open,
+    onClose
+  );
 
-  const { mutate: createPizzaSize, isPending: isCreating } =
-    useCreatePizzaSize();
-  const { mutate: updatePizzaSize, isPending: isUpdating } =
-    useUpdatePizzaSize();
-  const isPending = isCreating || isUpdating;
-
-  const form = useForm<PizzaSizeFormValues>({
-    resolver: zodResolver(pizzaSizeSchema),
-    defaultValues: {
-      size: 0,
-      label: '',
-    },
-  });
-
-  useEffect(() => {
-    if (pizzaSize) {
-      form.reset({
-        size: pizzaSize.size,
-        label: pizzaSize.label,
-      });
-      setSizeInput(pizzaSize.size.toString());
-    } else {
-      form.reset({
-        size: 0,
-        label: '',
-      });
-      setSizeInput('');
-    }
-  }, [pizzaSize, form, open]);
-
-  const onSubmit = (data: PizzaSizeFormValues) => {
-    if (isEditing) {
-      updatePizzaSize(
-        { id: pizzaSize.id, dto: data },
-        {
-          onSuccess: () => {
-            onClose();
-            form.reset();
-            setSizeInput('');
-          },
-        }
-      );
-    } else {
-      createPizzaSize(data, {
-        onSuccess: () => {
-          onClose();
-          form.reset();
-          setSizeInput('');
-        },
-      });
-    }
-  };
+  const { sizeInput, handleSizeChange, handleSizeBlur } = useSizeInput(
+    pizzaSize,
+    open
+  );
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className='sm:max-w-[400px]'>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать размер пиццы' : 'Создать размер пиццы'}
@@ -100,19 +47,19 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            {/* Name Field */}
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+            {/* Label Field */}
             <FormField
               control={form.control}
-              name="label"
+              name='label'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Например: Маленькая, Средняя, Большая"
+                      placeholder='Например: Маленькая, Средняя, Большая'
                       {...field}
-                      autoComplete="off"
+                      autoComplete='off'
                     />
                   </FormControl>
                   <FormMessage />
@@ -120,55 +67,25 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
               )}
             />
 
-            {/* Value Field */}
+            {/* Size Field */}
             <FormField
               control={form.control}
-              name="size"
+              name='size'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Значение (см)</FormLabel>
                   <FormControl>
                     <Input
-                      type="text"
-                      inputMode="numeric"
-                      autoComplete="off"
-                      pattern="[0-9]*"
-                      placeholder="Например: 25"
+                      type='text'
+                      inputMode='numeric'
+                      autoComplete='off'
+                      pattern='[0-9]*'
+                      placeholder='Например: 25'
                       value={sizeInput}
-                      onChange={(e) => {
-                        const value = e.target.value;
-
-                        // Allow empty input
-                        if (value === '') {
-                          setSizeInput('');
-                          field.onChange(0);
-                          return;
-                        }
-
-                        // Allow only digits (no decimals, no negatives)
-                        if (!/^\d+$/.test(value)) {
-                          return;
-                        }
-
-                        setSizeInput(value);
-
-                        // Parse to number for Zod validation
-                        const numValue = parseInt(value, 10);
-                        field.onChange(isNaN(numValue) ? 0 : numValue);
-                      }}
-                      onBlur={() => {
-                        // If left empty, normalize to 0
-                        if (sizeInput === '') {
-                          field.onChange(0);
-                          return;
-                        }
-
-                        const numValue = parseInt(sizeInput, 10);
-                        if (!isNaN(numValue)) {
-                          setSizeInput(numValue.toString());
-                          field.onChange(numValue);
-                        }
-                      }}
+                      onChange={(e) =>
+                        handleSizeChange(e.target.value, field.onChange)
+                      }
+                      onBlur={() => handleSizeBlur(field.onChange)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -177,20 +94,20 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
             />
 
             {/* Actions */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className='flex justify-end gap-2 pt-4'>
               <Button
-                type="button"
-                variant="outline"
+                type='button'
+                variant='outline'
                 onClick={onClose}
                 disabled={isPending}
-                className="cursor-pointer"
+                className='cursor-pointer'
               >
                 Отмена
               </Button>
               <Button
-                type="submit"
+                type='submit'
                 disabled={isPending}
-                className="cursor-pointer"
+                className='cursor-pointer'
               >
                 {isEditing ? 'Изменить' : 'Создать'}
               </Button>
