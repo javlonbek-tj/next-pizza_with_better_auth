@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const pizzaSizes = await prisma.pizzaSize.findMany({
       include: {
         _count: {
-          select: { ProductItem: true },
+          select: { productItems: true },
         },
       },
       orderBy: { size: 'asc' },

@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
     const pizzaTypes = await prisma.pizzaType.findMany({
       include: {
         _count: {
-          select: { ProductItem: true },
+          select: { productItems: true },
         },
       },
       orderBy: { createdAt: 'asc' },

@@ -135,7 +135,7 @@ model PizzaSize {
 
   size        Int
   label       String
-  ProductItem ProductItem[]
+  productItems ProductItem[]
 }
 
 model PizzaType {
@@ -144,7 +144,7 @@ model PizzaType {
   updatedAt DateTime @updatedAt
 
   type        String
-  ProductItem ProductItem[]
+  productItems ProductItem[]
 }
 
 model Ingredient {

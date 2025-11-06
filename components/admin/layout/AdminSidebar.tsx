@@ -25,11 +25,11 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="bg-white border-r w-64">
-      <div className="p-6">
-        <h2 className="font-bold text-gray-800 text-2xl">Админ-панель</h2>
+    <aside className='bg-white border-r w-64'>
+      <div className='p-6'>
+        <h2 className='font-bold text-gray-800 text-2xl'>Админ-панель</h2>
       </div>
-      <nav className="space-y-2 px-4">
+      <nav className='space-y-2 px-4'>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -47,8 +47,8 @@ export function AdminSidebar() {
                   : 'hover:bg-gray-100'
               )}
             >
-              <Icon className="w-5 h-5" />
-              <span className="font-medium">{item.label}</span>
+              <Icon className='w-5 h-5' />
+              <span className='font-medium'>{item.label}</span>
             </Link>
           );
         })}

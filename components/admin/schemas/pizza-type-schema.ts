@@ -5,7 +5,7 @@ export const pizzaTypeSchema = z.object({
     .string()
     .trim()
     .min(1, 'Введите название типа пиццы')
-    .max(50, 'Название не должно превышать 50 символов')
+    .max(200, 'Название не должно превышать 200 символов')
     .transform((val) => val.toLowerCase())
     .transform((val) => val.charAt(0).toUpperCase() + val.slice(1)),
 });

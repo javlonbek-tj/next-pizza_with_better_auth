@@ -21,6 +21,8 @@ export const queryKeys = {
   categories: ['categories'] as const,
   ['pizza-sizes']: ['pizza-sizes'] as const,
   ['pizza-types']: ['pizza-types'] as const,
+  products: ['products'] as const,
+  product: (id: string) => ['product', id] as const,
 };
 
 // ==============================

@@ -9,11 +9,7 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { deleteImageFile } from '@/app/actions';
-import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from '@/lib';
-
-const queryKeys = {
-  ingredients: ['ingredients'],
-};
+import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE, queryKeys } from '@/lib';
 
 export function useGetIngredients() {
   return useQuery({
@@ -173,73 +169,6 @@ export function useIngredientForm(
     isEditing,
     isPending,
     onSubmit,
-  };
-}
-
-/**
- * Hook to manage price input formatting
- */
-export function usePriceInput(
-  ingredient: Ingredient | null | undefined,
-  open: boolean
-) {
-  const [priceInput, setPriceInput] = useState<string>('');
-
-  useEffect(() => {
-    if (ingredient) {
-      setPriceInput(ingredient.price.toString());
-    } else {
-      setPriceInput('');
-    }
-  }, [ingredient, open]);
-
-  const handlePriceChange = (
-    value: string,
-    onChange: (value: number) => void
-  ) => {
-    // Allow empty string
-    if (value === '') {
-      setPriceInput('');
-      onChange(0);
-      return;
-    }
-
-    // Allow only valid number format with max 2 decimals
-    if (!/^\d*\.?\d{0,2}$/.test(value)) {
-      return;
-    }
-
-    // Update local state (keep string with decimal point)
-    setPriceInput(value);
-
-    // Update form state with number (for validation)
-    const numValue = parseFloat(value);
-    onChange(isNaN(numValue) ? 0 : numValue);
-  };
-
-  const handlePriceBlur = (onChange: (value: number) => void) => {
-    // Format on blur only if there's content
-    if (priceInput === '' || priceInput === '.') {
-      setPriceInput('');
-      onChange(0);
-      return;
-    }
-
-    const numValue = parseFloat(priceInput);
-    if (!isNaN(numValue)) {
-      // Only format to 2 decimals if the input had a decimal point
-      const formatted = priceInput.includes('.')
-        ? numValue.toFixed(2)
-        : numValue.toString();
-      setPriceInput(formatted);
-      onChange(parseFloat(formatted));
-    }
-  };
-
-  return {
-    priceInput,
-    handlePriceChange,
-    handlePriceBlur,
   };
 }
 

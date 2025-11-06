@@ -10,6 +10,7 @@ import { ProductItem } from '@/lib/generated/prisma/client';
 export type ProductWithRelations = Product & {
   productItems: ProductItem[];
   ingredients: Ingredient[];
+  category: Category;
 };
 
 export type CategoryWithProductCount = Category & {

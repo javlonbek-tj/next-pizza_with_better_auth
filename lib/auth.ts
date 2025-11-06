@@ -44,3 +44,5 @@ export const auth = betterAuth({
 });
 
 export type ErrorCodes = typeof auth.$ERROR_CODES | 'UNKNOWN';
+
+export type Session = typeof auth.$Infer.Session;

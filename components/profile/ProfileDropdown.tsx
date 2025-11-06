@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, Settings, User, Loader2 } from 'lucide-react';
+import { LogOut, Settings, User, Loader2, Shield } from 'lucide-react';
 import { Button } from '../ui/button';
 import { signoutAction } from '@/app/actions/signout-action';
 import { cn } from '@/lib/utils';
@@ -70,6 +70,12 @@ export function ProfileDropdown({ user }: Props) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
+        <DropdownMenuItem
+          disabled={isLoggingOut}
+          onClick={() => router.push('/admin')}
+        >
+          <Shield className='w-4 h-4' /> Admin
+        </DropdownMenuItem>
         <DropdownMenuItem disabled={isLoggingOut}>
           <User className='w-4 h-4' /> Profile
         </DropdownMenuItem>

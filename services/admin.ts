@@ -17,7 +17,9 @@ import {
   CategoryWithProductCount,
   PizzaSizeWithProductCount,
   PizzaTypeWithProductCount,
+  ProductWithRelations,
 } from '@/prisma/@types/prisma';
+import { ProductFormValues } from '@/components/admin/schemas/product-schema';
 
 export const getCategories = async () => {
   const { data } = (
@@ -174,4 +176,25 @@ export const updatePizzaType = async (id: string, dto: PizzaTypeFormValues) => {
 
 export const deletePizzaType = (id: string) => {
   return axiosInstance.delete(`${ApiRoutes.ADMIN}/pizza-types/${id}`);
+};
+
+export const getProducts = async () => {
+  const { data } = (
+    await axiosInstance.get<ApiResponse<ProductWithRelations[]>>(
+      `${ApiRoutes.ADMIN}/products`
+    )
+  ).data;
+
+  return data;
+};
+
+export const createProduct = async (dto: ProductFormValues) => {
+  const { data } = (
+    await axiosInstance.post<ApiResponse<ProductWithRelations>>(
+      `${ApiRoutes.ADMIN}/products`,
+      dto
+    )
+  ).data;
+
+  return data;
 };
