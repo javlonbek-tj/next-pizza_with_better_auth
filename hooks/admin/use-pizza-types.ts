@@ -1,10 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import toast from 'react-hot-toast';
+import { useEffect } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { PizzaType } from '@/lib/generated/prisma';
 import { queryKeys } from '@/lib';
 import { Api } from '@/services/api-client';
 import { ApiResponse } from '@/services/api-response';
-import { PizzaTypeFormValues } from '@/components/admin';
+import { PizzaTypeFormValues, pizzaTypeSchema } from '@/components/admin';
 
 export function useGetPizzaTypes() {
   return useQuery({
@@ -69,4 +73,68 @@ export function useDeletePizzaType() {
       toast.error('Не удалось удалить тип пиццы');
     },
   });
+}
+
+/**
+ * Hook to manage pizza type form state and submission
+ */
+export function usePizzaTypeForm(
+  pizzaType: PizzaType | null | undefined,
+  open: boolean,
+  onClose: () => void
+) {
+  const isEditing = !!pizzaType;
+
+  const { mutate: createPizzaType, isPending: isCreating } =
+    useCreatePizzaType();
+  const { mutate: updatePizzaType, isPending: isUpdating } =
+    useUpdatePizzaType();
+  const isPending = isCreating || isUpdating;
+
+  const form = useForm<PizzaTypeFormValues>({
+    resolver: zodResolver(pizzaTypeSchema),
+    defaultValues: {
+      type: '',
+    },
+  });
+
+  useEffect(() => {
+    if (pizzaType) {
+      form.reset({
+        type: pizzaType.type,
+      });
+    } else {
+      form.reset({
+        type: '',
+      });
+    }
+  }, [pizzaType, form, open]);
+
+  const onSubmit = (data: PizzaTypeFormValues) => {
+    if (isEditing) {
+      updatePizzaType(
+        { id: pizzaType.id, dto: data },
+        {
+          onSuccess: () => {
+            onClose();
+            form.reset();
+          },
+        }
+      );
+    } else {
+      createPizzaType(data, {
+        onSuccess: () => {
+          onClose();
+          form.reset();
+        },
+      });
+    }
+  };
+
+  return {
+    form,
+    isEditing,
+    isPending,
+    onSubmit,
+  };
 }

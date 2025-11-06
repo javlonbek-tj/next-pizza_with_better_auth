@@ -73,7 +73,7 @@ export async function DELETE(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     } */
 
-    const { id } = params;
+    const { id } = await params;
 
     // Optional: check if pizzaSize is used in any ProductItem, if relevant in your schema
     // const usageCount = await prisma.productItem.count({

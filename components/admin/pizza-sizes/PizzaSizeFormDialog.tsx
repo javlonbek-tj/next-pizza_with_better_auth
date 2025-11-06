@@ -15,9 +15,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { PizzaSize } from '@/lib/generated/prisma';
 import { usePizzaSizeForm, useSizeInput } from '@/hooks';
+import { FormActions } from '@/components/shared/FormActions';
 
 interface Props {
   open: boolean;
@@ -39,7 +39,7 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-[400px]'>
+      <DialogContent className="sm:max-w-[400px]">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать размер пиццы' : 'Создать размер пиццы'}
@@ -47,19 +47,19 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Label Field */}
             <FormField
               control={form.control}
-              name='label'
+              name="label"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='Например: Маленькая, Средняя, Большая'
+                      placeholder="Например: Маленькая, Средняя, Большая"
                       {...field}
-                      autoComplete='off'
+                      autoComplete="off"
                     />
                   </FormControl>
                   <FormMessage />
@@ -70,17 +70,17 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
             {/* Size Field */}
             <FormField
               control={form.control}
-              name='size'
+              name="size"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Значение (см)</FormLabel>
                   <FormControl>
                     <Input
-                      type='text'
-                      inputMode='numeric'
-                      autoComplete='off'
-                      pattern='[0-9]*'
-                      placeholder='Например: 25'
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      pattern="[0-9]*"
+                      placeholder="Например: 25"
                       value={sizeInput}
                       onChange={(e) =>
                         handleSizeChange(e.target.value, field.onChange)
@@ -94,23 +94,12 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
             />
 
             {/* Actions */}
-            <div className='flex justify-end gap-2 pt-4'>
-              <Button
-                type='button'
-                variant='outline'
-                onClick={onClose}
-                disabled={isPending}
-                className='cursor-pointer'
-              >
-                Отмена
-              </Button>
-              <Button
-                type='submit'
-                disabled={isPending}
-                className='cursor-pointer'
-              >
-                {isEditing ? 'Изменить' : 'Создать'}
-              </Button>
+            <div className="flex justify-end gap-2 pt-4">
+              <FormActions
+                onCancel={onClose}
+                isEditing={isEditing}
+                isPending={isPending}
+              />
             </div>
           </form>
         </Form>
