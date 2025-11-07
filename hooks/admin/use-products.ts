@@ -1,10 +1,11 @@
 // hooks/admin/use-products.ts
 import { useEffect, useState, useMemo } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ProductFormValues,
-  productSchema,
+  ProductItemFormValues,
+  createProductSchema,
 } from '@/components/admin/schemas/product-schema';
 import { queryKeys } from '@/lib';
 import { Api } from '@/services/api-client';
@@ -14,7 +15,6 @@ import { deleteImageFile } from '@/app/actions';
 import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from '@/lib';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { useUploadImage } from './use-ingredients';
-import { ProductItem } from '@/lib/generated/prisma';
 import { useGetCategories } from '@/hooks';
 
 export function useGetProducts() {
@@ -39,25 +39,26 @@ export function useCreateProduct() {
   });
 }
 
+/**
+ * Hook to manage product form state and submission
+ */
 export function useProductForm(
   product: ProductWithRelations | null | undefined,
   open: boolean,
   onClose: () => void
 ) {
   const isEditing = !!product;
-
   const { mutate: createProduct, isPending: isCreating } = useCreateProduct();
   const { data: categories } = useGetCategories();
   const isPending = isCreating;
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(createProductSchema(false)),
     defaultValues: {
       name: '',
       imageUrl: '',
       categoryId: '',
       ingredientIds: [],
-      productType: 'regular',
       productItems: [
         {
           price: 0,
@@ -68,9 +69,8 @@ export function useProductForm(
     },
   });
 
-  // Watch the selected category
+  // Watch the selected category to determine if it's pizza
   const selectedCategoryId = form.watch('categoryId');
-
   const isPizzaCategory = useMemo(() => {
     if (!selectedCategoryId || !categories) return false;
     const selectedCategory = categories.find(
@@ -79,53 +79,19 @@ export function useProductForm(
     return selectedCategory?.name.toLowerCase() === 'пиццы';
   }, [selectedCategoryId, categories]);
 
-  // Update productType when category changes
-  useEffect(() => {
-    const currentProductType = form.getValues('productType');
-    const newProductType = isPizzaCategory ? 'pizza' : 'regular';
-
-    if (currentProductType !== newProductType) {
-      form.setValue('productType', newProductType);
-
-      // Reset product items when switching types
-      if (newProductType === 'pizza') {
-        form.setValue('productItems', [
-          {
-            price: 0,
-            sizeId: '',
-            typeId: '',
-          },
-        ]);
-      } else {
-        form.setValue('productItems', [
-          {
-            price: 0,
-            sizeId: null,
-            typeId: null,
-          },
-        ]);
-      }
-    }
-  }, [isPizzaCategory, form]);
-
   useEffect(() => {
     if (product) {
-      const isPizza =
-        categories
-          ?.find((c) => c.id === product.categoryId)
-          ?.name.toLowerCase() === 'пиццы';
-
       form.reset({
         name: product.name,
         imageUrl: product.imageUrl,
-        categoryId: product.categoryId || '',
+        categoryId: product.categoryId ?? '',
         ingredientIds: product.ingredients?.map((ing) => ing.id) || [],
-        productType: isPizza ? 'pizza' : 'regular',
         productItems:
           product.productItems?.map((item) => ({
+            id: item.id,
             price: item.price,
-            sizeId: item.sizeId || (isPizza ? '' : null),
-            typeId: item.typeId || (isPizza ? '' : null),
+            sizeId: item.sizeId || null,
+            typeId: item.typeId || null,
           })) || [],
       });
     } else {
@@ -134,7 +100,6 @@ export function useProductForm(
         imageUrl: '',
         categoryId: '',
         ingredientIds: [],
-        productType: 'regular',
         productItems: [
           {
             price: 0,
@@ -144,31 +109,59 @@ export function useProductForm(
         ],
       });
     }
-  }, [product, form, open, categories]);
+  }, [product, form, open]);
 
   const onSubmit = async (data: ProductFormValues, onSuccess?: () => void) => {
-    console.log('Submitting:', data);
-    console.log('Form errors:', form.formState.errors);
+    // Validate with the correct schema based on current category
+    const schema = createProductSchema(isPizzaCategory);
+    const validation = schema.safeParse(data);
 
-    // Transform data for API
-    const transformedData = {
-      ...data,
-      productItems: data.productItems.map((item) => ({
-        price:
-          typeof item.price === 'string' ? parseFloat(item.price) : item.price,
-        sizeId: item.sizeId || null,
-        typeId: item.typeId || null,
-      })),
+    if (!validation.success) {
+      toast.error('Пожалуйста, исправьте ошибки в форме');
+      return;
+    }
+
+    // Transform data to ensure proper types and handle edge cases
+    const transformedData: ProductFormValues = {
+      name: data.name.trim(),
+      imageUrl: data.imageUrl.trim(),
+      categoryId: data.categoryId ?? '',
+      ingredientIds: data.ingredientIds,
+      productItems: data.productItems.map((item) => {
+        // Ensure price is a number
+        const price =
+          typeof item.price === 'string' ? parseFloat(item.price) : item.price;
+
+        // Validate price is a valid number
+        if (isNaN(price)) {
+          throw new Error('Некорректная цена');
+        }
+
+        return {
+          ...(item.id ? { id: item.id } : {}),
+          price,
+          sizeId: !item.sizeId || item.sizeId === 'none' ? null : item.sizeId,
+          typeId: !item.typeId || item.typeId === 'none' ? null : item.typeId,
+        };
+      }),
     };
 
-    createProduct(transformedData as any, {
+    createProduct(transformedData, {
       onSuccess: () => {
+        toast.success(
+          isEditing ? 'Продукт успешно обновлен' : 'Продукт успешно создан'
+        );
         onSuccess?.();
         onClose();
         form.reset();
       },
       onError: (error) => {
-        console.error('Create product error:', error);
+        console.error('Product operation error:', error);
+        toast.error(
+          isEditing
+            ? 'Ошибка при обновлении продукта'
+            : 'Ошибка при создании продукта'
+        );
       },
     });
   };
@@ -188,7 +181,7 @@ export function useProductForm(
 export function useProductImageUpload(
   product: ProductWithRelations | null | undefined,
   open: boolean,
-  form: any
+  form: UseFormReturn<ProductFormValues>
 ) {
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
@@ -308,7 +301,7 @@ export function useProductImageUpload(
 /**
  * Hook to manage product items (variations)
  */
-export function useProductItems(form: any) {
+export function useProductItems(form: UseFormReturn<ProductFormValues>) {
   const productItems = form.watch('productItems') || [];
 
   const addProductItem = () => {
@@ -327,13 +320,15 @@ export function useProductItems(form: any) {
     );
   };
 
-  const updateProductItem = (index: number, updated: Partial<ProductItem>) => {
+  const updateProductItem = (
+    index: number,
+    updated: Partial<ProductItemFormValues>
+  ) => {
     const currentItems = form.getValues('productItems') || [];
     const updatedItems = currentItems.map((item, i) =>
       i === index ? { ...item, ...updated } : item
     );
     form.setValue('productItems', updatedItems, { shouldValidate: true });
-    console.log('[UPDATED PRODUCT ITEMS]', updatedItems);
   };
 
   const removeProductItem = (index: number) => {

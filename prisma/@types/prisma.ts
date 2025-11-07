@@ -7,8 +7,13 @@ import {
 import { Ingredient } from '@/lib/generated/prisma/client';
 import { ProductItem } from '@/lib/generated/prisma/client';
 
+export type ProductItems = ProductItem & {
+  size: PizzaSize | null;
+  type: PizzaType | null;
+};
+
 export type ProductWithRelations = Product & {
-  productItems: ProductItem[];
+  productItems: ProductItems[];
   ingredients: Ingredient[];
   category: Category;
 };

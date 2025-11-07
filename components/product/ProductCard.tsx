@@ -31,23 +31,23 @@ export function ProductCard({ className, ingredients, ...product }: Props) {
         <Title
           text={product.name}
           size='sm'
-          className='mb-2 font-bold line-clamp-1 leading-tight'
+          className='mb-2 font-bold leading-tight line-clamp-1'
         />
 
         {ingredients.length > 0 && (
-          <p className='text-gray-400 text-sm line-clamp-2'>
+          <p className='text-sm text-gray-400 line-clamp-2'>
             {ingredients.map((ingredient) => ingredient.name).join(', ')}
           </p>
         )}
 
-        <div className='flex justify-between items-center mt-auto pt-4'>
+        <div className='flex items-center justify-between pt-4 mt-auto'>
           <span className='text-[20px]'>
             от <b>{product.productItems[0].price} ₽</b>
           </span>
 
           <Button
             variant='secondary'
-            className='font-bold text-base cursor-pointer'
+            className='text-base font-bold cursor-pointer'
           >
             <Plus size={20} className='mr-1' /> Добавить
           </Button>

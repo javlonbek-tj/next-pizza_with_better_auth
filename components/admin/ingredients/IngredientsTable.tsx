@@ -17,7 +17,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { IngredientFormDialog } from './IngredientFormDialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { DeleteDialog } from '@/components/shared';
+import { AddButton, DeleteDialog } from '@/components/shared';
 import { Ingredient } from '@/lib/generated/prisma';
 import { Card, CardContent } from '@/components/ui/card';
 import { useTableActions } from '@/hooks';
@@ -49,14 +49,11 @@ export function IngredientsTable() {
   return (
     <div className='space-y-4'>
       <div className='flex justify-end'>
-        <Button onClick={handleCreate} className='cursor-pointer'>
-          <Plus className='mr-2 w-4 h-4' />
-          Добавить ингредиент
-        </Button>
+        <AddButton onClick={handleCreate} text='ингредиент' />
       </div>
 
       {isPending ? (
-        <Card className='shadow-md border border-gray-200 rounded-xl'>
+        <Card className='border border-gray-200 shadow-md rounded-xl'>
           <CardContent className='p-6 space-y-4'>
             {[...Array(5)].map((_, i) => (
               <Skeleton key={i} className='w-full h-16' />
@@ -64,31 +61,31 @@ export function IngredientsTable() {
           </CardContent>
         </Card>
       ) : !ingredients?.length ? (
-        <div className='mt-10 text-muted-foreground text-2xl text-center'>
+        <div className='mt-10 text-2xl text-center text-muted-foreground'>
           Ингредиенты не найдены
         </div>
       ) : (
-        <Card className='shadow-md border border-gray-200 rounded-xl overflow-x-auto'>
+        <Card className='overflow-x-auto border border-gray-200 shadow-md rounded-xl'>
           <CardContent className='p-6'>
             <Table>
               <TableHeader>
                 <TableRow className='bg-gray-50 hover:bg-gray-50'>
-                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     №
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     Изображение
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     Название
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
                     Цена
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
                     Дата создания
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-right text-gray-700 uppercase'>
                     Действия
                   </TableHead>
                 </TableRow>
@@ -97,18 +94,18 @@ export function IngredientsTable() {
                 {ingredients?.map((ingredient: Ingredient, index: number) => (
                   <TableRow
                     key={ingredient.id}
-                    className='hover:bg-gray-50 transition-colors'
+                    className='transition-colors hover:bg-gray-50'
                   >
                     {/* Number */}
                     <TableCell className='py-2'>
-                      <div className='flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white'>
+                      <div className='flex items-center justify-center w-8 h-8 font-bold text-white rounded-lg shadow-md bg-gradient-to-br from-primary to-primary/80'>
                         {index + 1}
                       </div>
                     </TableCell>
 
                     {/* Image */}
                     <TableCell className='py-2'>
-                      <div className='relative border border-gray-200 rounded-lg w-12 h-12 overflow-hidden'>
+                      <div className='relative w-12 h-12 overflow-hidden border border-gray-200 rounded-lg'>
                         <Image
                           src={ingredient.imageUrl}
                           alt={ingredient.name}
@@ -127,16 +124,16 @@ export function IngredientsTable() {
 
                     {/* Price */}
                     <TableCell className='py-2 text-center'>
-                      <div className='inline-flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full'>
+                      <div className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-50'>
                         <span className='font-semibold text-green-700'>
                           {ingredient.price.toLocaleString('ru-RU')}
                         </span>
-                        <span className='text-green-600 text-sm'>₽</span>
+                        <span className='text-sm text-green-600'>₽</span>
                       </div>
                     </TableCell>
 
                     {/* Created Date */}
-                    <TableCell className='py-2 text-gray-600 text-center'>
+                    <TableCell className='py-2 text-center text-gray-600'>
                       {new Date(ingredient.createdAt).toLocaleDateString(
                         'ru-RU',
                         {

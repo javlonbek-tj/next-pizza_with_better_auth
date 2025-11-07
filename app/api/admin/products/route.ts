@@ -14,7 +14,14 @@ export async function GET(req: NextRequest) {
       include: {
         category: true,
         ingredients: true,
-        productItems: true,
+        productItems: {
+          select: {
+            id: true,
+            price: true,
+            size: true,
+            type: true,
+          },
+        },
       },
       orderBy: { createdAt: 'asc' },
     });
@@ -44,10 +51,10 @@ export async function POST(req: NextRequest) {
         imageUrl: data.imageUrl,
         categoryId: data.categoryId,
         ingredients: {
-          connect: data.ingredients?.map((id: string) => ({ id })),
+          connect: data.ingredientIds?.map((id: string) => ({ id })) || [],
         },
         productItems: {
-          create: data.productItems,
+          create: data.productItems || [],
         },
       },
       include: {
@@ -56,6 +63,8 @@ export async function POST(req: NextRequest) {
         productItems: true,
       },
     });
+
+    console.log('[PRODUCT API]', product);
 
     return NextResponse.json(product);
   } catch (error) {

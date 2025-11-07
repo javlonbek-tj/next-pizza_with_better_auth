@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
 } from '@/components/ui/dialog';
 import {
   Form,
@@ -26,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
@@ -34,7 +33,7 @@ import { FormActions } from '@/components/shared/FormActions';
 
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { MultiSelect } from '@/components/shared/MultiSelect';
-import { Category, Ingredient, ProductItem } from '@/lib/generated/prisma';
+import { Category, Ingredient } from '@/lib/generated/prisma';
 import {
   useProductForm,
   useProductImageUpload,
@@ -47,6 +46,10 @@ import {
   useGetPizzaTypes,
 } from '@/hooks';
 import { ProductItemCard } from './ProductItemCard';
+import {
+  ProductFormValues,
+  ProductItemFormValues,
+} from '../schemas/product-schema';
 
 interface Props {
   open: boolean;
@@ -85,11 +88,7 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
     isSizesLoading ||
     isTypesLoading;
 
-  const handleSubmit = (data: any) => {
-    console.log('Form data:', data);
-    console.log('Form errors:', form.formState.errors);
-    console.log('Is Pizza Category:', isPizzaCategory);
-
+  const handleSubmit = (data: ProductFormValues) => {
     onSubmit(data, () => {
       markAsSubmitted();
       resetImageState();
@@ -103,79 +102,71 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
     onClose();
   };
 
-  // Handle category change - reset product items if switching to/from pizza
   const handleCategoryChange = (value: string) => {
-    const newCategoryId = value === 'none' ? null : value;
+    const newCategoryId = value === 'none' ? '' : value;
     const wasPizza = isPizzaCategory;
 
-    form.setValue('categoryId', newCategoryId);
+    form.setValue('categoryId', newCategoryId, { shouldValidate: true });
 
-    console.log(form.formState.errors);
-
-    // Check if new category is pizza
-    const newCategory = categories?.find(
-      (cat: Category) => cat.id === newCategoryId
-    );
+    const newCategory = categories?.find((cat) => cat.id === newCategoryId);
     const isNewPizza = newCategory?.name.toLowerCase() === 'пиццы';
 
-    // If switching between pizza and non-pizza, reset items
     if (wasPizza !== isNewPizza) {
-      form.setValue('productItems', [
-        {
-          price: 0,
-          sizeId: null,
-          typeId: null,
-        },
-      ]);
+      form.setValue(
+        'productItems',
+        [
+          {
+            price: 0,
+            sizeId: null,
+            typeId: null,
+          },
+        ],
+        { shouldValidate: true } // <-- THIS IS KEY
+      );
     }
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className='sm:max-w-[850px] max-h-[90vh] overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className="font-bold text-2xl">
+          <DialogTitle className='text-2xl font-bold'>
             {isEditing ? 'Редактировать продукт' : 'Создать новый продукт'}
           </DialogTitle>
-          <DialogDescription className="text-base">
-            {isEditing
-              ? 'Измените информацию о продукте и его вариантах'
-              : 'Заполните информацию о новом продукте и создайте варианты'}
-          </DialogDescription>
         </DialogHeader>
 
         {isLoadingOptions ? (
-          <div className="space-y-4 py-4">
-            <Skeleton className="rounded-lg w-full h-48" />
-            <Skeleton className="w-full h-12" />
-            <Skeleton className="w-full h-12" />
-            <Skeleton className="w-full h-32" />
-            <Skeleton className="w-full h-32" />
+          <div className='py-4 space-y-4'>
+            <Skeleton className='w-full h-48 rounded-lg' />
+            <Skeleton className='w-full h-12' />
+            <Skeleton className='w-full h-12' />
+            <Skeleton className='w-full h-32' />
+            <Skeleton className='w-full h-32' />
           </div>
         ) : (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
-              className="space-y-6"
+              className='space-y-6'
             >
               {/* Basic Information Section */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <div className="bg-primary/10 p-1.5 rounded-md">
-                    <Info className="w-4 h-4 text-primary" />
+              <div className='space-y-4'>
+                <div className='flex items-center gap-2'>
+                  <div className='bg-primary/10 p-1.5 rounded-md'>
+                    <Info className='w-4 h-4 text-primary' />
                   </div>
-                  <h3 className="font-semibold text-lg">Основная информация</h3>
+                  <h3 className='text-lg font-semibold'>Основная информация</h3>
                 </div>
 
                 {/* Image Upload */}
                 <FormField
                   control={form.control}
-                  name="imageUrl"
+                  name='imageUrl'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">
+                      <FormLabel className='text-base'>
                         Изображение продукта{' '}
-                        <span className="text-red-500">*</span>
+                        <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
                         <ImageUploadInput
@@ -195,20 +186,20 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                 {/* Name */}
                 <FormField
                   control={form.control}
-                  name="name"
+                  name='name'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">
+                      <FormLabel className='text-base'>
                         Название продукта{' '}
-                        <span className="text-red-500">*</span>
+                        <span className='text-red-500'>*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="Например: Пепперони, Маргарита, Четыре сыра"
+                          placeholder='Например: Пепперони, Маргарита, Четыре сыра'
                           {...field}
                           disabled={isPending}
-                          autoComplete="off"
-                          className="text-base"
+                          autoComplete='off'
+                          className='text-base'
                         />
                       </FormControl>
                       <FormMessage />
@@ -219,11 +210,11 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                 {/* Category */}
                 <FormField
                   control={form.control}
-                  name="categoryId"
+                  name='categoryId'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">
-                        Категория <span className="text-red-500">*</span>
+                      <FormLabel className='text-base'>
+                        Категория <span className='text-red-500'>*</span>
                       </FormLabel>
                       <Select
                         value={field.value ?? 'none'}
@@ -231,12 +222,14 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                         disabled={isPending || !categories?.length}
                       >
                         <FormControl>
-                          <SelectTrigger className="text-base">
-                            <SelectValue placeholder="Выберите категорию" />
+                          <SelectTrigger className='text-base'>
+                            <SelectValue placeholder='Выберите категорию' />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="none">Без категории</SelectItem>
+                          <SelectItem value='none'>
+                            Выберите категорию
+                          </SelectItem>
                           {categories?.map((category: Category) => (
                             <SelectItem key={category.id} value={category.id}>
                               {category.name}
@@ -246,9 +239,7 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                       </Select>
                       <FormDescription>
                         {categories?.length
-                          ? isPizzaCategory
-                            ? 'Для пиццы будут доступны размеры и типы теста'
-                            : 'Для других категорий указывается только цена'
+                          ? ''
                           : 'Сначала создайте категории в разделе "Категории"'}
                       </FormDescription>
                       <FormMessage />
@@ -259,10 +250,10 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                 {/* Ingredients */}
                 <FormField
                   control={form.control}
-                  name="ingredientIds"
+                  name='ingredientIds'
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-base">Ингредиенты</FormLabel>
+                      <FormLabel className='text-base'>Ингредиенты</FormLabel>
                       <FormControl>
                         <MultiSelect
                           options={
@@ -273,13 +264,13 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                           }
                           value={field.value}
                           onChange={field.onChange}
-                          placeholder="Выберите ингредиенты"
+                          placeholder='Выберите ингредиенты'
                           disabled={isPending || !ingredients?.length}
                         />
                       </FormControl>
                       <FormDescription>
                         {ingredients?.length
-                          ? 'Выберите ингредиенты, входящие в состав продукта'
+                          ? ''
                           : 'Сначала создайте ингредиенты в разделе "Ингредиенты"'}
                       </FormDescription>
                       <FormMessage />
@@ -289,64 +280,26 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
               </div>
 
               {/* Product Items Section */}
-              <div className="space-y-4">
-                <div className="flex justify-between items-start">
-                  <div className="space-y-1">
-                    <h3 className="flex items-center gap-2 font-semibold text-lg">
-                      {isPizzaCategory ? 'Варианты пиццы' : 'Цена продукта'}
-                      <span className="text-red-500">*</span>
-                    </h3>
-                    <p className="text-muted-foreground text-sm">
-                      {isPizzaCategory
-                        ? 'Создайте варианты с разными размерами, типами теста и ценами'
-                        : 'Укажите цену продукта'}
-                    </p>
-                  </div>
+              <div className='space-y-4'>
+                <div className='flex justify-end'>
                   {isPizzaCategory && (
                     <Button
-                      type="button"
-                      variant="default"
-                      size="sm"
+                      type='button'
+                      variant='default'
+                      size='sm'
                       onClick={addProductItem}
                       disabled={isPending}
-                      className="cursor-pointer"
+                      className='cursor-pointer'
                     >
-                      <Plus className="mr-2 w-4 h-4" />
+                      <Plus className='w-4 h-4 mr-2' />
                       Добавить вариант
                     </Button>
                   )}
                 </div>
 
-                {/* Info Alert for Pizza */}
-                {isPizzaCategory &&
-                  (!pizzaSizes?.length || !pizzaTypes?.length) && (
-                    <Alert className="bg-amber-50 border-amber-200">
-                      <AlertCircle className="w-4 h-4 text-amber-600" />
-                      <AlertTitle className="text-amber-900">
-                        Внимание
-                      </AlertTitle>
-                      <AlertDescription className="text-amber-800">
-                        {!pizzaSizes?.length && !pizzaTypes?.length
-                          ? 'Сначала создайте размеры и типы пиццы в соответствующих разделах'
-                          : !pizzaSizes?.length
-                          ? 'Сначала создайте размеры пиццы в разделе "Размеры пиццы"'
-                          : 'Сначала создайте типы пиццы в разделе "Типы пиццы"'}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-
-                {productItems.length === 0 ? (
-                  <Alert variant="destructive">
-                    <AlertCircle className="w-4 h-4" />
-                    <AlertTitle>Нет вариантов продукта</AlertTitle>
-                    <AlertDescription>
-                      Добавьте хотя бы один вариант продукта. Нажмите
-                      &quot;Добавить вариант&quot; чтобы создать.
-                    </AlertDescription>
-                  </Alert>
-                ) : (
-                  <div className="space-y-3">
-                    {productItems.map((item: ProductItem, index: number) => (
+                <div className='space-y-3'>
+                  {productItems.map(
+                    (item: ProductItemFormValues, index: number) => (
                       <ProductItemCard
                         key={index}
                         item={item}
@@ -356,18 +309,56 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                         onUpdate={updateProductItem}
                         onRemove={removeProductItem}
                         disabled={isPending}
-                        canRemove={isPizzaCategory && productItems.length > 1}
+                        canRemove={
+                          isPizzaCategory ? productItems.length > 1 : false
+                        }
                         isPizzaCategory={isPizzaCategory}
                       />
-                    ))}
-                  </div>
-                )}
+                    )
+                  )}
+                </div>
 
                 {form.formState.errors.productItems && (
-                  <Alert variant="destructive">
-                    <AlertCircle className="w-4 h-4" />
+                  <Alert variant='destructive'>
+                    <AlertCircle className='w-4 h-4' />
                     <AlertDescription>
-                      {form.formState.errors.productItems.message}
+                      {(() => {
+                        const error = form.formState.errors.productItems;
+
+                        // If it's a root error (like minimum items)
+                        if (error.message) {
+                          return error.message;
+                        }
+
+                        // If it's an array of errors for individual items
+                        if (Array.isArray(error)) {
+                          const errorMessages = error
+                            .map((item, index) => {
+                              if (!item) return null;
+                              const errors = [];
+                              if (item.price?.message)
+                                errors.push(
+                                  `Вариант ${index + 1}: ${item.price.message}`
+                                );
+                              if (item.sizeId?.message)
+                                errors.push(
+                                  `Вариант ${index + 1}: ${item.sizeId.message}`
+                                );
+                              if (item.typeId?.message)
+                                errors.push(
+                                  `Вариант ${index + 1}: ${item.typeId.message}`
+                                );
+                              return errors.join(', ');
+                            })
+                            .filter(Boolean);
+
+                          return errorMessages.length > 0
+                            ? errorMessages.join(' • ')
+                            : 'Исправьте ошибки в вариантах продукта';
+                        }
+
+                        return 'Исправьте ошибки в вариантах продукта';
+                      })()}
                     </AlertDescription>
                   </Alert>
                 )}
@@ -379,7 +370,7 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                 isPending={isPending}
                 isLoading={isUploading}
                 onCancel={() => handleClose(false)}
-                className="pt-2"
+                className='pt-2'
               />
             </form>
           </Form>
