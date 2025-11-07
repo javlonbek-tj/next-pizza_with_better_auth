@@ -1,10 +1,9 @@
 // hooks/admin/use-products.ts
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   ProductFormValues,
-  ProductItemFormValues,
   productSchema,
 } from '@/components/admin/schemas/product-schema';
 import { queryKeys } from '@/lib';
@@ -16,6 +15,7 @@ import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from '@/lib';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { useUploadImage } from './use-ingredients';
 import { ProductItem } from '@/lib/generated/prisma';
+import { useGetCategories } from '@/hooks';
 
 export function useGetProducts() {
   return useQuery({
@@ -39,9 +39,6 @@ export function useCreateProduct() {
   });
 }
 
-/**
- * Hook to manage product form state and submission
- */
 export function useProductForm(
   product: ProductWithRelations | null | undefined,
   open: boolean,
@@ -50,16 +47,17 @@ export function useProductForm(
   const isEditing = !!product;
 
   const { mutate: createProduct, isPending: isCreating } = useCreateProduct();
-  /* const { mutate: updateProduct, isPending: isUpdating } = useUpdateProduct(); */
-  const isPending = isCreating; /* || isUpdating; */
+  const { data: categories } = useGetCategories();
+  const isPending = isCreating;
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
       imageUrl: '',
-      categoryId: null,
+      categoryId: '',
       ingredientIds: [],
+      productType: 'regular',
       productItems: [
         {
           price: 0,
@@ -70,27 +68,73 @@ export function useProductForm(
     },
   });
 
+  // Watch the selected category
+  const selectedCategoryId = form.watch('categoryId');
+
+  const isPizzaCategory = useMemo(() => {
+    if (!selectedCategoryId || !categories) return false;
+    const selectedCategory = categories.find(
+      (cat) => cat.id === selectedCategoryId
+    );
+    return selectedCategory?.name.toLowerCase() === 'пиццы';
+  }, [selectedCategoryId, categories]);
+
+  // Update productType when category changes
+  useEffect(() => {
+    const currentProductType = form.getValues('productType');
+    const newProductType = isPizzaCategory ? 'pizza' : 'regular';
+
+    if (currentProductType !== newProductType) {
+      form.setValue('productType', newProductType);
+
+      // Reset product items when switching types
+      if (newProductType === 'pizza') {
+        form.setValue('productItems', [
+          {
+            price: 0,
+            sizeId: '',
+            typeId: '',
+          },
+        ]);
+      } else {
+        form.setValue('productItems', [
+          {
+            price: 0,
+            sizeId: null,
+            typeId: null,
+          },
+        ]);
+      }
+    }
+  }, [isPizzaCategory, form]);
+
   useEffect(() => {
     if (product) {
+      const isPizza =
+        categories
+          ?.find((c) => c.id === product.categoryId)
+          ?.name.toLowerCase() === 'пиццы';
+
       form.reset({
         name: product.name,
         imageUrl: product.imageUrl,
-        categoryId: product.categoryId,
+        categoryId: product.categoryId || '',
         ingredientIds: product.ingredients?.map((ing) => ing.id) || [],
+        productType: isPizza ? 'pizza' : 'regular',
         productItems:
           product.productItems?.map((item) => ({
-            id: item.id,
             price: item.price,
-            sizeId: item.sizeId,
-            typeId: item.typeId,
+            sizeId: item.sizeId || (isPizza ? '' : null),
+            typeId: item.typeId || (isPizza ? '' : null),
           })) || [],
       });
     } else {
       form.reset({
         name: '',
         imageUrl: '',
-        categoryId: null,
+        categoryId: '',
         ingredientIds: [],
+        productType: 'regular',
         productItems: [
           {
             price: 0,
@@ -100,53 +144,33 @@ export function useProductForm(
         ],
       });
     }
-  }, [product, form, open]);
+  }, [product, form, open, categories]);
 
-  const onSubmit = (data: ProductFormValues, onSuccess?: () => void) => {
-    /* if (isEditing) {
-      updateProduct(
-        { id: product.id, dto: data },
-        {
-          onSuccess: () => {
-            onSuccess?.();
-            onClose();
-            form.reset();
-            toast.success('Продукт успешно обновлен');
-          },
-          onError: () => {
-            toast.error('Не удалось обновить продукт');
-          },
-        }
-      );
-    } else { */
-    // Transform data to ensure proper types
-    const transformedData: ProductFormValues = {
+  const onSubmit = async (data: ProductFormValues, onSuccess?: () => void) => {
+    console.log('Submitting:', data);
+    console.log('Form errors:', form.formState.errors);
+
+    // Transform data for API
+    const transformedData = {
       ...data,
-      categoryId: data.categoryId === 'none' ? null : data.categoryId,
       productItems: data.productItems.map((item) => ({
-        ...item,
         price:
-          typeof item.price === 'string'
-            ? parseFloat(item.price as any)
-            : item.price,
-        sizeId: item.sizeId === 'none' ? null : item.sizeId,
-        typeId: item.typeId === 'none' ? null : item.typeId,
+          typeof item.price === 'string' ? parseFloat(item.price) : item.price,
+        sizeId: item.sizeId || null,
+        typeId: item.typeId || null,
       })),
     };
 
-    console.log('Submitting:', transformedData); // Debug
-    createProduct(transformedData, {
+    createProduct(transformedData as any, {
       onSuccess: () => {
         onSuccess?.();
         onClose();
         form.reset();
-        toast.success('Продукт успешно создан');
       },
-      onError: () => {
-        toast.error('Не удалось создать продукт');
+      onError: (error) => {
+        console.error('Create product error:', error);
       },
     });
-    /* } */
   };
 
   return {
@@ -154,6 +178,7 @@ export function useProductForm(
     isEditing,
     isPending,
     onSubmit,
+    isPizzaCategory,
   };
 }
 
