@@ -1,6 +1,6 @@
 'use client';
 
-import { Plus, AlertCircle, Info } from 'lucide-react';
+import { Plus, Info } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -25,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Skeleton } from '@/components/ui/skeleton';
 
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
@@ -34,11 +33,7 @@ import { FormActions } from '@/components/shared/FormActions';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { MultiSelect } from '@/components/shared/MultiSelect';
 import { Category, Ingredient } from '@/lib/generated/prisma';
-import {
-  useProductForm,
-  useProductImageUpload,
-  useProductItems,
-} from '@/hooks/admin/use-products';
+import { useProductForm, useProductItems, useImageUpload } from '@/hooks';
 import {
   useGetCategories,
   useGetIngredients,
@@ -57,7 +52,7 @@ interface Props {
   product?: ProductWithRelations | null;
 }
 
-export function ProductFormDialog({ open, onClose, product }: Props) {
+export function ProductFormDialog({ open, onClose, product = null }: Props) {
   const { form, isEditing, isPending, onSubmit, isPizzaCategory } =
     useProductForm(product, open, onClose);
 
@@ -69,7 +64,11 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
     cleanupOrphanedImage,
     markAsSubmitted,
     resetImageState,
-  } = useProductImageUpload(product, open, form);
+  } = useImageUpload(product?.imageUrl, open, {
+    setValue: form.setValue,
+    setError: form.setError,
+    clearErrors: form.clearErrors,
+  });
 
   const { productItems, addProductItem, removeProductItem, updateProductItem } =
     useProductItems(form);
@@ -111,7 +110,12 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
     const newCategory = categories?.find((cat) => cat.id === newCategoryId);
     const isNewPizza = newCategory?.name.toLowerCase() === 'пиццы';
 
+    // If switching between pizza and non-pizza categories, reset product items
     if (wasPizza !== isNewPizza) {
+      // Clear any existing validation errors
+      form.clearErrors('productItems');
+
+      // Reset product items with appropriate default values
       form.setValue(
         'productItems',
         [
@@ -121,7 +125,7 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
             typeId: null,
           },
         ],
-        { shouldValidate: true } // <-- THIS IS KEY
+        { shouldValidate: false } // Don't validate immediately on reset
       );
     }
   };
@@ -237,12 +241,7 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormDescription>
-                        {categories?.length
-                          ? ''
-                          : 'Сначала создайте категории в разделе "Категории"'}
-                      </FormDescription>
-                      <FormMessage />
+                      <FormMessage className='text-red-500 ' />
                     </FormItem>
                   )}
                 />
@@ -281,8 +280,9 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
 
               {/* Product Items Section */}
               <div className='space-y-4'>
-                <div className='flex justify-end'>
-                  {isPizzaCategory && (
+                {/* Only show button container for pizza category */}
+                {isPizzaCategory && (
+                  <div className='flex justify-end'>
                     <Button
                       type='button'
                       variant='default'
@@ -294,10 +294,10 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                       <Plus className='w-4 h-4 mr-2' />
                       Добавить вариант
                     </Button>
-                  )}
-                </div>
+                  </div>
+                )}
 
-                <div className='space-y-3'>
+                <div className={isPizzaCategory ? 'space-y-3' : ''}>
                   {productItems.map(
                     (item: ProductItemFormValues, index: number) => (
                       <ProductItemCard
@@ -313,55 +313,11 @@ export function ProductFormDialog({ open, onClose, product }: Props) {
                           isPizzaCategory ? productItems.length > 1 : false
                         }
                         isPizzaCategory={isPizzaCategory}
+                        errors={form.formState.errors.productItems?.[index]}
                       />
                     )
                   )}
                 </div>
-
-                {form.formState.errors.productItems && (
-                  <Alert variant='destructive'>
-                    <AlertCircle className='w-4 h-4' />
-                    <AlertDescription>
-                      {(() => {
-                        const error = form.formState.errors.productItems;
-
-                        // If it's a root error (like minimum items)
-                        if (error.message) {
-                          return error.message;
-                        }
-
-                        // If it's an array of errors for individual items
-                        if (Array.isArray(error)) {
-                          const errorMessages = error
-                            .map((item, index) => {
-                              if (!item) return null;
-                              const errors = [];
-                              if (item.price?.message)
-                                errors.push(
-                                  `Вариант ${index + 1}: ${item.price.message}`
-                                );
-                              if (item.sizeId?.message)
-                                errors.push(
-                                  `Вариант ${index + 1}: ${item.sizeId.message}`
-                                );
-                              if (item.typeId?.message)
-                                errors.push(
-                                  `Вариант ${index + 1}: ${item.typeId.message}`
-                                );
-                              return errors.join(', ');
-                            })
-                            .filter(Boolean);
-
-                          return errorMessages.length > 0
-                            ? errorMessages.join(' • ')
-                            : 'Исправьте ошибки в вариантах продукта';
-                        }
-
-                        return 'Исправьте ошибки в вариантах продукта';
-                      })()}
-                    </AlertDescription>
-                  </Alert>
-                )}
               </div>
 
               {/* Actions */}

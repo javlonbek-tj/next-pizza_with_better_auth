@@ -5,11 +5,11 @@ import { IngredientFormValues, ingredientSchema } from '@/components/admin';
 import { AxiosError } from 'axios';
 import { ApiResponse } from '@/services/api-response';
 import { Ingredient } from '@/lib/generated/prisma';
-import { useForm, UseFormReturn } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
-import { deleteImageFile } from '@/app/actions';
-import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE, queryKeys } from '@/lib';
+import { useEffect } from 'react';
+
+import { queryKeys } from '@/lib';
 
 export function useGetIngredients() {
   return useQuery({
@@ -169,120 +169,5 @@ export function useIngredientForm(
     isEditing,
     isPending,
     onSubmit,
-  };
-}
-
-/**
- * Hook to manage image upload and preview
- */
-export function useImageUpload(
-  ingredient: Ingredient | null | undefined,
-  open: boolean,
-  form: UseFormReturn<IngredientFormValues>
-) {
-  const [previewUrl, setPreviewUrl] = useState<string>('');
-  const [isUploading, setIsUploading] = useState(false);
-  const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const { mutateAsync: uploadImage } = useUploadImage();
-
-  useEffect(() => {
-    if (ingredient) {
-      setPreviewUrl(ingredient.imageUrl);
-      setNewImageUrl(null);
-    } else {
-      setPreviewUrl('');
-      setNewImageUrl(null);
-    }
-    setIsSubmitted(false);
-  }, [ingredient, open]);
-
-  const validateFile = (file: File): string | null => {
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-      return 'Неверный формат файла. Разрешены только JPG, PNG и WebP';
-    }
-
-    if (file.size > MAX_UPLOAD_SIZE) {
-      return 'Размер файла превышает 5MB';
-    }
-
-    return null;
-  };
-
-  const uploadFile = async (file: File) => {
-    const error = validateFile(file);
-    if (error) {
-      form.setError('imageUrl', {
-        type: 'manual',
-        message: error,
-      });
-      return;
-    }
-
-    form.clearErrors('imageUrl');
-
-    // Delete previous new image if exists
-    if (newImageUrl) {
-      await deleteImageFile(newImageUrl);
-    }
-
-    setIsUploading(true);
-    try {
-      const result = await uploadImage(file);
-      const imageUrl = result?.imageUrl;
-
-      if (!imageUrl) {
-        throw new Error('No imageUrl in response');
-      }
-
-      form.setValue('imageUrl', result.imageUrl, { shouldValidate: true });
-      setPreviewUrl(result.imageUrl);
-      setNewImageUrl(result.imageUrl);
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Не удалось загрузить изображение');
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
-  const handleRemoveImage = async () => {
-    // Delete new image if it was uploaded
-    if (newImageUrl) {
-      await deleteImageFile(newImageUrl);
-      setNewImageUrl(null);
-    }
-    form.setValue('imageUrl', '', { shouldValidate: true });
-    setPreviewUrl('');
-  };
-
-  const cleanupOrphanedImage = async () => {
-    if (newImageUrl && !isSubmitted) {
-      try {
-        await deleteImageFile(newImageUrl);
-      } catch (error) {
-        console.error('Failed to delete orphaned image:', error);
-      }
-    }
-  };
-
-  const markAsSubmitted = () => {
-    setIsSubmitted(true);
-  };
-
-  const resetImageState = () => {
-    setPreviewUrl('');
-    setNewImageUrl(null);
-  };
-
-  return {
-    previewUrl,
-    isUploading,
-    uploadFile,
-    handleRemoveImage,
-    cleanupOrphanedImage,
-    markAsSubmitted,
-    resetImageState,
   };
 }

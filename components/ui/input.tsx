@@ -12,10 +12,9 @@ function Input({ className, type, ...props }: React.ComponentProps<'input'>) {
         // focus styles
         'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-0',
         // invalid styles (same as focus but with destructive color)
-        'aria-invalid:outline-none aria-invalid:ring-2 aria-invalid:ring-destructive aria-invalid:ring-offset-0',
+        'aria-invalid:outline-none aria-invalid:ring-1 aria-invalid:ring-destructive aria-invalid:ring-offset-0',
         className
       )}
-
       {...props}
     />
   );

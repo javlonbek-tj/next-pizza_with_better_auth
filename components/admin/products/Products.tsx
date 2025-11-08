@@ -135,6 +135,12 @@ export function Products() {
             <AddButton onClick={handleCreate} text='первый продукт' />
           </CardContent>
         </Card>
+
+        <ProductFormDialog
+          open={isFormOpen}
+          onClose={handleCloseForm}
+          product={editingProduct}
+        />
       </div>
     );
   }
@@ -377,15 +383,6 @@ export function Products() {
         onClose={handleCloseForm}
         product={editingProduct}
       />
-
-      {/* <DeleteDialog
-        open={!!deleteId}
-        onClose={handleCloseDelete}
-        onConfirm={handleDelete}
-        isDeleting={isDeleting}
-        title="Удалить продукт"
-        description="Вы уверены, что хотите удалить этот продукт? Это действие нельзя отменить. Все связанные варианты продукта также будут удалены."
-      /> */}
     </div>
   );
 }

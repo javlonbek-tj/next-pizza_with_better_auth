@@ -4,7 +4,7 @@ import z from 'zod';
 export const productItemSchema = z.object({
   price: z
     .number({ message: 'Цена должна быть числом' })
-    .positive('Цена должна быть больше 0')
+    .positive('Цена обязательна')
     .max(1000000000, 'Цена не должна превышать 1,000,000,000')
     .refine(
       (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
@@ -18,11 +18,11 @@ export const productItemSchema = z.object({
 
 export const pizzaProductItemSchema = productItemSchema.extend({
   sizeId: z
-    .string({ message: 'Необходимо указать размер' })
-    .min(1, 'Необходимо указать размер'),
+    .string({ message: 'Размер обязателен' })
+    .min(1, 'Размер обязателен'),
   typeId: z
-    .string({ message: 'Необходимо указать тип теста' })
-    .min(1, 'Необходимо указать тип теста'),
+    .string({ message: 'Тип теста обязателен' })
+    .min(1, 'Тип теста обязателен'),
 });
 
 // Schema for editing (includes optional id)

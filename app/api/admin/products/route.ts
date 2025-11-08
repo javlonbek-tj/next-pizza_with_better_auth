@@ -64,8 +64,6 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    console.log('[PRODUCT API]', product);
-
     return NextResponse.json(product);
   } catch (error) {
     console.error('[ADMIN_PRODUCTS_POST]', error);

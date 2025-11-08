@@ -47,7 +47,11 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
     cleanupOrphanedImage,
     markAsSubmitted,
     resetImageState,
-  } = useImageUpload(ingredient, open, form);
+  } = useImageUpload(ingredient?.imageUrl, open, {
+    setValue: form.setValue,
+    setError: form.setError,
+    clearErrors: form.clearErrors,
+  });
 
   const handleSubmit = (data: IngredientFormValues) => {
     onSubmit(data, () => {
