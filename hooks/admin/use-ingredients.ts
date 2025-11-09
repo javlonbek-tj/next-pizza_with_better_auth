@@ -77,11 +77,14 @@ export function useDeleteIngredient() {
   });
 }
 
-export function useUploadImage() {
+type UploadFolder = 'ingredients' | 'products';
+
+export function useUploadImage(folder: UploadFolder) {
   return useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
       formData.append('file', file);
+      formData.append('folder', folder);
       return Api.admin.uploadImage(formData);
     },
     onError: (error: AxiosError<ApiResponse<null>>) => {

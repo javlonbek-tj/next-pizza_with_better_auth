@@ -108,7 +108,7 @@ model ProductItem {
 
   cartItems CartItem[]
 
-  product   Product @relation(fields: [productId], references: [id])
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
   productId String
 
   @@map("product_items")

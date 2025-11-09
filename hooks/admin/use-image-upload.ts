@@ -28,13 +28,15 @@ interface FormImageUrlMethods {
 export function useImageUpload(
   imageUrl: string | null | undefined,
   open: boolean,
-  formMethods: FormImageUrlMethods
+  formMethods: FormImageUrlMethods,
+  imageFolder: 'products' | 'ingredients',
+  originalImageUrl?: string | null // NEW: Track original image for edit mode
 ) {
   const [previewUrl, setPreviewUrl] = useState<string>('');
   const [isUploading, setIsUploading] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const { mutateAsync: uploadImage } = useUploadImage();
+  const { mutateAsync: uploadImage } = useUploadImage(imageFolder);
 
   // When modal opens or imageUrl changes
   useEffect(() => {
@@ -71,8 +73,8 @@ export function useImageUpload(
     }
     formMethods.clearErrors('imageUrl');
 
-    // Delete previous new image if exists
-    if (newImageUrl) {
+    // Delete previous new image if exists (but not the original)
+    if (newImageUrl && newImageUrl !== originalImageUrl) {
       await deleteImageFile(newImageUrl);
     }
 
@@ -99,8 +101,8 @@ export function useImageUpload(
 
   /** Remove current image */
   const handleRemoveImage = async () => {
-    // Delete new image if it was uploaded
-    if (newImageUrl) {
+    // Delete new image if it was uploaded (but not the original in edit mode)
+    if (newImageUrl && newImageUrl !== originalImageUrl) {
       await deleteImageFile(newImageUrl);
       setNewImageUrl(null);
     }
@@ -110,7 +112,8 @@ export function useImageUpload(
 
   /** Delete any uploaded image that wasn't submitted */
   const cleanupOrphanedImage = async () => {
-    if (newImageUrl && !isSubmitted) {
+    // Only cleanup new images that weren't submitted and aren't the original
+    if (newImageUrl && !isSubmitted && newImageUrl !== originalImageUrl) {
       try {
         await deleteImageFile(newImageUrl);
       } catch (error) {

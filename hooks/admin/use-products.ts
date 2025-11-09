@@ -13,6 +13,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { useGetCategories } from '@/hooks';
+import { AxiosError } from 'axios';
+import { ApiResponse } from '@/services/api-response';
+import { deleteImageFile } from '@/app/actions';
 
 export function useGetProducts() {
   return useQuery({
@@ -45,8 +48,14 @@ export function useProductForm(
   onClose: () => void
 ) {
   const isEditing = !!product;
-  const { mutate: createProduct, isPending } = useCreateProduct();
+  const { mutate: createProduct, isPending: isCreating } = useCreateProduct();
+  const { mutate: updateProduct, isPending: isUpdating } = useUpdateProduct();
   const { data: categories } = useGetCategories();
+
+  const isPending = isCreating || isUpdating;
+
+  // Track the original image URL when editing
+  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
 
   // Watch the selected category to determine if it's pizza
   const [isPizzaCategory, setIsPizzaCategory] = useState(false);
@@ -85,6 +94,9 @@ export function useProductForm(
 
   useEffect(() => {
     if (product) {
+      // Store the original image URL
+      setOriginalImageUrl(product.imageUrl);
+
       // Determine if the product is pizza category
       const productCategory = categories?.find(
         (cat) => cat.id === product.categoryId
@@ -106,6 +118,7 @@ export function useProductForm(
           })) || [],
       });
     } else {
+      setOriginalImageUrl(null);
       setIsPizzaCategory(false);
       form.reset({
         name: '',
@@ -140,23 +153,48 @@ export function useProductForm(
       }),
     };
 
-    createProduct(transformedData, {
-      onSuccess: () => {
-        toast.success(
-          isEditing ? 'Продукт успешно обновлен' : 'Продукт успешно создан'
-        );
-        onSuccess?.();
-        onClose();
-        form.reset();
-      },
-      onError: () => {
-        toast.error(
-          isEditing
-            ? 'Ошибка при обновлении продукта'
-            : 'Ошибка при создании продукта'
-        );
-      },
-    });
+    // Check if image was changed during edit
+    const imageChanged =
+      isEditing &&
+      originalImageUrl &&
+      transformedData.imageUrl !== originalImageUrl;
+
+    if (isEditing && product?.id) {
+      // UPDATE existing product
+      updateProduct(
+        { productId: product.id, data: transformedData },
+        {
+          onSuccess: async () => {
+            // Delete old image if a new one was uploaded
+            if (imageChanged && originalImageUrl) {
+              await deleteImageFile(originalImageUrl);
+            }
+
+            toast.success('Продукт успешно обновлен');
+            onSuccess?.();
+            onClose();
+            form.reset();
+            setOriginalImageUrl(null);
+          },
+          onError: () => {
+            toast.error('Ошибка при обновлении продукта');
+          },
+        }
+      );
+    } else {
+      // CREATE new product
+      createProduct(transformedData, {
+        onSuccess: () => {
+          toast.success('Продукт успешно создан');
+          onSuccess?.();
+          onClose();
+          form.reset();
+        },
+        onError: () => {
+          toast.error('Ошибка при создании продукта');
+        },
+      });
+    }
   };
 
   return {
@@ -165,6 +203,7 @@ export function useProductForm(
     isPending,
     onSubmit,
     isPizzaCategory,
+    originalImageUrl,
   };
 }
 
@@ -288,4 +327,44 @@ export function usePriceInput(initialValue: number = 0) {
     handlePriceChange,
     handlePriceBlur,
   };
+}
+
+// useDeleteProduct
+
+export function useDeleteProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (productId: string) => Api.admin.deleteProduct(productId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.products });
+      toast.success('Товар успешно удален');
+    },
+    onError: () => {
+      toast.error('Не удалось удалить товар');
+    },
+  });
+}
+
+export function useUpdateProduct() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      productId,
+      data,
+    }: {
+      productId: string;
+      data: ProductFormValues;
+    }) => {
+      return Api.admin.updateProduct(productId, data);
+    },
+    onSuccess: () => {
+      // Invalidate products list to refetch
+      queryClient.invalidateQueries({ queryKey: ['products'] });
+    },
+    onError: (error: AxiosError<ApiResponse<null>>) => {
+      console.error('Update product error:', error);
+    },
+  });
 }

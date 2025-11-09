@@ -198,3 +198,21 @@ export const createProduct = async (dto: ProductFormValues) => {
 
   return data;
 };
+
+export const deleteProduct = (id: string) => {
+  return axiosInstance.delete(`${ApiRoutes.ADMIN}/products/${id}`);
+};
+
+export const updateProduct = async (
+  productId: string,
+  dto: ProductFormValues
+) => {
+  const { data } = (
+    await axiosInstance.put<ApiResponse<ProductWithRelations>>(
+      `${ApiRoutes.ADMIN}/products/${productId}`,
+      dto
+    )
+  ).data;
+
+  return data;
+};

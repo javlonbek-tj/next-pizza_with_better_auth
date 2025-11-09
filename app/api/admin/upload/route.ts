@@ -2,12 +2,29 @@ import { NextRequest, NextResponse } from 'next/server';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { existsSync } from 'fs';
-import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from '@/lib';
+import { ACCEPTED_IMAGE_TYPES, MAX_UPLOAD_SIZE } from '@/lib/constants';
+
+const VALID_FOLDERS = ['ingredients', 'products', 'categories'] as const;
+type UploadFolder = (typeof VALID_FOLDERS)[number];
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File;
+    const folder = formData.get('folder') as UploadFolder | null;
+
+    // Validate folder
+    if (!folder || !VALID_FOLDERS.includes(folder)) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Invalid folder. Must be one of: ${VALID_FOLDERS.join(
+            ', '
+          )}`,
+        },
+        { status: 400 }
+      );
+    }
 
     if (!file) {
       return NextResponse.json(
@@ -21,7 +38,7 @@ export async function POST(req: NextRequest) {
         {
           success: false,
           message:
-            'URL должен указывать на изображение (png, jpg, jpeg, gif, webp)',
+            'Поддерживаются только изображения: png, jpg, jpeg, gif, webp',
         },
         { status: 400 }
       );
@@ -29,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     if (file.size > MAX_UPLOAD_SIZE) {
       return NextResponse.json(
-        { success: false, message: 'Файл слишком большой. Максимум 5MB' },
+        { success: false, message: 'Файл слишком большой. Максимум 5MB' },
         { status: 400 }
       );
     }
@@ -39,29 +56,23 @@ export async function POST(req: NextRequest) {
 
     // Generate unique filename
     const timestamp = Date.now();
-    const filename = `${timestamp}-${file.name.replace(/\s/g, '-')}`;
-    const uploadDir = path.join(
-      process.cwd(),
-      'public',
-      'uploads',
-      'ingredients'
-    );
+    const safeName = file.name
+      .replace(/\s/g, '-')
+      .replace(/[^a-zA-Z0-9.-]/g, '');
+    const filename = `${timestamp}-${safeName}`;
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads', folder);
 
-    // Create directory if it doesn't exist
+    // Create directory
     if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
 
     const filepath = path.join(uploadDir, filename);
-
-    // Save file
     await writeFile(filepath, buffer);
 
-    // Return URL
-    const imageUrl = `/uploads/ingredients/${filename}`;
+    const imageUrl = `/uploads/${folder}/${filename}`;
     return NextResponse.json({ success: true, data: { imageUrl } });
   } catch (error) {
-    // TODO REMOVE IN PRODUCTION
     console.error('[ADMIN_UPLOAD_POST]', error);
     return NextResponse.json(
       { success: false, message: 'Failed to upload file' },
