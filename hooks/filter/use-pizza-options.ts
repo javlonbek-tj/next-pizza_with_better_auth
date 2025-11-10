@@ -24,7 +24,7 @@ interface ReturnProps {
 
 export const usePizzaOptions = (product: ProductWithRelations): ReturnProps => {
   const validPizzaItems = product.productItems.filter(
-    (item) => item.pizzaType !== null && item.size !== null
+    (item) => item.typeId !== null && item.sizeId !== null
   );
 
   const hasValidPizzaItems = validPizzaItems.length > 0;

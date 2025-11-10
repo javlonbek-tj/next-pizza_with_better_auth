@@ -58,10 +58,10 @@ export function FilterCheckboxGroup({
       )}
     >
       {/* Sticky header (title + search) */}
-      <div className='top-0 z-2 sticky bg-white pb-2'>
+      <div className='sticky top-0 pb-2 bg-white z-2'>
         {title && <p className='font-bold text-md'>{title}:</p>}
         {showAll && options.length > limit && (
-          <div className='mt-2 px-1'>
+          <div className='px-1 mt-2'>
             <Input
               placeholder={searchInputPlaceholder}
               onChange={onChangeSearchInput}
@@ -85,7 +85,7 @@ export function FilterCheckboxGroup({
 
         {options.length > limit && !searchTerm && (
           <button
-            className='self-start mt-2 text-primary text-sm cursor-pointer'
+            className='self-start mt-2 text-sm cursor-pointer text-primary'
             onClick={() => setShowAll(!showAll)}
           >
             {showAll ? 'Скрыть' : '+ Показать все'}

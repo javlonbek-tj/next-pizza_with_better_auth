@@ -13,9 +13,9 @@ export type ProductItems = ProductItem & {
 };
 
 export type ProductWithRelations = Product & {
-  productItems: ProductItems[];
+  productItems: ProductItem[];
   ingredients: Ingredient[];
-  category: Category;
+  category?: Category | null;
 };
 
 export type CategoryWithProductCount = Category & {

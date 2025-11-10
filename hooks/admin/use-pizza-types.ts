@@ -17,6 +17,13 @@ export function useGetPizzaTypes() {
   });
 }
 
+export function usePizzaTypes() {
+  return useQuery({
+    queryKey: queryKeys['pizza-types'],
+    queryFn: Api.admin.getPizzaTypes,
+  });
+}
+
 export function useCreatePizzaType() {
   const queryClient = useQueryClient();
 

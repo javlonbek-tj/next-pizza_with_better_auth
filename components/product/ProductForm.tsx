@@ -15,7 +15,9 @@ export function ProductForm({ product, isModal, onClose }: Props) {
   const { mutate: addToCart, isPending } = useAddToCart();
 
   const pizzaOptions = usePizzaOptions(product);
-  const isPizza = Boolean(product.productItems[0].pizzaType);
+
+  // TODO: Better detection for pizza products
+  const isPizza = Boolean(product.productItems[0].typeId);
 
   const handleAddToCart = () => {
     addToCart({

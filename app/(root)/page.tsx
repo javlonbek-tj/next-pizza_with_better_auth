@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 
 import { GetSearchParams } from '@/lib/product/find-pizzas';
 import { Container, Title, TopBarContent } from '@/components/shared';
-import { CategoriesSkeleton, ProductsSkeleton } from '@/components/skeletons';
+import { ProductsSkeleton } from '@/components/skeletons';
 import { Filters } from '@/components/filters';
 import { ProductsContent } from '@/components/product';
 
@@ -18,9 +18,7 @@ export default async function Home({
         <Title text='Все пиццы' size='lg' className='font-extrabold' />
       </Container>
 
-      <Suspense fallback={<CategoriesSkeleton />}>
-        <TopBarContent searchParams={resolvedSearchParams} />
-      </Suspense>
+      <TopBarContent />
 
       <Container className='flex gap-16 mt-10 pb-14'>
         <div className='w-[250px]'>

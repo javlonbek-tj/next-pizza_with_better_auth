@@ -1,4 +1,3 @@
-// components/admin/products/DeleteDialog.tsx
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -10,7 +9,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Loader2, AlertCircle } from 'lucide-react';
 
 interface Props {
   open: boolean;
@@ -19,6 +19,8 @@ interface Props {
   isDeleting: boolean;
   title: string;
   description: string;
+  showAlert?: boolean;
+  alertDescription?: string;
 }
 
 export function DeleteDialog({
@@ -28,6 +30,8 @@ export function DeleteDialog({
   isDeleting,
   title,
   description,
+  showAlert = false,
+  alertDescription,
 }: Props) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -36,9 +40,18 @@ export function DeleteDialog({
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
+
+        {showAlert && (
+          <Alert variant='destructive' className='my-4'>
+            <AlertCircle className='w-4 h-4' />
+            <AlertTitle>Внимание!</AlertTitle>
+            <AlertDescription>{alertDescription}</AlertDescription>
+          </Alert>
+        )}
+
         <DialogFooter>
           <Button
-            variant="outline"
+            variant='outline'
             onClick={onClose}
             disabled={isDeleting}
             className={`cursor-pointer min-w-[90px] transition-colors ${
@@ -48,13 +61,13 @@ export function DeleteDialog({
             Отмена
           </Button>
           <Button
-            variant="destructive"
+            variant='destructive'
             onClick={onConfirm}
             disabled={isDeleting}
-            className="min-w-[100px] cursor-pointer"
+            className='min-w-[100px] cursor-pointer'
           >
             {isDeleting ? (
-              <Loader2 className="mx-auto w-4 h-4 animate-spin" />
+              <Loader2 className='w-4 h-4 mx-auto animate-spin' />
             ) : (
               'Удалить'
             )}

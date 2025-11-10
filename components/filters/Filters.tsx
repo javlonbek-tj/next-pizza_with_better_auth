@@ -5,9 +5,14 @@ import { Title } from '../shared/Title';
 import { FilterCheckboxGroup } from './FilterCheckboxGroup';
 import { PriceRange } from './PriceRange';
 import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/lib/constants';
-import { useFilters, useQueryFilters } from '@/hooks';
-import { useIngredients } from '@/hooks';
-import { FilterLoading } from './FilterLoading';
+import {
+  useFilters,
+  useGetIngredients,
+  useGetPizzaSizes,
+  usePizzaTypes,
+  useQueryFilters,
+} from '@/hooks';
+import { FilterSkeleton } from './FilterLoading';
 
 interface Props {
   className?: string;
@@ -15,87 +20,91 @@ interface Props {
 
 export function Filters({ className }: Props) {
   const filters = useFilters();
+  const { isPending: isFiltersPending } = useQueryFilters(filters);
 
-  const { isPending } = useQueryFilters(filters);
+  const { data: ingredients = [], isPending: isIngredientsLoading } =
+    useGetIngredients();
 
-  const {
-    options,
-    isPending: isIngredientsLoading,
-    isError,
-  } = useIngredients();
+  const { data: pizzaSizeOptions = [], isPending: isSizesLoading } =
+    useGetPizzaSizes();
+
+  const { data: pizzaTypeOptions = [], isPending: isTypesLoading } =
+    usePizzaTypes();
+
+  const isPending =
+    isFiltersPending ||
+    isSizesLoading ||
+    isTypesLoading ||
+    isIngredientsLoading;
 
   return (
     <div className={cn('relative', className)}>
-      {isPending && <FilterLoading />}
-
       <Title text='Фильтрация' size='sm' className='mb-5 font-bold' />
 
-      <FilterCheckboxGroup
-        options={[
-          { label: 'Тонкое', value: '1' },
-          { label: 'Традиционное', value: '2' },
-        ]}
-        name='pizza-type'
-        title='Тип теста'
-        className='mb-5'
-        values={filters.pizzaTypes}
-        onClickCheckbox={filters.togglePizzaType}
-      />
+      {isPending ? (
+        <FilterSkeleton />
+      ) : (
+        <>
+          {/* ---------- Pizza Types ---------- */}
+          {pizzaTypeOptions.length > 0 && (
+            <FilterCheckboxGroup
+              options={pizzaTypeOptions.map((pizzaType) => ({
+                label: pizzaType.type,
+                value: pizzaType.id.toString(),
+              }))}
+              name='pizza-type'
+              title='Тип теста'
+              className='mb-5'
+              values={filters.pizzaTypes}
+              onClickCheckbox={filters.togglePizzaType}
+            />
+          )}
 
-      <FilterCheckboxGroup
-        options={[
-          { label: '30 см', value: '30' },
-          { label: '40 см', value: '40' },
-          { label: '50 см', value: '50' },
-        ]}
-        name='pizza-size'
-        title='Размеры'
-        className='mb-5'
-        values={filters.pizzaSize}
-        onClickCheckbox={filters.togglePizzaSize}
-      />
+          {/* ---------- Pizza Sizes ---------- */}
+          {pizzaSizeOptions.length > 0 && (
+            <FilterCheckboxGroup
+              options={pizzaSizeOptions.map((pizzaSize) => ({
+                label: pizzaSize.label,
+                value: pizzaSize.size.toString(),
+              }))}
+              name='pizza-size'
+              title='Размеры'
+              className='mb-5'
+              values={filters.pizzaSize}
+              onClickCheckbox={filters.togglePizzaSize}
+            />
+          )}
 
-      <PriceRange
-        className='mb-6 pt-4 pb-7 border-gray-200 border-t border-b'
-        title='Цены от и до'
-        min={DEFAULT_PRICE_FROM}
-        max={DEFAULT_PRICE_TO}
-        step={10}
-        value={[
-          filters.prices.priceFrom || DEFAULT_PRICE_FROM,
-          filters.prices.priceTo || DEFAULT_PRICE_TO,
-        ]}
-        onValueChange={filters.togglePrices}
-      />
+          {/* ---------- Price Range ---------- */}
+          <PriceRange
+            className='pt-4 mb-6 border-t border-b border-gray-200 pb-7'
+            title='Цены от и до'
+            min={DEFAULT_PRICE_FROM}
+            max={DEFAULT_PRICE_TO}
+            step={10}
+            value={[
+              filters.prices.priceFrom ?? DEFAULT_PRICE_FROM,
+              filters.prices.priceTo ?? DEFAULT_PRICE_TO,
+            ]}
+            onValueChange={filters.togglePrices}
+          />
 
-      {!isIngredientsLoading && !isError && options.length > 0 && (
-        <FilterCheckboxGroup
-          options={options}
-          name='ingredients'
-          title='Ингредиенты'
-          limit={6}
-          className='mb-5'
-          values={filters.ingredientsIds}
-          onClickCheckbox={filters.toggleIngredient}
-        />
-      )}
-
-      {isIngredientsLoading && (
-        <div className='mb-5'>
-          <Title text='Ингредиенты' size='sm' className='mb-3 font-bold' />
-          <div className='animate-pulse space-y-2'>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className='h-6 bg-gray-200 rounded' />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {isError && (
-        <div className='mb-5'>
-          <Title text='Ингредиенты' size='sm' className='mb-3 font-bold' />
-          <p className='text-gray-500 text-sm'>Ошибка загрузки ингредиентов</p>
-        </div>
+          {/* ---------- Ingredients ---------- */}
+          {ingredients.length > 0 && (
+            <FilterCheckboxGroup
+              options={ingredients.map((ingredient) => ({
+                label: ingredient.name,
+                value: ingredient.id,
+              }))}
+              name='ingredients'
+              title='Ингредиенты'
+              limit={6}
+              className='mb-5'
+              values={filters.ingredientsIds}
+              onClickCheckbox={filters.toggleIngredient}
+            />
+          )}
+        </>
       )}
     </div>
   );

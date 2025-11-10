@@ -1,22 +1,13 @@
-import { Suspense } from 'react';
-
-import { GetSearchParams } from '@/lib/product/find-pizzas';
 import { Container } from './Container';
 import { SortPopup } from '../filters/SortPopup';
-import { CategoriesSkeleton } from '../skeletons';
-import { CategoriesLoader } from '../categories/CategoriesLoader';
 
-interface TopBarContentProps {
-  searchParams: GetSearchParams;
-}
+import { Categories } from '../categories/Categories';
 
-export async function TopBarContent({ searchParams }: TopBarContentProps) {
+export async function TopBarContent() {
   return (
-    <div className="top-0 z-10 sticky bg-white shadow-black/5 shadow-lg py-5">
-      <Container className="flex justify-between items-center gap-5">
-        <Suspense fallback={<CategoriesSkeleton />}>
-          <CategoriesLoader searchParams={searchParams} />
-        </Suspense>
+    <div className='sticky top-0 z-10 py-5 bg-white shadow-lg shadow-black/5'>
+      <Container className='flex items-center justify-between gap-5'>
+        <Categories />
         <SortPopup />
       </Container>
     </div>

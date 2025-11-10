@@ -18,10 +18,9 @@ export interface GetSearchParams {
 }
 
 export const findPizzas = async (params: GetSearchParams) => {
-  const sizes = params.pizzaSize?.split(',').map(Number);
-  const pizzaTypes = params.pizzaTypes?.split(',').map(Number);
-  const ingredients = params.ingredients?.split(',');
-
+  const sizes = params.pizzaSize?.split(',').filter(Boolean); // Keep as strings (IDs)
+  const pizzaTypes = params.pizzaTypes?.split(',').filter(Boolean); // Keep as strings (IDs)
+  const ingredients = params.ingredients?.split(',').filter(Boolean);
   const priceFrom = Number(params.priceFrom) || DEFAULT_PRICE_FROM;
   const priceTo = Number(params.priceTo) || DEFAULT_PRICE_TO;
 
@@ -29,16 +28,18 @@ export const findPizzas = async (params: GetSearchParams) => {
     include: {
       products: {
         where: {
-          ...(ingredients && {
-            ingredients: {
-              some: { id: { in: ingredients } },
-            },
-          }),
+          ...(ingredients &&
+            ingredients.length > 0 && {
+              ingredients: {
+                some: { id: { in: ingredients } },
+              },
+            }),
           productItems: {
             some: {
               price: { gte: priceFrom, lte: priceTo },
-              ...(sizes && { size: { in: sizes } }),
-              ...(pizzaTypes && { pizzaType: { in: pizzaTypes } }),
+              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }), // Changed: size → sizeId
+              ...(pizzaTypes &&
+                pizzaTypes.length > 0 && { typeId: { in: pizzaTypes } }), // Changed: pizzaType → typeId
             },
           },
         },
@@ -47,10 +48,15 @@ export const findPizzas = async (params: GetSearchParams) => {
           productItems: {
             where: {
               price: { gte: priceFrom, lte: priceTo },
-              ...(sizes && { size: { in: sizes } }),
-              ...(pizzaTypes && { pizzaType: { in: pizzaTypes } }),
+              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }), // Changed: size → sizeId
+              ...(pizzaTypes &&
+                pizzaTypes.length > 0 && { typeId: { in: pizzaTypes } }), // Changed: pizzaType → typeId
             },
             orderBy: { createdAt: 'asc' },
+            include: {
+              size: true,
+              type: true,
+            },
           },
         },
       },

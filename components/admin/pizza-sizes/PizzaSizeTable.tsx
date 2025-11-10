@@ -52,7 +52,7 @@ export function PizzaSizeTable() {
       </div>
 
       {isPending ? (
-        <Card className='shadow-md border border-gray-200 rounded-xl'>
+        <Card className='border border-gray-200 shadow-md rounded-xl'>
           <CardContent className='p-6 space-y-4'>
             {[...Array(5)].map((_, i) => (
               <Skeleton key={i} className='w-full h-16' />
@@ -60,28 +60,28 @@ export function PizzaSizeTable() {
           </CardContent>
         </Card>
       ) : !sizes?.length ? (
-        <div className='mt-10 text-muted-foreground text-2xl text-center'>
+        <div className='mt-10 text-2xl text-center text-muted-foreground'>
           Размеры не найдены
         </div>
       ) : (
-        <Card className='shadow-md border border-gray-200 rounded-xl overflow-x-auto'>
+        <Card className='overflow-x-auto border border-gray-200 shadow-md rounded-xl'>
           <CardContent className='p-6'>
             <Table>
               <TableHeader>
                 <TableRow className='bg-gray-50 hover:bg-gray-50'>
-                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     №
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     Название
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
                     Диаметр (см)
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
                     Дата создания
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-right text-gray-700 uppercase'>
                     Действия
                   </TableHead>
                 </TableRow>
@@ -91,10 +91,10 @@ export function PizzaSizeTable() {
                 {sizes.map((size: PizzaSizeWithProductCount, index: number) => (
                   <TableRow
                     key={size.id}
-                    className='hover:bg-gray-50 transition-colors'
+                    className='transition-colors hover:bg-gray-50'
                   >
                     <TableCell className='py-4'>
-                      <div className='flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white'>
+                      <div className='flex items-center justify-center w-8 h-8 font-bold text-white rounded-lg shadow-md bg-gradient-to-br from-primary to-primary/80'>
                         {index + 1}
                       </div>
                     </TableCell>
@@ -103,10 +103,10 @@ export function PizzaSizeTable() {
                         {size.label}
                       </span>
                     </TableCell>
-                    <TableCell className='py-4 text-gray-700 text-center'>
+                    <TableCell className='py-4 text-center text-gray-700'>
                       {size.size}
                     </TableCell>
-                    <TableCell className='py-4 text-gray-600 text-center'>
+                    <TableCell className='py-4 text-center text-gray-600'>
                       {new Date(size.createdAt).toLocaleDateString('ru-RU', {
                         day: '2-digit',
                         month: 'short',
@@ -153,6 +153,9 @@ export function PizzaSizeTable() {
         isDeleting={isDeleting}
         title='Удалить размер'
         description='Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить.'
+        showAlert={true}
+        alertDescription='Все связанные элементы продукта, использующие этот размер,
+              будут установлены как «Стандартный» после удаления.'
       />
     </div>
   );
