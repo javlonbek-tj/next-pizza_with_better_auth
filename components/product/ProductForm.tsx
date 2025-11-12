@@ -16,8 +16,9 @@ export function ProductForm({ product, isModal, onClose }: Props) {
 
   const pizzaOptions = usePizzaOptions(product);
 
-  // TODO: Better detection for pizza products
-  const isPizza = Boolean(product.productItems[0].typeId);
+  const isPizza = Boolean(
+    product.productItems[0].sizeId || product.productItems[0].typeId
+  );
 
   const handleAddToCart = () => {
     addToCart({

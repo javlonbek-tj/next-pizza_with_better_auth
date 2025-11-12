@@ -15,7 +15,12 @@ export default async function ProductModalPage({
     },
     include: {
       ingredients: true,
-      productItems: true,
+      productItems: {
+        include: {
+          size: true,
+          type: true,
+        },
+      },
     },
   });
   if (!product) {

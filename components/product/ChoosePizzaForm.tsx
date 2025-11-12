@@ -1,13 +1,9 @@
 'use client';
-
 import { Loader } from 'lucide-react';
-
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { cn } from '@/lib';
 import { PizzaImage } from './PizzaImage';
 import { Title } from '../shared';
-import { PizzaSize, PizzaType, pizzaTypes } from '@/lib/constants';
-
 import { usePizzaOptions } from '@/hooks';
 import { GroupVariants } from './GroupVariants';
 import { IngredientItem } from './Ingredient';
@@ -33,25 +29,38 @@ export function ChoosePizzaForm({
 }: Props) {
   const {
     allPizzaSizes,
-    type,
-    size,
-    setSize,
-    setType,
+    allPizzaTypes,
+    typeId,
+    sizeId,
+    setSizeId,
+    setTypeId,
     selectedIngredients,
     addIngredient,
     description,
     hasValidPizzaItems,
     error,
     totalPrice,
+    isPending: isOptionsPending,
+    pizzaSize,
   } = pizzaOptions;
+
+  if (isOptionsPending) {
+    return (
+      <div className='flex items-center justify-center h-[500px]'>
+        <Loader className='w-8 h-8 animate-spin' />
+      </div>
+    );
+  }
+
   if (!hasValidPizzaItems) {
     return <InvalidPizzaItems error={error} />;
   }
+
   return (
     <div className={cn('flex', !isModal && ' max-w-5xl mx-auto ', className)}>
       <PizzaImage
         imageUrl={product.imageUrl}
-        size={size}
+        size={pizzaSize}
         className={isModal ? '' : 'rounded-2xl overflow-hidden bg-[#FFF7EE]'}
       />
       <div
@@ -64,14 +73,14 @@ export function ChoosePizzaForm({
         <p className='text-gray-400'>{description}</p>
         <GroupVariants
           variants={allPizzaSizes}
-          value={size}
-          onClick={(value) => setSize(value as PizzaSize)}
+          value={sizeId}
+          onSelect={(value) => setSizeId(value)}
           className='mt-4'
         />
         <GroupVariants
-          variants={pizzaTypes}
-          value={type}
-          onClick={(value) => setType(value as PizzaType)}
+          variants={allPizzaTypes}
+          value={typeId}
+          onSelect={(value) => setTypeId(value)}
           className='mt-3'
         />
         <Title text='Ингредиенты' size='xs' className='mt-4' />
@@ -88,7 +97,7 @@ export function ChoosePizzaForm({
           ))}
         </div>
         <Button
-          className='mt-5 py-5 w-full cursor-pointer'
+          className='w-full py-5 mt-5 cursor-pointer'
           disabled={isPending}
           onClick={onAddToCart}
         >

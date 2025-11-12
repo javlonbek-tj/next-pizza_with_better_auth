@@ -1,15 +1,16 @@
 import { cn } from '@/lib';
+import { PizzaSize, PizzaType } from '@/lib/generated/prisma';
 
 interface Props {
   className?: string;
   variants: Variant[];
-  value: string;
-  onSelect: (value: string) => void;
+  value: PizzaSize | PizzaType;
+  onSelect: (value: PizzaSize | PizzaType) => void;
 }
 
 export type Variant = {
   name: string;
-  value: string;
+  value: PizzaSize | PizzaType;
   disabled?: boolean;
 };
 
@@ -22,11 +23,11 @@ export function GroupVariants({ className, variants, value, onSelect }: Props) {
       )}
     >
       {variants.map((variant) => {
-        const isSelected = variant.value === value;
+        const isSelected = variant.value.id === value?.id;
 
         return (
           <button
-            key={variant.value}
+            key={variant.value.id}
             type='button'
             aria-pressed={isSelected}
             disabled={variant.disabled}

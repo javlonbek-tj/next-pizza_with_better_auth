@@ -6,14 +6,14 @@ import { useSet } from 'react-use';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { totalPizzaPrice } from '@/lib/product';
 import { Variant } from '@/components/product/GroupVariants';
-import { PizzaSize } from '@/lib/generated/prisma';
+import { PizzaSize, PizzaType } from '@/lib/generated/prisma';
 import { useGetPizzaSizes, useGetPizzaTypes } from '../admin';
 
 interface ReturnProps {
-  typeId: string;
-  setTypeId: (id: string) => void;
-  sizeId: string;
-  setSizeId: (id: string) => void;
+  type: PizzaType;
+  setType: (type: PizzaType) => void;
+  size: PizzaSize;
+  setSize: (size: PizzaSize) => void;
   allPizzaSizes: Variant[];
   allPizzaTypes: Variant[];
   selectedIngredients: Set<string>;
@@ -24,98 +24,104 @@ interface ReturnProps {
   selectedPizzaItemId: string | null;
   totalPrice: number;
   isPending: boolean;
-  pizzaSize?: number;
 }
 
 export const usePizzaOptions = (product: ProductWithRelations): ReturnProps => {
+  const validPizzaItems = product.productItems.filter(
+    (item) => item.typeId !== null && item.sizeId !== null
+  );
   const { data: pizzaSizes = [], isPending: isPizzaSizesPending } =
     useGetPizzaSizes();
   const { data: pizzaTypes = [], isPending: isPizzaTypesPending } =
     useGetPizzaTypes();
+
   const isPending = isPizzaSizesPending || isPizzaTypesPending;
 
-  const validPizzaItems = product.productItems.filter(
-    (item) => item.typeId !== null && item.sizeId !== null
-  );
-
   const hasValidPizzaItems = validPizzaItems.length > 0;
+  const firstValidItem = validPizzaItems[0];
+  const defaultType = firstValidItem.type as PizzaType;
+  const defaultSize = firstValidItem.size as PizzaSize;
 
-  const defaultTypeId = validPizzaItems[0]?.type?.id as string;
-  const defaultSizeId = validPizzaItems[0]?.size?.id as string;
-
-  const [typeId, setTypeId] = useState<string>(defaultTypeId);
-  const [sizeId, setSizeId] = useState<string>(defaultSizeId);
+  const [type, setType] = useState<PizzaType>(defaultType);
+  const [size, setSize] = useState<PizzaSize>(defaultSize);
   const [selectedIngredients, { toggle: addIngredient }] = useSet(
     new Set<string>([])
   );
 
   const availableSizes = validPizzaItems
-    .filter((item) => item.type?.id === typeId)
+    .filter((item) => item.type?.id === type?.id)
     .map((item) => item.size);
 
-  const handleTypeChange = (newTypeId: string) => {
+  const handleTypeChange = (newType: PizzaType) => {
     const newAvailableSizes = validPizzaItems
-      .filter((item) => item.type?.id === newTypeId)
+      .filter((item) => item.type?.id === newType.id)
       .map((item) => item.size as PizzaSize);
 
     const isCurrentSizeAvailable = newAvailableSizes.find(
-      (size) => size.id === sizeId
+      (s) => s.id === size?.id
     );
 
-    setTypeId(newTypeId);
+    setType(newType);
     if (!isCurrentSizeAvailable && newAvailableSizes.length > 0) {
-      setSizeId(newAvailableSizes[0].id);
+      setSize(newAvailableSizes[0]);
     }
   };
 
-  const allPizzaSizes = pizzaSizes.map((pizzaSize): Variant => {
+  const allPizzaSizes = pizzaSizes.map((variant): Variant => {
     return {
-      name: pizzaSize.label,
-      value: pizzaSize.id,
-      disabled: !availableSizes.some((size) => size?.id === pizzaSize.id),
+      name: variant.label,
+      value: variant,
+      disabled: !availableSizes.some((size) => size?.id === variant.id),
     };
   });
 
-  const allPizzaTypes = pizzaTypes.map((pizzaType): Variant => {
+  const allPizzaTypes = pizzaTypes.map((variant): Variant => {
     return {
-      name: pizzaType.type,
-      value: pizzaType.id,
-      disabled: !validPizzaItems.some((item) => item.type?.id === pizzaType.id),
+      name: variant.type,
+      value: variant,
+      disabled: !validPizzaItems.some((item) => item.type?.id === variant.id),
     };
   });
+
+  console.log('[VALID PIZZA ITEMS]', validPizzaItems);
+
+  console.log('[type]', type);
+
+  console.log('[size]', size);
+
+  console.log('[ALL PIZZA SIZES]', allPizzaSizes);
+
+  console.log('[ALL PIZZA TYPES]', allPizzaTypes);
 
   const description = hasValidPizzaItems
-    ? `${pizzaSizes.find((size) => size.id === sizeId)?.size} см, ${
-        pizzaTypes.find((type) => type.id === typeId)?.type
-      } пицца`
+    ? `${size?.size} см, ${type?.type} пицца`
     : 'Конфигурация недоступна';
 
-  const error = hasValidPizzaItems
-    ? undefined
-    : 'У этого продукта отсутствуют корректные варианты размера и типа';
+  let error: string | undefined;
+  if (!hasValidPizzaItems) {
+    error = 'У этого продукта отсутствуют корректные варианты размера и типа';
+  }
 
   const selectedPizzaItemId =
     validPizzaItems.find(
-      (item) => item.size?.id === sizeId && item.type?.id === typeId
+      (item) => item.size?.id === size?.id && item.type?.id === type?.id
     )?.id || null;
 
   const totalPrice = hasValidPizzaItems
     ? totalPizzaPrice(
         product.productItems,
         product.ingredients,
-        typeId,
-        sizeId,
+        type,
+        size,
         selectedIngredients
       )
     : 0;
 
-  const pizzaSize = pizzaSizes.find((size) => size.id === sizeId)?.size;
-
   return {
-    typeId,
-    setTypeId: handleTypeChange,
-    sizeId,
-    setSizeId,
+    type,
+    setType: handleTypeChange,
+    size,
+    setSize,
     allPizzaSizes,
     allPizzaTypes,
     selectedIngredients,
@@ -126,6 +132,5 @@ export const usePizzaOptions = (product: ProductWithRelations): ReturnProps => {
     selectedPizzaItemId,
     totalPrice,
     isPending,
-    pizzaSize,
   };
 };

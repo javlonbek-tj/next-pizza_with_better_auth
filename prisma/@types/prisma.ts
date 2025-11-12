@@ -13,7 +13,7 @@ export type ProductItems = ProductItem & {
 };
 
 export type ProductWithRelations = Product & {
-  productItems: ProductItem[];
+  productItems: ProductItems[];
   ingredients: Ingredient[];
   category?: Category | null;
 };

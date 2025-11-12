@@ -1,16 +1,15 @@
-import { PizzaSize, PizzaType } from '@/lib/constants/pizza';
 import { Ingredient, ProductItem } from '@/lib/generated/prisma/client';
 import Decimal from 'decimal.js';
 
 export const totalPizzaPrice = (
   items: ProductItem[],
   ingredients: Ingredient[],
-  type: PizzaType,
-  size: PizzaSize,
+  typeId: string,
+  sizeId: string,
   selectedIngredients: Set<string>
 ) => {
   const pizzaPrice = new Decimal(
-    items.find((item) => item.pizzaType === type && item.size === size)
+    items.find((item) => item.typeId === typeId && item.sizeId === sizeId)
       ?.price || 0
   );
 
