@@ -4,6 +4,9 @@ import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 
 import { Title } from '../shared';
+import { IngredientItem } from './Ingredient';
+import { Ingredient } from '@/lib/generated/prisma';
+import { totalProductPrice } from '@/lib';
 
 interface Props {
   className?: string;
@@ -13,6 +16,9 @@ interface Props {
   onAddToCart: () => void;
   isPending: boolean;
   isModal: boolean;
+  selectedIngredients: Set<string>;
+  addIngredient: (id: string) => void;
+  ingredients?: Ingredient[];
 }
 
 export function ChooseProductForm({
@@ -23,7 +29,11 @@ export function ChooseProductForm({
   onAddToCart,
   isPending,
   isModal,
+  selectedIngredients,
+  addIngredient,
+  ingredients = [],
 }: Props) {
+  const totalPrice = totalProductPrice(price, ingredients, selectedIngredients);
   return (
     <div
       className={cn(
@@ -47,6 +57,19 @@ export function ChooseProductForm({
         )}
       >
         <Title text={name} size="md" />
+        <Title text="Ингредиенты" size="xs" className="mt-4" />
+        <div className="gap-2 grid grid-cols-3 mt-4 h-[340px] overflow-y-scroll scrollbar-thin">
+          {ingredients.map((ingredient) => (
+            <IngredientItem
+              ingredient={ingredient}
+              key={ingredient.id}
+              selectedIngredients={selectedIngredients}
+              onClick={() => addIngredient(ingredient.id)}
+              active={selectedIngredients.has(ingredient.id)}
+              className={isModal ? '' : 'bg-[#f7f6f5]'}
+            />
+          ))}
+        </div>
         <Button
           className={cn(
             'mt-5 w-full cursor-pointer',
@@ -58,7 +81,7 @@ export function ChooseProductForm({
           {isPending ? (
             <Loader className="w-5 h-5 animate-spin" />
           ) : (
-            `Добавить в корзину за ${price} ₽`
+            `Добавить в корзину за ${totalPrice} ₽`
           )}
         </Button>
       </div>

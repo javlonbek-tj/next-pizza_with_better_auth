@@ -3,7 +3,7 @@
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { ChoosePizzaForm } from './ChoosePizzaForm';
 import { ChooseProductForm } from './ChooseProductForm';
-import { usePizzaOptions, useAddToCart } from '@/hooks';
+import { usePizzaDetail, useProductDetail } from '@/hooks';
 
 interface Props {
   product: ProductWithRelations;
@@ -12,36 +12,48 @@ interface Props {
 }
 
 export function ProductForm({ product, isModal, onClose }: Props) {
-  const { mutate: addToCart, isPending } = useAddToCart();
-
-  const pizzaOptions = usePizzaOptions(product);
-
   const isPizza = Boolean(
-    product.productItems[0].sizeId || product.productItems[0].typeId
+    product.productItems[0]?.sizeId || product.productItems[0]?.typeId
   );
 
-  const handleAddToCart = () => {
-    addToCart({
-      productItemId:
-        pizzaOptions.selectedPizzaItemId ?? product.productItems[0].id,
-      quantity: 1,
-      ingredients: Array.from(pizzaOptions.selectedIngredients),
-    });
+  if (isPizza) {
+    return (
+      <PizzaFormWrapper product={product} isModal={isModal} onClose={onClose} />
+    );
+  }
 
-    if (isModal) {
-      onClose?.();
-    }
-  };
+  return (
+    <RegularProductFormWrapper
+      product={product}
+      isModal={isModal}
+      onClose={onClose}
+    />
+  );
+}
 
-  return isPizza ? (
+function PizzaFormWrapper({ product, isModal, onClose }: Props) {
+  const { pizzaOptions, handleAddToCart, isSubmitting } = usePizzaDetail(
+    product,
+    onClose,
+    isModal
+  );
+
+  return (
     <ChoosePizzaForm
       product={product}
       onAddToCart={handleAddToCart}
-      isPending={isPending}
+      isSubmitting={isSubmitting}
       isModal={isModal}
       pizzaOptions={pizzaOptions}
     />
-  ) : (
+  );
+}
+
+function RegularProductFormWrapper({ product, isModal, onClose }: Props) {
+  const { handleAddToCart, isPending, selectedIngredients, addIngredient } =
+    useProductDetail(product, onClose, isModal);
+
+  return (
     <ChooseProductForm
       imageUrl={product.imageUrl}
       name={product.name}
@@ -49,6 +61,9 @@ export function ProductForm({ product, isModal, onClose }: Props) {
       onAddToCart={handleAddToCart}
       isPending={isPending}
       isModal={isModal}
+      selectedIngredients={selectedIngredients}
+      addIngredient={addIngredient}
+      ingredients={product.ingredients}
     />
   );
 }

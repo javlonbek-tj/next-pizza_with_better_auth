@@ -8,13 +8,13 @@ import { usePizzaOptions } from '@/hooks';
 import { GroupVariants } from './GroupVariants';
 import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
-import { InvalidPizzaItems } from './InvalidPizzaItems';
+import { GroupVariantsSkeleton } from '../skeletons/GorupVariantsSkeleton';
 
 interface Props {
   className?: string;
   product: ProductWithRelations;
   onAddToCart: () => void;
-  isPending: boolean;
+  isSubmitting: boolean;
   isModal: boolean;
   pizzaOptions: ReturnType<typeof usePizzaOptions>;
 }
@@ -23,7 +23,7 @@ export function ChoosePizzaForm({
   className,
   product,
   onAddToCart,
-  isPending,
+  isSubmitting,
   isModal,
   pizzaOptions,
 }: Props) {
@@ -37,24 +37,10 @@ export function ChoosePizzaForm({
     selectedIngredients,
     addIngredient,
     description,
-    hasValidPizzaItems,
-    error,
     totalPrice,
     isPending: isOptionsPending,
     pizzaSize,
   } = pizzaOptions;
-
-  if (isOptionsPending) {
-    return (
-      <div className='flex items-center justify-center h-[500px]'>
-        <Loader className='w-8 h-8 animate-spin' />
-      </div>
-    );
-  }
-
-  if (!hasValidPizzaItems) {
-    return <InvalidPizzaItems error={error} />;
-  }
 
   return (
     <div className={cn('flex', !isModal && ' max-w-5xl mx-auto ', className)}>
@@ -69,22 +55,35 @@ export function ChoosePizzaForm({
           isModal ? 'bg-[#f7f6f5]' : 'bg-white py-0'
         )}
       >
-        <Title text={product.name} size='md' />
-        <p className='text-gray-400'>{description}</p>
-        <GroupVariants
-          variants={allPizzaSizes}
-          value={sizeId}
-          onSelect={(value) => setSizeId(value)}
-          className='mt-4'
-        />
-        <GroupVariants
-          variants={allPizzaTypes}
-          value={typeId}
-          onSelect={(value) => setTypeId(value)}
-          className='mt-3'
-        />
-        <Title text='Ингредиенты' size='xs' className='mt-4' />
-        <div className='gap-2 grid grid-cols-3 mt-4 h-[340px] overflow-y-scroll scrollbar-thin'>
+        <Title text={product.name} size="md" />
+        <p className="text-gray-400">{description}</p>
+
+        {/* Pizza Sizes with Skeleton */}
+        {isOptionsPending ? (
+          <GroupVariantsSkeleton itemCount={3} className="mt-4" />
+        ) : (
+          <GroupVariants
+            variants={allPizzaSizes}
+            value={sizeId}
+            onSelect={(value) => setSizeId(value)}
+            className="mt-4"
+          />
+        )}
+
+        {/* Pizza Types with Skeleton */}
+        {isOptionsPending ? (
+          <GroupVariantsSkeleton itemCount={2} className="mt-3" />
+        ) : (
+          <GroupVariants
+            variants={allPizzaTypes}
+            value={typeId}
+            onSelect={(value) => setTypeId(value)}
+            className="mt-3"
+          />
+        )}
+
+        <Title text="Ингредиенты" size="xs" className="mt-4" />
+        <div className="gap-2 grid grid-cols-3 mt-4 h-[340px] overflow-y-scroll scrollbar-thin">
           {product.ingredients.map((ingredient) => (
             <IngredientItem
               ingredient={ingredient}
@@ -97,12 +96,12 @@ export function ChoosePizzaForm({
           ))}
         </div>
         <Button
-          className='w-full py-5 mt-5 cursor-pointer'
-          disabled={isPending}
+          className="mt-5 py-5 w-full cursor-pointer"
+          disabled={isSubmitting || isOptionsPending}
           onClick={onAddToCart}
         >
-          {isPending ? (
-            <Loader className='w-5 h-5 animate-spin' />
+          {isSubmitting ? (
+            <Loader className="w-5 h-5 animate-spin" />
           ) : (
             <>Добавить в корзину за {totalPrice} ₽</>
           )}

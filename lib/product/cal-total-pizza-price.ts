@@ -3,14 +3,12 @@ import Decimal from 'decimal.js';
 
 export const totalPizzaPrice = (
   items: ProductItem[],
+  selectedPizzaItemId: string | undefined,
   ingredients: Ingredient[],
-  typeId: string,
-  sizeId: string,
   selectedIngredients: Set<string>
 ) => {
   const pizzaPrice = new Decimal(
-    items.find((item) => item.typeId === typeId && item.sizeId === sizeId)
-      ?.price || 0
+    items.find((item) => item.id === selectedPizzaItemId)?.price || 0
   );
 
   const totalIngredientsPrice = ingredients
