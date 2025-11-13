@@ -75,14 +75,14 @@ export type PizzaType = keyof typeof mapPizzaType;
 export const pizzaTypes: Variant[] = Object.entries(mapPizzaType).map(
   ([value, name]) => ({
     name,
-    value: Number(value) as PizzaType,
+    value,
   })
 );
 
 export const pizzaSizes: Variant[] = Object.entries(mapPizzaSize).map(
   ([value, name]) => ({
     name,
-    value: Number(value) as PizzaSize,
+    value,
   })
 );
 

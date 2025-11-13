@@ -33,7 +33,7 @@ export function Categories({ className }: Props) {
       ) : (
         categories.map((category) => (
           <a
-            key={category.name}
+            key={category.id}
             href={`/#${category.slug}`}
             onClick={() => handleClick(category.slug)}
             className={cn(

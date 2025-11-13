@@ -36,54 +36,63 @@ export function ChooseProductForm({
   const totalPrice = totalProductPrice(price, ingredients, selectedIngredients);
   return (
     <div
-      className={cn(
-        'flex items-stretch',
-        !isModal && 'max-w-4xl mx-auto',
-        className
-      )}
+      className={cn('flex h-full', !isModal && 'max-w-4xl mx-auto', className)}
     >
+      {/* Left: Image */}
       <div
         className={cn(
           'flex flex-1 justify-center items-center',
           !isModal && 'rounded-2xl overflow-hidden bg-[#FFF7EE]'
         )}
       >
-        <Image src={imageUrl} alt={name} width={300} height={300} />
+        <Image
+          src={imageUrl}
+          alt={name}
+          width={300}
+          height={300}
+          className='object-cover'
+        />
       </div>
+
+      {/* Right: Form */}
       <div
         className={cn(
-          'flex flex-col flex-1 justify-between bg-[#f7f6f5] p-7',
-          !isModal && 'bg-white py-0'
+          'flex-1 flex flex-col',
+          isModal ? 'bg-[#f7f6f5]' : 'bg-white'
         )}
       >
-        <Title text={name} size="md" />
-        <Title text="Ингредиенты" size="xs" className="mt-4" />
-        <div className="gap-2 grid grid-cols-3 mt-4 h-[340px] overflow-y-scroll scrollbar-thin">
-          {ingredients.map((ingredient) => (
-            <IngredientItem
-              ingredient={ingredient}
-              key={ingredient.id}
-              selectedIngredients={selectedIngredients}
-              onClick={() => addIngredient(ingredient.id)}
-              active={selectedIngredients.has(ingredient.id)}
-              className={isModal ? '' : 'bg-[#f7f6f5]'}
-            />
-          ))}
+        {/* Scrollable Area */}
+        <div className='flex-1 overflow-y-auto p-7 scrollbar-thin'>
+          <Title text={name} size='md' className='mb-1' />
+          <Title text='Ингредиенты' size='xs' className='mt-4 mb-2' />
+          <div className='grid grid-cols-3 gap-2'>
+            {ingredients.map((ingredient) => (
+              <IngredientItem
+                key={ingredient.id}
+                ingredient={ingredient}
+                selectedIngredients={selectedIngredients}
+                onClick={() => addIngredient(ingredient.id)}
+                active={selectedIngredients.has(ingredient.id)}
+                className={isModal ? '' : 'bg-[#f7f6f5]'}
+              />
+            ))}
+          </div>
         </div>
-        <Button
-          className={cn(
-            'mt-5 w-full cursor-pointer',
-            isModal ? 'py-5 text-base' : 'py-3 text-sm max-w-xs mx-auto'
-          )}
-          disabled={isPending}
-          onClick={onAddToCart}
-        >
-          {isPending ? (
-            <Loader className="w-5 h-5 animate-spin" />
-          ) : (
-            `Добавить в корзину за ${totalPrice} ₽`
-          )}
-        </Button>
+
+        {/* Fixed Button */}
+        <div className={cn('p-7 pt-0', isModal ? 'bg-[#f7f6f5]' : 'bg-white')}>
+          <Button
+            className='w-full py-5'
+            disabled={isPending}
+            onClick={onAddToCart}
+          >
+            {isPending ? (
+              <Loader className='w-5 h-5 animate-spin' />
+            ) : (
+              <>Добавить в корзину за {totalPrice} ₽</>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );

@@ -1,34 +1,36 @@
-import { notFound } from 'next/navigation';
-import prisma from '@/prisma/prisma-client';
+'use client';
 
-import { Container } from '@/components/shared';
+import { Container, Spinner } from '@/components/shared';
 import { ProductForm } from '@/components/product';
+import { useGetPizzaSizes, useGetPizzaTypes, useGetProduct } from '@/hooks';
 
-export default async function ProductPage({
-  params,
-}: {
-  params: { id: string };
-}) {
-  const param = await params;
+export default function ProductPage({ params }: { params: { id: string } }) {
+  const { data: product, isPending: isProductPending } = useGetProduct(
+    params.id
+  );
+  const { data: pizzaSizes = [], isPending: isPizzaSizesPending } =
+    useGetPizzaSizes();
+  const { data: pizzaTypes = [], isPending: isPizzaTypesPending } =
+    useGetPizzaTypes();
 
-  const product = await prisma.product.findUnique({
-    where: { id: param.id },
-    include: {
-      productItems: {
-        include: {
-          size: true,
-          type: true,
-        },
-      },
-      ingredients: true,
-    },
-  });
-
-  if (!product) return notFound();
+  const isPending =
+    isProductPending || isPizzaSizesPending || isPizzaTypesPending;
 
   return (
     <Container className='my-10'>
-      <ProductForm product={product} isModal={false} />
+      {isPending ? (
+        <Spinner className='mt-36' />
+      ) : (
+        <div className='p-0 h-[600px]'>
+          <ProductForm
+            product={product}
+            isModal={false}
+            isPending={isPending}
+            pizzaSizes={pizzaSizes}
+            pizzaTypes={pizzaTypes}
+          />
+        </div>
+      )}
     </Container>
   );
 }

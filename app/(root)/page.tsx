@@ -21,10 +21,11 @@ export default async function Home({
       <TopBarContent />
 
       <Container className='flex gap-16 mt-10 pb-14'>
-        <div className='w-[250px]'>
+        <aside className='w-[250px] sticky top-24 self-start'>
           <Filters />
-        </div>
-        <div className='flex flex-col flex-1 gap-16'>
+        </aside>
+
+        <div className='flex-1 min-w-0'>
           <Suspense
             key={JSON.stringify(resolvedSearchParams)}
             fallback={<ProductsSkeleton />}

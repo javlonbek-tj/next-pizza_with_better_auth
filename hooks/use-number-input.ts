@@ -1,9 +1,6 @@
 import { useEffect, useState } from 'react';
 import { PizzaSize } from '@/lib/generated/prisma';
 
-/**
- * Hook to manage pizza size input formatting
- */
 export function useNumberInput(
   pizzaSize: PizzaSize | null | undefined,
   open: boolean

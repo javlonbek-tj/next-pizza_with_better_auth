@@ -1,31 +1,31 @@
-import { notFound } from 'next/navigation';
-import prisma from '@/prisma/prisma-client';
+'use client';
 
+import { use } from 'react';
 import { ChooseProductModal } from '@/components/modals';
+import { useGetPizzaSizes, useGetPizzaTypes, useGetProduct } from '@/hooks';
 
-export default async function ProductModalPage({
+export default function ProductModalPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const param = await params;
-  const product = await prisma.product.findFirst({
-    where: {
-      id: param.id,
-    },
-    include: {
-      ingredients: true,
-      productItems: {
-        include: {
-          size: true,
-          type: true,
-        },
-      },
-    },
-  });
-  if (!product) {
-    return notFound();
-  }
+  const { id } = use(params);
 
-  return <ChooseProductModal product={product} />;
+  const { data: product, isPending: isProductPending } = useGetProduct(id);
+  const { data: pizzaSizes = [], isPending: isPizzaSizesPending } =
+    useGetPizzaSizes();
+  const { data: pizzaTypes = [], isPending: isPizzaTypesPending } =
+    useGetPizzaTypes();
+
+  const isPending =
+    isProductPending || isPizzaSizesPending || isPizzaTypesPending;
+
+  return (
+    <ChooseProductModal
+      product={product}
+      isPending={isPending}
+      pizzaSizes={pizzaSizes}
+      pizzaTypes={pizzaTypes}
+    />
+  );
 }
