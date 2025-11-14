@@ -32,10 +32,10 @@ export function ChooseProductModal({
       }}
     >
       <DialogContent
-        size='xl'
-        className={cn('p-0 h-[600px] flex flex-col', className)}
+        size="xl"
+        className={cn('flex flex-col p-0 h-[620px]', className)}
       >
-        <DialogTitle className='sr-only'>
+        <DialogTitle className="sr-only">
           Choose {product?.name || 'Product'}
         </DialogTitle>
 
@@ -51,11 +51,11 @@ export function ChooseProductModal({
             pizzaTypes={pizzaTypes}
           />
         ) : (
-          <div className='flex flex-col items-center justify-center min-h-[500px] gap-4'>
-            <p className='text-lg text-gray-500'>Продукт не найден</p>
+          <div className="flex flex-col justify-center items-center gap-4 min-h-[500px]">
+            <p className="text-gray-500 text-lg">Продукт не найден</p>
             <button
               onClick={handleClose}
-              className='px-4 py-2 text-white transition-colors rounded-lg bg-primary hover:bg-primary/90'
+              className="bg-primary hover:bg-primary/90 px-4 py-2 rounded-lg text-white transition-colors"
             >
               Закрыть
             </button>

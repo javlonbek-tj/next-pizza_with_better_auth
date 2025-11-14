@@ -49,5 +49,9 @@ export const useQueryFilters = (filters: Filters) => {
   }, [updateUrl]);
 
   // Return only for internal use (e.g. disabling buttons)
+<<<<<<< HEAD
   return { isPending: isPending && !isInitialMount.current };
+=======
+  return { isSyncPending: isPending && !isInitialMount.current };
+>>>>>>> d6b396e0c68a01ed69935cbdca2ea0ddc93d2884
 };
