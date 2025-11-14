@@ -80,35 +80,39 @@ export function ChoosePizzaForm({
         className={isModal ? '' : 'rounded-2xl overflow-hidden bg-[#FFF7EE]'}
       />
 
-      {/* Right side - with flex column and proper height management */}
       <div
         className={cn(
-          'flex-1 flex flex-col',
+          'flex flex-col flex-1',
           isModal ? 'bg-[#f7f6f5]' : 'bg-white'
         )}
       >
         {/* Scrollable content */}
-        <div className='flex-1 overflow-y-auto p-7 scrollbar-thin'>
-          <Title text={product.name} size='md' />
-          <p className='text-gray-400'>{description}</p>
+        <div
+          className={cn(
+            'flex-1 px-7 overflow-y-auto scrollbar-thin',
+            isModal && 'py-4'
+          )}
+        >
+          <Title text={product.name} size="md" />
+          <p className="text-gray-400">{description}</p>
 
           <GroupVariants
             variants={allPizzaSizes}
             value={sizeId}
             onSelect={(value) => setSizeId(value)}
-            className='mt-4'
+            className="mt-4"
           />
 
           <GroupVariants
             variants={allPizzaTypes}
             value={typeId}
             onSelect={(value) => setTypeId(value)}
-            className='mt-3'
+            className="mt-3"
           />
 
-          <Title text='Ингредиенты' size='xs' className='mt-4' />
+          <Title text="Ингредиенты" size="xs" className="mt-4" />
 
-          <div className='grid grid-cols-3 gap-2 pb-4 mt-4'>
+          <div className="gap-2 grid grid-cols-3 mt-4 pb-4">
             {product.ingredients.map((ingredient) => (
               <IngredientItem
                 ingredient={ingredient}
@@ -123,14 +127,19 @@ export function ChoosePizzaForm({
         </div>
 
         {/* Fixed button at bottom */}
-        <div className={cn('p-7', isModal ? 'bg-[#f7f6f5]' : 'bg-white')}>
+        <div
+          className={cn(
+            'px-7',
+            isModal ? 'py-4 bg-[#f7f6f5]' : 'bg-white pt-4'
+          )}
+        >
           <Button
-            className='w-full py-5 cursor-pointer'
+            className="py-5 w-full cursor-pointer"
             disabled={isSubmitting}
             onClick={onAddToCart}
           >
             {isSubmitting ? (
-              <Loader className='w-5 h-5 animate-spin' />
+              <Loader className="w-5 h-5 animate-spin" />
             ) : (
               <>Добавить в корзину за {totalPrice} ₽</>
             )}

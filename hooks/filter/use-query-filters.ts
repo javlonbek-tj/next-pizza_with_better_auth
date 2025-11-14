@@ -1,9 +1,10 @@
+// hooks/useQueryFilters.ts
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useTransition } from 'react';
 import qs from 'qs';
-import { Filters } from './filter/use-filters';
+import { Filters } from './use-filters';
 
 export const useQueryFilters = (filters: Filters) => {
   const isInitialMount = useRef(true);
@@ -28,26 +29,25 @@ export const useQueryFilters = (filters: Filters) => {
     });
 
     const currentQuery = searchParams.toString();
-
-    // Only update if the query actually changed
     if (newQuery === currentQuery) {
       isInitialMount.current = false;
       return;
     }
 
+    const push = () => router.push(`?${newQuery}`, { scroll: false });
+
     if (isInitialMount.current) {
       isInitialMount.current = false;
-      router.push(`?${newQuery}`, { scroll: false });
+      push();
     } else {
-      startTransition(() => {
-        router.push(`?${newQuery}`, { scroll: false });
-      });
+      startTransition(push);
     }
   }, [filters, router, searchParams, startTransition]);
 
   useEffect(() => {
     updateUrl();
-  }, [updateUrl, filters]);
+  }, [updateUrl]);
 
-  return { isPending: isPending && !isInitialMount.current };
+  // Return only for internal use (e.g. disabling buttons)
+  return { isSyncPending: isPending && !isInitialMount.current };
 };

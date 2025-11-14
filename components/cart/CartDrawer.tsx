@@ -1,5 +1,4 @@
-// CartDrawer.tsx
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react'; // ⬅️ import spinner icon
 import { PropsWithChildren, useState } from 'react';
 import { useIsMutating } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -23,6 +22,7 @@ import { authClient } from '@/lib/auth-client';
 
 export function CartDrawer({ children }: PropsWithChildren) {
   const [authOpen, setAuthOpen] = useState(false);
+  const [isRedirecting, setIsRedirecting] = useState(false); // ⬅️ new state
   const router = useRouter();
   const { data } = useCart();
 
@@ -39,13 +39,14 @@ export function CartDrawer({ children }: PropsWithChildren) {
       if (!isAuthenticated) {
         setAuthOpen(true);
       } else {
+        setIsRedirecting(true); // ⬅️ start spinner
         router.push('/checkout');
         router.refresh();
       }
     } catch (error) {
-      // TODO REMOVE IN PRODUCTION
       console.error('Session check failed:', error);
       setAuthOpen(true);
+      setIsRedirecting(false);
     }
   };
 
@@ -99,13 +100,28 @@ export function CartDrawer({ children }: PropsWithChildren) {
                   <span className="top-1 relative flex-1 border-b border-b-neutral-200 border-dashed"></span>
                   <span className="font-bold">{totalAmount} ₽</span>
                 </div>
-                <Button className="h-12 cursor-pointer" onClick={handleClick}>
+
+                <Button
+                  className="h-12 cursor-pointer"
+                  onClick={handleClick}
+                  disabled={isRedirecting} // ⬅️ prevent double click
+                >
                   <span className="flex items-center gap-2">
-                    Оформить заказ
-                    <ArrowRight />
+                    {isRedirecting ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        <span>Оформить заказ</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Оформить заказ</span>
+                        <ArrowRight />
+                      </>
+                    )}
                   </span>
                 </Button>
               </SheetFooter>
+
               <AuthModal
                 open={authOpen}
                 onClose={() => setAuthOpen(false)}

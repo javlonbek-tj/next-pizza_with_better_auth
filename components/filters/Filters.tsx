@@ -19,9 +19,6 @@ interface Props {
 }
 
 export function Filters({ className }: Props) {
-  const filters = useFilters();
-  const { isPending: isFiltersPending } = useQueryFilters(filters);
-
   const { data: ingredients = [], isPending: isIngredientsLoading } =
     useGetIngredients();
 
@@ -31,20 +28,17 @@ export function Filters({ className }: Props) {
   const { data: pizzaTypeOptions = [], isPending: isTypesLoading } =
     usePizzaTypes();
 
-  const isPending =
-    isFiltersPending ||
-    isSizesLoading ||
-    isTypesLoading ||
-    isIngredientsLoading;
+  const isDataLoading =
+    isSizesLoading || isTypesLoading || isIngredientsLoading;
 
   return (
     <div className={cn('relative', className)}>
-      <Title text='Фильтрация' size='sm' className='mb-5 font-bold' />
+      <Title text="Фильтрация" size="sm" className="mb-5 font-bold" />
 
-      {isPending ? (
+      {isDataLoading ? (
         <FilterSkeleton />
       ) : (
-        <div className=''>
+        <div className="">
           {/* ---------- Pizza Types ---------- */}
           {pizzaTypeOptions.length > 0 && (
             <FilterCheckboxGroup
@@ -52,9 +46,9 @@ export function Filters({ className }: Props) {
                 label: pizzaType.type,
                 value: pizzaType.id.toString(),
               }))}
-              name='pizza-type'
-              title='Тип теста'
-              className='mb-5'
+              name="pizza-type"
+              title="Тип теста"
+              className="mb-5"
               values={filters.pizzaTypes}
               onClickCheckbox={filters.togglePizzaType}
             />
@@ -67,9 +61,9 @@ export function Filters({ className }: Props) {
                 label: `${pizzaSize.size.toString()}  см`,
                 value: pizzaSize.size.toString(),
               }))}
-              name='pizza-size'
-              title='Размеры'
-              className='mb-5'
+              name="pizza-size"
+              title="Размеры"
+              className="mb-5"
               values={filters.pizzaSize}
               onClickCheckbox={filters.togglePizzaSize}
             />
@@ -77,8 +71,8 @@ export function Filters({ className }: Props) {
 
           {/* ---------- Price Range ---------- */}
           <PriceRange
-            className='pt-4 mb-6 border-t border-b border-gray-200 pb-7'
-            title='Цены от и до'
+            className="mb-6 pt-4 pb-7 border-gray-200 border-t border-b"
+            title="Цены от и до"
             min={DEFAULT_PRICE_FROM}
             max={DEFAULT_PRICE_TO}
             step={10}
@@ -96,10 +90,10 @@ export function Filters({ className }: Props) {
                 label: ingredient.name,
                 value: ingredient.id,
               }))}
-              name='ingredients'
-              title='Ингредиенты'
+              name="ingredients"
+              title="Ингредиенты"
               limit={6}
-              className='mb-5'
+              className="mb-5"
               values={filters.ingredientsIds}
               onClickCheckbox={filters.toggleIngredient}
             />

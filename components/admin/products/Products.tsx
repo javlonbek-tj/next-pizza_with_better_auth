@@ -22,7 +22,7 @@ import { useDeleteProduct, useGetProducts } from '@/hooks/admin/use-products';
 import { ProductFormDialog } from './ProductFormDialog';
 
 export function Products() {
-  const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
+  const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const {
     editingItem: editingProduct,
@@ -38,7 +38,7 @@ export function Products() {
   const { data: products, isPending } = useGetProducts();
   const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
 
-  const toggleRow = (productId: number) => {
+  const toggleRow = (productId: string) => {
     const newExpanded = new Set(expandedRows);
     if (newExpanded.has(productId)) {
       newExpanded.delete(productId);

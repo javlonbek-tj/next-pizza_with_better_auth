@@ -27,11 +27,11 @@ export function GroupVariants({ className, variants, value, onSelect }: Props) {
         return (
           <button
             key={variant.value}
-            type='button'
+            type="button"
             aria-pressed={isSelected}
             disabled={variant.disabled}
             className={cn(
-              'flex-1 px-4 py-1.5 rounded-full cursor-pointer',
+              'flex-1 px-4 py-1 rounded-full cursor-pointer',
               isSelected && 'bg-white pointer-events-none',
               variant.disabled && 'pointer-events-none opacity-50'
             )}

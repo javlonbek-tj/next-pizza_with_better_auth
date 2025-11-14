@@ -17,11 +17,11 @@ export default function ProductPage({ params }: { params: { id: string } }) {
     isProductPending || isPizzaSizesPending || isPizzaTypesPending;
 
   return (
-    <Container className='my-10'>
+    <Container className="my-10">
       {isPending ? (
-        <Spinner className='mt-36' />
+        <Spinner className="mt-36" />
       ) : (
-        <div className='p-0 h-[600px]'>
+        <div className="p-0 h-[500px]">
           <ProductForm
             product={product}
             isModal={false}
