@@ -1,47 +1,27 @@
 import { useEffect, useState } from 'react';
-import { PizzaSize } from '@/lib/generated/prisma';
 
-export function useNumberInput(
-  pizzaSize: PizzaSize | null | undefined,
-  open: boolean
-) {
-  const [sizeInput, setSizeInput] = useState('');
+export function useNumberInput(initialValue: string = '', open?: boolean) {
+  const [value, setValue] = useState(initialValue);
 
   useEffect(() => {
-    if (pizzaSize) {
-      setSizeInput(pizzaSize.size.toString());
-    } else {
-      setSizeInput('');
+    if (open) {
+      setValue(initialValue ?? '');
     }
-  }, [pizzaSize, open]);
+  }, [open, initialValue]);
 
-  const handleSizeChange = (
-    value: string,
-    onChange: (value: number) => void
-  ) => {
-    // Allow only digits (no decimals, no negatives)
-    if (!/^\d+$/.test(value)) {
-      return;
-    }
-
-    setSizeInput(value);
-
-    // Parse to number for Zod validation
-    const numValue = parseInt(value, 10);
-    onChange(isNaN(numValue) ? 0 : numValue);
-  };
-
-  const handleSizeBlur = (onChange: (value: number) => void) => {
-    const numValue = parseInt(sizeInput, 10);
-    if (!isNaN(numValue)) {
-      setSizeInput(numValue.toString());
-      onChange(numValue);
+  const handleChange = (value: string) => {
+    if (value === '' || /^\d+$/.test(value)) {
+      setValue(value);
     }
   };
 
-  return {
-    sizeInput,
-    handleSizeChange,
-    handleSizeBlur,
+  const handleBlur = (onExternalChange: (value: number) => void) => {
+    const num = parseInt(value, 10);
+    if (!isNaN(num)) {
+      setValue(String(num));
+      onExternalChange(num);
+    }
   };
+
+  return { value, onChange: handleChange, onBlur: handleBlur };
 }

@@ -1,58 +1,36 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export function usePriceInput(
-  value: number | null | undefined,
-  isOpen: boolean
-) {
-  const [priceInput, setPriceInput] = useState<string>('');
+export function usePriceInput(initialValue: string = '') {
+  const [priceInput, setPriceInput] = useState<string>(initialValue);
 
-  // Sync external value (e.g. from form or db)
-  useEffect(() => {
-    if (typeof value === 'number' && !isNaN(value)) {
-      setPriceInput(value.toString());
-    } else {
-      setPriceInput('');
+  const handlePriceChange = (input: string) => {
+    // Normalize comma to dot
+    const normalized = input.replace(',', '.');
+
+    // Allow empty or valid decimal with up to 2 decimals
+    if (normalized === '' || /^\d*\.?\d{0,2}$/.test(normalized)) {
+      setPriceInput(normalized);
     }
-  }, [value, isOpen]);
-
-  const handlePriceChange = (
-    input: string,
-    onChange: (num: number) => void
-  ) => {
-    // Allow empty string
-    if (input === '') {
-      setPriceInput('');
-      onChange(0);
-      return;
-    }
-
-    if (!/^\d*\.?\d{0,2}$/.test(input)) {
-      return;
-    }
-
-    setPriceInput(input);
-
-    const numValue = parseFloat(input);
-    onChange(isNaN(numValue) ? 0 : numValue);
+    // Otherwise, ignore invalid input (prevents typing bad chars)
   };
 
-  const handlePriceBlur = (onChange: (num: number) => void) => {
-    if (priceInput === '' || priceInput === '.') {
+  const handlePriceBlur = (onChange: (value: number | null) => void) => {
+    if (priceInput === '') {
       setPriceInput('');
-      onChange(0);
+      onChange(null);
       return;
     }
 
     const numValue = parseFloat(priceInput);
     if (!isNaN(numValue)) {
-      const formatted = priceInput.includes('.')
-        ? numValue.toFixed(2)
-        : numValue.toString();
-
+      const formatted = numValue.toFixed(2);
       setPriceInput(formatted);
       onChange(parseFloat(formatted));
+    } else {
+      setPriceInput('');
+      onChange(null);
     }
   };
 
-  return { priceInput, handlePriceChange, handlePriceBlur };
+  return { priceInput, setPriceInput, handlePriceChange, handlePriceBlur };
 }

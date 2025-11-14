@@ -10,9 +10,9 @@ export const pizzaSizeSchema = z.object({
     .transform((val) => val.charAt(0).toUpperCase() + val.slice(1)),
 
   size: z
-    .number('Размер должна быть числом')
-    .positive('Размер должна быть больше 0')
-    .max(1000, 'Размер не должна превышать 1,000'),
+    .number('Размер должен быть числом')
+    .positive('Размер должен быть больше 0')
+    .max(1000, 'Размер не должен превышать 1,000'),
 });
 
 export type PizzaSizeFormValues = z.infer<typeof pizzaSizeSchema>;

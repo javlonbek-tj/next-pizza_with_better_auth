@@ -266,69 +266,6 @@ export function useProductItems(form: UseFormReturn<ProductFormValues>) {
   };
 }
 
-/**
- * Hook to manage price input formatting for product items
- */
-export function usePriceInput(initialValue: number = 0) {
-  const [priceInput, setPriceInput] = useState<string>(
-    initialValue > 0 ? initialValue.toString() : ''
-  );
-
-  useEffect(() => {
-    setPriceInput(initialValue > 0 ? initialValue.toString() : '');
-  }, [initialValue]);
-
-  const handlePriceChange = (
-    value: string,
-    onChange: (value: number) => void
-  ) => {
-    // Allow empty string
-    if (value === '') {
-      setPriceInput('');
-      onChange(0);
-      return;
-    }
-
-    // Allow only valid number format with max 2 decimals
-    if (!/^\d*\.?\d{0,2}$/.test(value)) {
-      return;
-    }
-
-    // Update local state (keep string with decimal point)
-    setPriceInput(value);
-
-    // Update form state with number (for validation)
-    const numValue = parseFloat(value);
-    onChange(isNaN(numValue) ? 0 : numValue);
-  };
-
-  const handlePriceBlur = (onChange: (value: number) => void) => {
-    // Format on blur only if there's content
-    if (priceInput === '' || priceInput === '.') {
-      setPriceInput('');
-      onChange(0);
-      return;
-    }
-
-    const numValue = parseFloat(priceInput);
-    if (!isNaN(numValue)) {
-      // Only format to 2 decimals if the input had a decimal point
-      const formatted = priceInput.includes('.')
-        ? numValue.toFixed(2)
-        : numValue.toString();
-      setPriceInput(formatted);
-      onChange(parseFloat(formatted));
-    }
-  };
-
-  return {
-    priceInput,
-    setPriceInput,
-    handlePriceChange,
-    handlePriceBlur,
-  };
-}
-
 // useDeleteProduct
 
 export function useDeleteProduct() {

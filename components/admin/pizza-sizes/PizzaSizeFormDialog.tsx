@@ -32,8 +32,8 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
     onClose
   );
 
-  const { sizeInput, handleSizeChange, handleSizeBlur } = useNumberInput(
-    pizzaSize,
+  const { value, onChange, onBlur } = useNumberInput(
+    pizzaSize?.size?.toString() ?? '',
     open
   );
 
@@ -81,11 +81,9 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
                       autoComplete='off'
                       pattern='[0-9]*'
                       placeholder='Например: 25'
-                      value={sizeInput}
-                      onChange={(e) =>
-                        handleSizeChange(e.target.value, field.onChange)
-                      }
-                      onBlur={() => handleSizeBlur(field.onChange)}
+                      value={value}
+                      onChange={(e) => onChange(e.target.value)}
+                      onBlur={() => onBlur(field.onChange)}
                     />
                   </FormControl>
                   <FormMessage />

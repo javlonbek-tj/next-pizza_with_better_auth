@@ -18,8 +18,8 @@ export interface GetSearchParams {
 }
 
 export const findPizzas = async (params: GetSearchParams) => {
-  const sizes = params.pizzaSize?.split(',').filter(Boolean); // Keep as strings (IDs)
-  const pizzaTypes = params.pizzaTypes?.split(',').filter(Boolean); // Keep as strings (IDs)
+  const sizes = params.pizzaSize?.split(',').filter(Boolean);
+  const pizzaTypes = params.pizzaTypes?.split(',').filter(Boolean);
   const ingredients = params.ingredients?.split(',').filter(Boolean);
   const priceFrom = Number(params.priceFrom) || DEFAULT_PRICE_FROM;
   const priceTo = Number(params.priceTo) || DEFAULT_PRICE_TO;

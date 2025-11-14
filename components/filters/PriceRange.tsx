@@ -97,7 +97,7 @@ export function PriceRange({
 
   return (
     <div className={cn(className)}>
-      {title && <p className='text-md font-bold'>{title}:</p>}
+      {title && <p className='font-bold text-md'>{title}:</p>}
       <div className='flex items-center gap-2 mt-3 mb-5'>
         <Input
           type='number'
@@ -128,7 +128,7 @@ export function PriceRange({
           className='w-full'
         />
         {/* Floating labels */}
-        <div className='absolute -bottom-6 left-0 w-full flex justify-between px-1'>
+        <div className='absolute left-0 flex justify-between w-full px-1 -bottom-6'>
           <span className='text-sm text-gray-600'>{range[0]}</span>
           <span className='text-sm text-gray-600'>{range[1]}</span>
         </div>
