@@ -148,7 +148,7 @@ export function Filters({ className }: Props) {
 
           {/* ---------- Price Range ---------- */}
           <PriceRange
-            className="mb-6 pt-4 pb-7 border-gray-200 border-t border-b"
+            className="pt-4 mb-6 border-t border-b border-gray-200 pb-7"
             title="Цены от и до"
             min={DEFAULT_PRICE_FROM}
             max={DEFAULT_PRICE_TO}
