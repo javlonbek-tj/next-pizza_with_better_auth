@@ -3,8 +3,8 @@ import z from 'zod';
 // Base schemas
 export const productItemSchema = z.object({
   price: z
-    .number({ message: 'Цена должна быть числом' })
-    .positive('Цена обязательна')
+    .number({ message: 'Цена обязательна и должна быть больше 0' })
+    .positive('Цена обязательна и должна быть больше 0')
     .max(1000000000, 'Цена не должна превышать 1,000,000,000')
     .refine(
       (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,

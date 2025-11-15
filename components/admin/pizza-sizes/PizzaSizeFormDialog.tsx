@@ -16,8 +16,9 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { PizzaSize } from '@/lib/generated/prisma';
-import { usePizzaSizeForm, useNumberInput } from '@/hooks';
+import { usePizzaSizeForm } from '@/hooks';
 import { FormActions } from '@/components/shared/FormActions';
+import { DecimalInput } from '@/components/shared';
 
 interface Props {
   open: boolean;
@@ -30,11 +31,6 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
     pizzaSize,
     open,
     onClose
-  );
-
-  const { value, onChange, onBlur } = useNumberInput(
-    pizzaSize?.size?.toString() ?? '',
-    open
   );
 
   return (
@@ -75,16 +71,7 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
                 <FormItem>
                   <FormLabel>Значение (см)</FormLabel>
                   <FormControl>
-                    <Input
-                      type='text'
-                      inputMode='numeric'
-                      autoComplete='off'
-                      pattern='[0-9]*'
-                      placeholder='Например: 25'
-                      value={value}
-                      onChange={(e) => onChange(e.target.value)}
-                      onBlur={() => onBlur(field.onChange)}
-                    />
+                    <DecimalInput {...field} maxDecimals={0} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

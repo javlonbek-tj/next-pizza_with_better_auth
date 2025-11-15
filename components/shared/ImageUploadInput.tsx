@@ -64,10 +64,10 @@ export function ImageUploadInput({
   };
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={className}>
       {value ? (
         // Preview Mode
-        <div className='group relative flex justify-center items-center bg-gray-50 border rounded-lg w-full h-48 overflow-hidden'>
+        <div className='relative flex items-center justify-center w-full overflow-hidden border rounded-lg h-52 group bg-gray-50'>
           <Image
             src={value}
             alt='Preview'
@@ -79,7 +79,7 @@ export function ImageUploadInput({
             <button
               type='button'
               onClick={onRemove}
-              className='top-2 right-2 absolute bg-red-500 opacity-0 group-hover:opacity-100 p-2 rounded-full text-white transition-opacity cursor-pointer hover:bg-red-600'
+              className='absolute p-2 text-white transition-opacity bg-red-500 rounded-full opacity-0 cursor-pointer top-2 right-2 group-hover:opacity-100 hover:bg-red-600'
               aria-label='Remove image'
             >
               <X className='w-4 h-4' />
@@ -89,7 +89,7 @@ export function ImageUploadInput({
       ) : (
         // Upload Mode
         <label
-          className={`flex flex-col justify-center items-center border-2 border-dashed rounded-lg w-full h-48 transition-all ${
+          className={`relative flex flex-col justify-center items-center border-2 border-dashed rounded-lg w-full h-48 transition-all ${
             isDragging
               ? 'border-primary bg-primary/5'
               : 'border-gray-300 hover:border-primary'
@@ -103,20 +103,31 @@ export function ImageUploadInput({
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
         >
-          <div className='flex flex-col justify-center items-center pt-5 pb-6 pointer-events-none'>
-            <Upload
-              className={`mb-3 w-10 h-10 transition-colors ${
-                isDragging ? 'text-primary' : 'text-gray-400'
-              }`}
-            />
-            <p className='text-gray-600 text-sm'>
-              <span className='font-semibold'>Нажмите для загрузки</span> или
-              перетащите
-            </p>
-            <p className='mt-1 text-gray-500 text-xs'>
-              PNG, JPG, WebP (макс. 5MB)
-            </p>
-          </div>
+          {isUploading ? (
+            // Loading State
+            <div className='flex flex-col items-center justify-center h-48 gap-2 pointer-events-none'>
+              <Loader2 className='w-10 h-10 text-primary animate-spin' />
+              <span className='text-sm text-gray-600'>
+                Загрузка изображения...
+              </span>
+            </div>
+          ) : (
+            // Upload Prompt
+            <div className='flex flex-col items-center justify-center pt-5 pb-6 pointer-events-none'>
+              <Upload
+                className={`mb-3 w-10 h-10 transition-colors ${
+                  isDragging ? 'text-primary' : 'text-gray-400'
+                }`}
+              />
+              <p className='text-sm text-gray-600'>
+                <span className='font-semibold'>Нажмите для загрузки</span> или
+                перетащите
+              </p>
+              <p className='mt-1 text-xs text-gray-500'>
+                PNG, JPG, WebP (макс. 5MB)
+              </p>
+            </div>
+          )}
           <input
             type='file'
             className='hidden'
@@ -125,14 +136,6 @@ export function ImageUploadInput({
             disabled={disabled || isUploading}
           />
         </label>
-      )}
-
-      {/* Loading Indicator */}
-      {isUploading && (
-        <div className='flex justify-center items-center gap-2 py-2'>
-          <Loader2 className='w-5 h-5 text-primary animate-spin' />
-          <span className='text-gray-600 text-sm'>Загрузка изображения...</span>
-        </div>
       )}
     </div>
   );

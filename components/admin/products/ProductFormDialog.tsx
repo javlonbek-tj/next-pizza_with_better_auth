@@ -141,7 +141,7 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-[850px] max-h-[90vh] overflow-y-auto'>
+      <DialogContent className='sm:max-w-[850px] overflow-y-auto max-h-[90vh] scrollbar-thin'>
         <DialogHeader>
           <DialogTitle className='text-2xl font-bold'>
             {isEditing ? 'Редактировать продукт' : 'Создать новый продукт'}

@@ -1,10 +1,8 @@
 'use client';
-
 import { useEffect, useState } from 'react';
-
 import { cn } from '@/lib';
-import { Input } from '../ui/input';
 import { Slider } from '../ui/slider';
+import { DecimalInput } from '../shared';
 
 interface Props {
   className?: string;
@@ -25,112 +23,126 @@ export function PriceRange({
   value = [min, max],
   onValueChange,
 }: Props) {
-  const [range, setRange] = useState<[number, number]>(value);
+  const [minValue, setMinValue] = useState<number | ''>('');
+  const [maxValue, setMaxValue] = useState<number | ''>('');
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
-    setRange(value);
-  }, [value]);
+    setMinValue(value[0] === min ? '' : value[0]);
+    setMaxValue(value[1] === max ? '' : value[1]);
+  }, [value, min, max]);
 
-  const handleSliderChange = (value: number[]) => {
-    const newRange: [number, number] = [value[0], value[1]];
-    setRange(newRange);
-    onValueChange(newRange);
+  const updateRange = (newMin: number, newMax: number) => {
+    onValueChange([newMin, newMax]);
   };
 
-  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-
-    if (inputValue === '') {
-      setRange([min, range[1]]);
+  const handleMinChange = (val: number | string | undefined) => {
+    if (val === '' || val === undefined) {
+      setMinValue('');
+      setError('');
       return;
     }
 
-    let newMin = Number(inputValue);
-
+    const newMin = Number(val);
     if (isNaN(newMin)) return;
 
-    newMin = Math.max(min, Math.min(newMin, max));
+    const currentMax = maxValue === '' ? max : maxValue;
 
-    newMin = Math.min(newMin, range[1]);
+    if (newMin > currentMax) {
+      setError('Конечная стоимость должна быть больше начальной');
+    } else {
+      setError('');
+    }
 
-    const newRange: [number, number] = [newMin, range[1]];
-    setRange(newRange);
-    onValueChange(newRange);
+    setMinValue(newMin);
   };
 
-  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-
-    if (inputValue === '') {
-      setRange([range[0], max]);
+  const handleMaxChange = (val: number | string | undefined) => {
+    if (val === '' || val === undefined) {
+      setMaxValue('');
+      setError('');
       return;
     }
 
-    let newMax = Number(inputValue);
-
+    const newMax = Number(val);
     if (isNaN(newMax)) return;
 
-    newMax = Math.max(min, Math.min(newMax, max));
+    const currentMin = minValue === '' ? min : minValue;
 
-    newMax = Math.max(newMax, range[0]);
+    if (newMax < currentMin) {
+      setError('Конечная стоимость должна быть больше начальной');
+    } else {
+      setError('');
+    }
 
-    const newRange: [number, number] = [range[0], newMax];
-    setRange(newRange);
-    onValueChange(newRange);
+    setMaxValue(newMax);
   };
 
   const handleMinBlur = () => {
-    if (range[0] < min || isNaN(range[0])) {
-      const newRange: [number, number] = [min, range[1]];
-      setRange(newRange);
-      onValueChange(newRange);
-    }
+    const actualMin = minValue === '' ? min : minValue;
+    const actualMax = maxValue === '' ? max : maxValue;
+    const clamped = Math.max(min, Math.min(actualMin, actualMax));
+    setMinValue(clamped);
+    setError('');
+    updateRange(clamped, actualMax);
   };
 
   const handleMaxBlur = () => {
-    if (range[1] > max || isNaN(range[1])) {
-      const newRange: [number, number] = [range[0], max];
-      setRange(newRange);
-      onValueChange(newRange);
-    }
+    const actualMin = minValue === '' ? min : minValue;
+    const actualMax = maxValue === '' ? max : maxValue;
+    const clamped = Math.min(max, Math.max(actualMax, actualMin));
+    setMaxValue(clamped);
+    setError('');
+    updateRange(actualMin, clamped);
   };
+
+  const sliderMin = minValue === '' ? min : minValue;
+  const sliderMax = maxValue === '' ? max : maxValue;
 
   return (
     <div className={cn(className)}>
       {title && <p className='font-bold text-md'>{title}:</p>}
       <div className='flex items-center gap-2 mt-3 mb-5'>
-        <Input
-          type='number'
-          value={range[0]}
+        <DecimalInput
+          maxDecimals={0}
+          value={minValue}
           onChange={handleMinChange}
           onBlur={handleMinBlur}
           min={min}
-          max={range[1]}
-          step={step}
-        />
-        <Input
-          type='number'
-          value={range[1]}
-          onChange={handleMaxChange}
-          onBlur={handleMaxBlur}
-          min={range[0]}
           max={max}
           step={step}
+          hideZero={false}
+          placeholder='0'
+        />
+        <DecimalInput
+          maxDecimals={0}
+          value={maxValue}
+          onChange={handleMaxChange}
+          onBlur={handleMaxBlur}
+          min={min}
+          max={max}
+          step={step}
+          hideZero={false}
+          placeholder='1000'
         />
       </div>
+      {error && <p className='mb-3 text-sm text-red-500'>{error}</p>}
       <div className='relative mt-6'>
         <Slider
           min={min}
           max={max}
           step={step}
-          value={range}
-          onValueChange={handleSliderChange}
+          value={[sliderMin, sliderMax]}
+          onValueChange={(val) => {
+            setMinValue(val[0]);
+            setMaxValue(val[1]);
+            updateRange(val[0], val[1]);
+          }}
           className='w-full'
         />
-        {/* Floating labels */}
         <div className='absolute left-0 flex justify-between w-full px-1 -bottom-6'>
-          <span className='text-sm text-gray-600'>{range[0]}</span>
-          <span className='text-sm text-gray-600'>{range[1]}</span>
+          <span className='text-sm text-gray-600'>{sliderMin}</span>
+          <span className='text-sm text-gray-600'>{sliderMax}</span>
         </div>
       </div>
     </div>

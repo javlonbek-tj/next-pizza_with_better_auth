@@ -20,6 +20,7 @@ import {
 import { PizzaSize, PizzaType } from '@/lib/generated/prisma';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from '../schemas/product-schema';
+import { DecimalInput } from '@/components/shared';
 
 interface ProductItemCardProps {
   form: UseFormReturn<ProductFormValues>;
@@ -30,14 +31,6 @@ interface ProductItemCardProps {
   disabled?: boolean;
   canRemove?: boolean;
   isPizzaCategory?: boolean;
-}
-
-function priceFormatter(value: string): string | null {
-  if (value === '') return '';
-  const normalized = value.replace(',', '.');
-  // Allow incomplete decimals like "2." or "2.3"
-  if (!/^\d*\.?\d{0,2}$/.test(normalized)) return null;
-  return normalized;
 }
 
 export function ProductItemCard({
@@ -57,32 +50,19 @@ export function ProductItemCard({
         <FormField
           control={form.control}
           name={`productItems.${index}.price`}
-          render={({ field }) => (
-            <FormItem className='flex-1'>
-              <FormLabel className='font-medium text-md'>
-                Цена (₽) <span className='text-red-500'>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  inputMode='decimal'
-                  autoComplete='off'
-                  pattern='[0-9]*[.,]?[0-9]{0,2}'
-                  placeholder='5000.00'
-                  value={field.value?.toString() ?? ''}
-                  onChange={(e) => {
-                    const formatted = priceFormatter(e.target.value);
-                    if (formatted !== null) {
-                      field.onChange(formatted ? parseFloat(formatted) : 0);
-                    }
-                  }}
-                  onBlur={field.onBlur}
-                  disabled={disabled}
-                  className='max-w-xs'
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            return (
+              <FormItem className='flex-1'>
+                <FormLabel className='font-medium text-md'>
+                  Цена (₽) <span className='text-red-500'>*</span>
+                </FormLabel>
+                <FormControl>
+                  <DecimalInput {...field} className='max-w-xs' />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
 
         {canRemove && (
@@ -206,31 +186,51 @@ export function ProductItemCard({
         <FormField
           control={form.control}
           name={`productItems.${index}.price`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Цена (₽) <span className='text-red-500'>*</span>
-              </FormLabel>
-              <FormControl>
-                <Input
-                  inputMode='decimal'
-                  autoComplete='off'
-                  pattern='[0-9]*[.,]?[0-9]{0,2}'
-                  placeholder='5000.00'
-                  value={field.value?.toString() ?? ''}
-                  onChange={(e) => {
-                    const formatted = priceFormatter(e.target.value);
-                    if (formatted !== null) {
-                      field.onChange(formatted ? parseFloat(formatted) : 0);
-                    }
-                  }}
-                  onBlur={field.onBlur}
-                  disabled={disabled}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          render={({ field }) => {
+            return (
+              <FormItem>
+                <FormLabel>
+                  Цена (₽) <span className='text-red-500'>*</span>
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    inputMode='decimal'
+                    autoComplete='off'
+                    placeholder='45.99'
+                    value={field.value ?? ''}
+                    onChange={(e) => {
+                      const value = e.target.value;
+
+                      if (value === '') {
+                        field.onChange('');
+                        return;
+                      }
+
+                      const normalized = value.replace(',', '.');
+
+                      if (/^\d*\.?\d{0,2}$/.test(normalized)) {
+                        field.onChange(normalized);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      const value = e.target.value;
+                      if (value === '' || value === '.') {
+                        field.onChange(undefined);
+                        return;
+                      }
+
+                      const numValue = parseFloat(value.replace(',', '.'));
+                      if (!isNaN(numValue)) {
+                        field.onChange(numValue);
+                      }
+                    }}
+                    disabled={disabled}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
         />
       </div>
     </Card>
