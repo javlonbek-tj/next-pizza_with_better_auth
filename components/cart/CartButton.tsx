@@ -14,7 +14,7 @@ interface Props {
 }
 
 export function CartButton({ className }: Props) {
-  const { data: cartItems, isPending, isError, error } = useCart();
+  const { data: cartItems, isPending, isError } = useCart();
 
   if (isPending && !isError) {
     return <CartButtonSkeleton />;
@@ -45,7 +45,7 @@ export function CartButton({ className }: Props) {
         {totalAmount > 0 && (
           <>
             <b>{totalAmount} ₽</b>
-            <span className="bg-gray-100 mx-1 w-px h-5" />
+            <span className="bg-gray-100 mx-1 w-px h-4" />
           </>
         )}
         <span className="flex items-center gap-1 group-hover:opacity-0 transition duration-300">

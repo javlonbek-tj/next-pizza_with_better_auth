@@ -1,7 +1,7 @@
 'use client';
 import { Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+
 import {
   Select,
   SelectContent,
@@ -46,18 +46,18 @@ export function ProductItemCard({
   // --- Non-pizza: inline ---
   if (!isPizzaCategory) {
     return (
-      <div className='flex items-end gap-3'>
+      <div className="flex items-end gap-3">
         <FormField
           control={form.control}
           name={`productItems.${index}.price`}
           render={({ field }) => {
             return (
-              <FormItem className='flex-1'>
-                <FormLabel className='font-medium text-md'>
-                  Цена (₽) <span className='text-red-500'>*</span>
+              <FormItem className="flex-1">
+                <FormLabel className="font-medium text-md">
+                  Цена (₽) <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <DecimalInput {...field} className='max-w-xs' />
+                  <DecimalInput {...field} className="max-w-xs" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -67,14 +67,14 @@ export function ProductItemCard({
 
         {canRemove && (
           <Button
-            type='button'
-            variant='destructive'
-            size='icon'
+            type="button"
+            variant="destructive"
+            size="icon"
             onClick={() => onRemove(index)}
             disabled={disabled}
-            className='mb-1'
+            className="mb-1"
           >
-            <Trash2 className='w-4 h-4' />
+            <Trash2 className="w-4 h-4" />
           </Button>
         )}
       </div>
@@ -83,23 +83,23 @@ export function ProductItemCard({
 
   // --- Pizza category card ---
   return (
-    <Card className='p-4 space-y-4 bg-white border rounded-lg shadow-sm'>
-      <div className='flex items-center justify-between'>
-        <h4 className='text-base font-medium'>Вариант #{index + 1}</h4>
+    <Card className="space-y-4 bg-white shadow-sm p-4 border rounded-lg">
+      <div className="flex justify-between items-center">
+        <h4 className="font-medium text-base">Вариант #{index + 1}</h4>
         {canRemove && (
           <Button
-            type='button'
-            variant='destructive'
-            size='sm'
+            type="button"
+            variant="destructive"
+            size="sm"
             onClick={() => onRemove(index)}
             disabled={disabled}
           >
-            <Trash2 className='w-4 h-4' />
+            <Trash2 className="w-4 h-4" />
           </Button>
         )}
       </div>
 
-      <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
+      <div className="gap-4 grid grid-cols-1 sm:grid-cols-3">
         {/* Size */}
         <FormField
           control={form.control}
@@ -107,7 +107,7 @@ export function ProductItemCard({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Размер <span className='text-red-500'>*</span>
+                Размер <span className="text-red-500">*</span>
               </FormLabel>
               <Select
                 value={field.value ?? 'none'}
@@ -118,14 +118,14 @@ export function ProductItemCard({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Выберите размер' />
+                    <SelectValue placeholder="Выберите размер" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   <SelectItem
-                    value='none'
+                    value="none"
                     disabled
-                    className='text-muted-foreground'
+                    className="text-muted-foreground"
                   >
                     Выберите размер
                   </SelectItem>
@@ -148,7 +148,7 @@ export function ProductItemCard({
           render={({ field }) => (
             <FormItem>
               <FormLabel>
-                Тип теста <span className='text-red-500'>*</span>
+                Тип теста <span className="text-red-500">*</span>
               </FormLabel>
               <Select
                 value={field.value ?? 'none'}
@@ -159,14 +159,14 @@ export function ProductItemCard({
               >
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder='Выберите тип теста' />
+                    <SelectValue placeholder="Выберите тип теста" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
                   <SelectItem
-                    value='none'
+                    value="none"
                     disabled
-                    className='text-muted-foreground'
+                    className="text-muted-foreground"
                   >
                     Выберите тип теста
                   </SelectItem>
@@ -190,42 +190,10 @@ export function ProductItemCard({
             return (
               <FormItem>
                 <FormLabel>
-                  Цена (₽) <span className='text-red-500'>*</span>
+                  Цена (₽) <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <Input
-                    inputMode='decimal'
-                    autoComplete='off'
-                    placeholder='45.99'
-                    value={field.value ?? ''}
-                    onChange={(e) => {
-                      const value = e.target.value;
-
-                      if (value === '') {
-                        field.onChange('');
-                        return;
-                      }
-
-                      const normalized = value.replace(',', '.');
-
-                      if (/^\d*\.?\d{0,2}$/.test(normalized)) {
-                        field.onChange(normalized);
-                      }
-                    }}
-                    onBlur={(e) => {
-                      const value = e.target.value;
-                      if (value === '' || value === '.') {
-                        field.onChange(undefined);
-                        return;
-                      }
-
-                      const numValue = parseFloat(value.replace(',', '.'));
-                      if (!isNaN(numValue)) {
-                        field.onChange(numValue);
-                      }
-                    }}
-                    disabled={disabled}
-                  />
+                  <DecimalInput {...field} className="max-w-xs" />
                 </FormControl>
                 <FormMessage />
               </FormItem>

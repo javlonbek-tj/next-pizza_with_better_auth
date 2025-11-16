@@ -22,7 +22,7 @@ import { authClient } from '@/lib/auth-client';
 
 export function CartDrawer({ children }: PropsWithChildren) {
   const [authOpen, setAuthOpen] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false); // ⬅️ new state
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { data } = useCart();
 
@@ -32,6 +32,8 @@ export function CartDrawer({ children }: PropsWithChildren) {
     }) > 0;
 
   const handleClick = async () => {
+    setIsLoading(true); // Show loader IMMEDIATELY
+
     try {
       const currentSession = await authClient.getSession();
       const isAuthenticated = !!currentSession?.data?.session?.userId;
@@ -39,14 +41,14 @@ export function CartDrawer({ children }: PropsWithChildren) {
       if (!isAuthenticated) {
         setAuthOpen(true);
       } else {
-        setIsRedirecting(true); // ⬅️ start spinner
         router.push('/checkout');
         router.refresh();
       }
     } catch (error) {
       console.error('Session check failed:', error);
       setAuthOpen(true);
-      setIsRedirecting(false);
+    } finally {
+      setIsLoading(false); // Always hide loader
     }
   };
 
@@ -104,13 +106,13 @@ export function CartDrawer({ children }: PropsWithChildren) {
                 <Button
                   className="h-12 cursor-pointer"
                   onClick={handleClick}
-                  disabled={isRedirecting} // ⬅️ prevent double click
+                  disabled={isLoading || isDeleting} // Disable during loading or mutation
                 >
                   <span className="flex items-center gap-2">
-                    {isRedirecting ? (
+                    {isLoading ? (
                       <>
                         <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Оформить заказ</span>
+                        <span>Проверка...</span>
                       </>
                     ) : (
                       <>

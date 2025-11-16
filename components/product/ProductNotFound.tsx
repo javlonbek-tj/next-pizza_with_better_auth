@@ -1,7 +1,7 @@
 export function ProductNotFound() {
   return (
-    <div className='py-10 text-center text-gray-500 text-3xl'>
-      🍕 По вашему запросу ничего не найдено.
+    <div className="flex justify-center items-center min-h-screen text-gray-500 text-2xl">
+      Ничего не найдено
     </div>
   );
 }

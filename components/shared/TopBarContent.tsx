@@ -3,10 +3,11 @@ import { SortPopup } from '../filters/SortPopup';
 
 import { Categories } from '../categories/Categories';
 
+// TopBarContent.tsx
 export async function TopBarContent() {
   return (
-    <div className='sticky top-0 z-10 py-5 bg-white shadow-lg shadow-black/5'>
-      <Container className='flex items-center justify-between gap-5'>
+    <div className="top-0 z-20 sticky bg-white shadow-black/5 shadow-lg">
+      <Container className="flex justify-between items-center gap-5 py-5">
         <Categories />
         <SortPopup />
       </Container>

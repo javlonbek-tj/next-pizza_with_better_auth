@@ -101,8 +101,8 @@ export function PriceRange({
 
   return (
     <div className={cn(className)}>
-      {title && <p className='font-bold text-md'>{title}:</p>}
-      <div className='flex items-center gap-2 mt-3 mb-5'>
+      {title && <h4 className="font-bold">{title}:</h4>}
+      <div className="flex items-center gap-2 mt-3 mb-5">
         <DecimalInput
           maxDecimals={0}
           value={minValue}
@@ -112,7 +112,7 @@ export function PriceRange({
           max={max}
           step={step}
           hideZero={false}
-          placeholder='0'
+          placeholder="0"
         />
         <DecimalInput
           maxDecimals={0}
@@ -123,11 +123,11 @@ export function PriceRange({
           max={max}
           step={step}
           hideZero={false}
-          placeholder='1000'
+          placeholder="1000"
         />
       </div>
-      {error && <p className='mb-3 text-sm text-red-500'>{error}</p>}
-      <div className='relative mt-6'>
+      {error && <p className="mb-3 text-red-500 text-sm">{error}</p>}
+      <div className="relative mt-6">
         <Slider
           min={min}
           max={max}
@@ -138,11 +138,11 @@ export function PriceRange({
             setMaxValue(val[1]);
             updateRange(val[0], val[1]);
           }}
-          className='w-full'
+          className="w-full"
         />
-        <div className='absolute left-0 flex justify-between w-full px-1 -bottom-6'>
-          <span className='text-sm text-gray-600'>{sliderMin}</span>
-          <span className='text-sm text-gray-600'>{sliderMax}</span>
+        <div className="-bottom-6 left-0 absolute flex justify-between px-1 w-full">
+          <span className="text-gray-600 text-sm">{sliderMin}</span>
+          <span className="text-gray-600 text-sm">{sliderMax}</span>
         </div>
       </div>
     </div>

@@ -41,7 +41,7 @@ export function SearchInput({ className }: Props) {
       <div
         ref={ref}
         className={cn(
-          'z-40 relative flex flex-1 items-center bg-gray-100 mx-10 px-5 py-3 rounded-2xl transition duration-300',
+          'z-40 relative flex flex-1 items-center bg-gray-100 mx-10 px-5 py-2.5 rounded-2xl transition duration-300',
           className
         )}
       >

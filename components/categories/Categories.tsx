@@ -24,7 +24,7 @@ export function Categories({ className }: Props) {
   return (
     <div
       className={cn(
-        'flex items-center gap-1 bg-gray-50 p-1 rounded-2xl',
+        'flex items-center gap-1 bg-gray-50 p-1 rounded-xl font-medium text-base',
         className
       )}
     >
@@ -37,7 +37,7 @@ export function Categories({ className }: Props) {
             href={`/#${category.slug}`}
             onClick={() => handleClick(category.slug)}
             className={cn(
-              'hover:bg-white px-5 py-2 rounded-xl font-medium hover:text-primary transition duration-300',
+              'hover:bg-white px-4 py-1 rounded-xl font-medium hover:text-primary transition duration-300',
               activeCategoryName === category.slug && 'bg-white text-primary'
             )}
           >

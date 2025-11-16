@@ -16,11 +16,11 @@ export function ProfileButton({ onClickSignIn, session }: Props) {
     <>
       {!isAuthenticated ? (
         <Button
-          variant='outline'
-          className='flex items-center gap-2 w-[100px] transition duration-300 cursor-pointer'
+          variant="outline"
+          className="flex items-center gap-2 w-[100px] transition duration-300 cursor-pointer"
           onClick={onClickSignIn}
         >
-          <User size={18} />
+          <User size={16} />
           <span>Войти</span>
         </Button>
       ) : (
