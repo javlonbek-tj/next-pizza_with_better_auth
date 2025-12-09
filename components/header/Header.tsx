@@ -27,13 +27,13 @@ export function Header({
   const [openAuthModal, setOpenAuthModal] = useState(false);
   return (
     <header className={cn('border border-b', className)}>
-      <Container className="flex justify-between items-center py-5">
+      <Container className='flex items-center justify-between py-5'>
         <Link href={'/'}>
-          <div className="flex items-center gap-4">
-            <Image src="/logo.png" alt="logo" width={30} height={30} />
+          <div className='flex items-center gap-4'>
+            <Image src='/logo.png' alt='logo' width={30} height={30} />
             <div>
-              <h1 className="font-black text-xl uppercase">Next Pizza</h1>
-              <p className="text-gray-400 text-sm leading-3">
+              <h1 className='text-xl font-black uppercase'>Next Pizza</h1>
+              <p className='text-sm leading-3 text-gray-400'>
                 вкусней уже некуда
               </p>
             </div>
@@ -42,7 +42,7 @@ export function Header({
 
         {hasSearch && <SearchInput />}
 
-        <div className="flex items-center gap-4">
+        <div className='flex items-center gap-4'>
           {hasCartBtn && <CartButton />}
           <AuthModal
             open={openAuthModal}

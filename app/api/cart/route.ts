@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
-import prisma from '@/prisma/prisma-client';
+import prisma from '@/lib/prisma';
 import { findOrCreateCart } from '@/lib/cart';
 import { AddToCartDto } from '@/services/dto/cart.dto';
 

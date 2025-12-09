@@ -1,9 +1,9 @@
 // app/api/admin/products/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
 
-import prisma from '@/prisma/prisma-client';
+import prisma from '@/lib/prisma';
 import { deleteImageFile } from '@/app/actions';
-import { ProductItem } from '@/lib/generated/prisma';
+import { ProductItem } from '@/lib/generated/prisma/client';
 
 export async function DELETE(
   req: NextRequest,

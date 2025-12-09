@@ -4,7 +4,7 @@ import {
   DEFAULT_PRICE_TO,
   SortValue,
 } from '@/lib/constants';
-import prisma from '@/prisma/prisma-client';
+import prisma from '../prisma';
 
 export interface GetSearchParams {
   query?: string;

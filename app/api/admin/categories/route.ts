@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/prisma/prisma-client';
+import prisma from '@/lib/prisma';
 
 import { categorySchema } from '@/components/admin';
 

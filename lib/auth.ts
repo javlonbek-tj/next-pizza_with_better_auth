@@ -2,9 +2,9 @@ import { betterAuth } from 'better-auth';
 import { nextCookies } from 'better-auth/next-js';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 
-import prisma from '@/prisma/prisma-client';
 import { sendOTPEmail } from '@/app/actions/send-email-action';
 import { emailOTP } from 'better-auth/plugins';
+import prisma from './prisma';
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_AUTH_API_URL,
