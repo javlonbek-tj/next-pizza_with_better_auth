@@ -17,7 +17,7 @@ import { Edit, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
-import { PizzaSize } from '@/lib/generated/prisma';
+import { PizzaSize } from '@/lib/generated/prisma/browser';
 import { PizzaSizeFormDialog } from './PizzaSizeFormDialog';
 import { useTableActions } from '@/hooks';
 import { PizzaSizeWithProductCount } from '@/prisma/@types/prisma';
@@ -46,42 +46,42 @@ export function PizzaSizeTable() {
   };
 
   return (
-    <div className='space-y-4'>
-      <div className='flex justify-end'>
-        <AddButton onClick={handleCreate} text='размер' />
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <AddButton onClick={handleCreate} text="размер" />
       </div>
 
       {isPending ? (
-        <Card className='border border-gray-200 shadow-md rounded-xl'>
-          <CardContent className='p-6 space-y-4'>
+        <Card className="shadow-md border border-gray-200 rounded-xl">
+          <CardContent className="space-y-4 p-6">
             {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className='w-full h-16' />
+              <Skeleton key={i} className="w-full h-16" />
             ))}
           </CardContent>
         </Card>
       ) : !sizes?.length ? (
-        <div className='mt-10 text-2xl text-center text-muted-foreground'>
+        <div className="mt-10 text-muted-foreground text-2xl text-center">
           Размеры не найдены
         </div>
       ) : (
-        <Card className='overflow-x-auto border border-gray-200 shadow-md rounded-xl'>
-          <CardContent className='p-6'>
+        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
+          <CardContent className="p-6">
             <Table>
               <TableHeader>
-                <TableRow className='bg-gray-50 hover:bg-gray-50'>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
+                <TableRow className="bg-gray-50 hover:bg-gray-50">
+                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
                     №
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
                     Название
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
                     Диаметр (см)
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
                     Дата создания
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-right text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
                     Действия
                   </TableHead>
                 </TableRow>
@@ -91,45 +91,45 @@ export function PizzaSizeTable() {
                 {sizes.map((size: PizzaSizeWithProductCount, index: number) => (
                   <TableRow
                     key={size.id}
-                    className='transition-colors hover:bg-gray-50'
+                    className="hover:bg-gray-50 transition-colors"
                   >
-                    <TableCell className='py-4'>
-                      <div className='flex items-center justify-center w-8 h-8 font-bold text-white rounded-lg shadow-md bg-gradient-to-br from-primary to-primary/80'>
+                    <TableCell className="py-4">
+                      <div className="flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
                         {index + 1}
                       </div>
                     </TableCell>
-                    <TableCell className='py-4'>
-                      <span className='font-semibold text-gray-900'>
+                    <TableCell className="py-4">
+                      <span className="font-semibold text-gray-900">
                         {size.label}
                       </span>
                     </TableCell>
-                    <TableCell className='py-4 text-center text-gray-700'>
+                    <TableCell className="py-4 text-gray-700 text-center">
                       {size.size}
                     </TableCell>
-                    <TableCell className='py-4 text-center text-gray-600'>
+                    <TableCell className="py-4 text-gray-600 text-center">
                       {new Date(size.createdAt).toLocaleDateString('ru-RU', {
                         day: '2-digit',
                         month: 'short',
                         year: 'numeric',
                       })}
                     </TableCell>
-                    <TableCell className='space-x-2 text-right'>
+                    <TableCell className="space-x-2 text-right">
                       <Button
-                        className='cursor-pointer'
-                        variant='outline'
-                        size='sm'
+                        className="cursor-pointer"
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleEdit(size)}
                       >
-                        <Edit className='w-4 h-4' />
+                        <Edit className="w-4 h-4" />
                       </Button>
                       <Button
-                        className='cursor-pointer'
-                        variant='destructive'
-                        size='sm'
+                        className="cursor-pointer"
+                        variant="destructive"
+                        size="sm"
                         onClick={() => handleOpenDelete(size.id)}
                         disabled={size._count?.ProductItem > 0}
                       >
-                        <Trash2 className='w-4 h-4' />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -151,11 +151,11 @@ export function PizzaSizeTable() {
         onClose={handleCloseDelete}
         onConfirm={handleDelete}
         isDeleting={isDeleting}
-        title='Удалить размер'
-        description='Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить.'
+        title="Удалить размер"
+        description="Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить."
         showAlert={true}
-        alertDescription='Все связанные элементы продукта, использующие этот размер,
-              будут установлены как «Стандартный» после удаления.'
+        alertDescription="Все связанные элементы продукта, использующие этот размер,
+              будут установлены как «Стандартный» после удаления."
       />
     </div>
   );

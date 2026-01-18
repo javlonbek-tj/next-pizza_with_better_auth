@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { PizzaSize } from '@/lib/generated/prisma';
+import { PizzaSize } from '@/lib/generated/prisma/browser';
 import { usePizzaSizeForm } from '@/hooks';
 import { FormActions } from '@/components/shared/FormActions';
 import { DecimalInput } from '@/components/shared';

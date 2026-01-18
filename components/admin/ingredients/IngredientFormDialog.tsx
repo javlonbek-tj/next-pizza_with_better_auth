@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Ingredient } from '@/lib/generated/prisma';
+import { Ingredient } from '@/lib/generated/prisma/browser';
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
 import { useImageUpload, useIngredientForm } from '@/hooks';
 import { IngredientFormValues } from '../schemas';
@@ -70,7 +70,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-[500px]'>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать ингредиент' : 'Создать ингредиент'}
@@ -80,12 +80,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}
-            className='space-y-4'
+            className="space-y-4"
           >
             {/* Image Upload */}
             <FormField
               control={form.control}
-              name='imageUrl'
+              name="imageUrl"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Изображение</FormLabel>
@@ -107,12 +107,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Name Field */}
             <FormField
               control={form.control}
-              name='name'
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название (на русском)</FormLabel>
                   <FormControl>
-                    <Input placeholder='Например: Сыр моцарелла' {...field} />
+                    <Input placeholder="Например: Сыр моцарелла" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -122,7 +122,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Price Field */}
             <FormField
               control={form.control}
-              name='price'
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Цена</FormLabel>
@@ -135,7 +135,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             />
 
             {/* Actions */}
-            <div className='flex justify-end gap-2 pt-4'>
+            <div className="flex justify-end gap-2 pt-4">
               <FormActions
                 onCancel={onClose}
                 isPending={isPending}

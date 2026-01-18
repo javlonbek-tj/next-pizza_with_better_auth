@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 
-import { Ingredient } from '@/lib/generated/prisma/client';
+import { Ingredient } from '@/lib/generated/prisma/browser';
 import { cn } from '@/lib/utils';
 
 interface Props {

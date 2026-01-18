@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Category } from '@/lib/generated/prisma';
+import { Category } from '@/lib/generated/prisma/browser';
 import { CategoryFormValues, categorySchema } from '@/components/admin';
 import { generateSlug, queryKeys } from '@/lib';
 import { Api } from '@/services/api-client';

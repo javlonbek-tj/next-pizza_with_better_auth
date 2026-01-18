@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { Edit, Trash2, Plus } from 'lucide-react';
+import { Edit, Trash2 } from 'lucide-react';
 import {
   useDeleteIngredient,
   useGetIngredients,
@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { IngredientFormDialog } from './IngredientFormDialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog } from '@/components/shared';
-import { Ingredient } from '@/lib/generated/prisma';
+import { Ingredient } from '@/lib/generated/prisma/browser';
 import { Card, CardContent } from '@/components/ui/card';
 import { useTableActions } from '@/hooks';
 
@@ -47,45 +47,45 @@ export function IngredientsTable() {
   };
 
   return (
-    <div className='space-y-4'>
-      <div className='flex justify-end'>
-        <AddButton onClick={handleCreate} text='ингредиент' />
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <AddButton onClick={handleCreate} text="ингредиент" />
       </div>
 
       {isPending ? (
-        <Card className='border border-gray-200 shadow-md rounded-xl'>
-          <CardContent className='p-6 space-y-4'>
+        <Card className="shadow-md border border-gray-200 rounded-xl">
+          <CardContent className="space-y-4 p-6">
             {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className='w-full h-16' />
+              <Skeleton key={i} className="w-full h-16" />
             ))}
           </CardContent>
         </Card>
       ) : !ingredients?.length ? (
-        <div className='mt-10 text-2xl text-center text-muted-foreground'>
+        <div className="mt-10 text-muted-foreground text-2xl text-center">
           Ингредиенты не найдены
         </div>
       ) : (
-        <Card className='overflow-x-auto border border-gray-200 shadow-md rounded-xl'>
-          <CardContent className='p-6'>
+        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
+          <CardContent className="p-6">
             <Table>
               <TableHeader>
-                <TableRow className='bg-gray-50 hover:bg-gray-50'>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
+                <TableRow className="bg-gray-50 hover:bg-gray-50">
+                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
                     №
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
                     Изображение
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
                     Название
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
                     Цена
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
                     Дата создания
                   </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-right text-gray-700 uppercase'>
+                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
                     Действия
                   </TableHead>
                 </TableRow>
@@ -94,46 +94,46 @@ export function IngredientsTable() {
                 {ingredients?.map((ingredient: Ingredient, index: number) => (
                   <TableRow
                     key={ingredient.id}
-                    className='transition-colors hover:bg-gray-50'
+                    className="hover:bg-gray-50 transition-colors"
                   >
                     {/* Number */}
-                    <TableCell className='py-2'>
-                      <div className='flex items-center justify-center w-8 h-8 font-bold text-white rounded-lg shadow-md bg-gradient-to-br from-primary to-primary/80'>
+                    <TableCell className="py-2">
+                      <div className="flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
                         {index + 1}
                       </div>
                     </TableCell>
 
                     {/* Image */}
-                    <TableCell className='py-2'>
-                      <div className='relative w-12 h-12 overflow-hidden border border-gray-200 rounded-lg'>
+                    <TableCell className="py-2">
+                      <div className="relative border border-gray-200 rounded-lg w-12 h-12 overflow-hidden">
                         <Image
                           src={ingredient.imageUrl}
                           alt={ingredient.name}
                           fill
-                          className='object-cover'
+                          className="object-cover"
                         />
                       </div>
                     </TableCell>
 
                     {/* Name */}
-                    <TableCell className='py-2'>
-                      <span className='font-semibold text-gray-900'>
+                    <TableCell className="py-2">
+                      <span className="font-semibold text-gray-900">
                         {ingredient.name}
                       </span>
                     </TableCell>
 
                     {/* Price */}
-                    <TableCell className='py-2 text-center'>
-                      <div className='inline-flex items-center gap-1 px-3 py-1 rounded-full bg-green-50'>
-                        <span className='font-semibold text-green-700'>
+                    <TableCell className="py-2 text-center">
+                      <div className="inline-flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
+                        <span className="font-semibold text-green-700">
                           {ingredient.price.toLocaleString('ru-RU')}
                         </span>
-                        <span className='text-sm text-green-600'>₽</span>
+                        <span className="text-green-600 text-sm">₽</span>
                       </div>
                     </TableCell>
 
                     {/* Created Date */}
-                    <TableCell className='py-2 text-center text-gray-600'>
+                    <TableCell className="py-2 text-gray-600 text-center">
                       {new Date(ingredient.createdAt).toLocaleDateString(
                         'ru-RU',
                         {
@@ -145,22 +145,22 @@ export function IngredientsTable() {
                     </TableCell>
 
                     {/* Actions */}
-                    <TableCell className='space-x-2 text-right'>
+                    <TableCell className="space-x-2 text-right">
                       <Button
-                        className='cursor-pointer'
-                        variant='outline'
-                        size='sm'
+                        className="cursor-pointer"
+                        variant="outline"
+                        size="sm"
                         onClick={() => handleEdit(ingredient)}
                       >
-                        <Edit className='w-4 h-4' />
+                        <Edit className="w-4 h-4" />
                       </Button>
                       <Button
-                        className='cursor-pointer'
-                        variant='destructive'
-                        size='sm'
+                        className="cursor-pointer"
+                        variant="destructive"
+                        size="sm"
                         onClick={() => handleOpenDelete(ingredient.id)}
                       >
-                        <Trash2 className='w-4 h-4' />
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </TableCell>
                   </TableRow>
@@ -182,8 +182,8 @@ export function IngredientsTable() {
         onClose={handleCloseDelete}
         onConfirm={handleDelete}
         isDeleting={isDeleting}
-        title='Удалить ингредиент'
-        description='Вы уверены, что хотите удалить этот ингредиент? Это действие нельзя отменить.'
+        title="Удалить ингредиент"
+        description="Вы уверены, что хотите удалить этот ингредиент? Это действие нельзя отменить."
       />
     </div>
   );

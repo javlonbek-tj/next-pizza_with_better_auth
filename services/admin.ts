@@ -6,7 +6,7 @@ import {
   Ingredient,
   PizzaSize,
   PizzaType,
-} from '@/lib/generated/prisma';
+} from '@/lib/generated/prisma/browser';
 import {
   CategoryFormValues,
   IngredientFormValues,

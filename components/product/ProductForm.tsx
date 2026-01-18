@@ -3,7 +3,7 @@ import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { ChoosePizzaForm } from './ChoosePizzaForm';
 import { ChooseProductForm } from './ChooseProductForm';
 import { usePizzaDetail, useProductDetail } from '@/hooks';
-import { PizzaSize, PizzaType } from '@/lib/generated/prisma';
+import { PizzaSize, PizzaType } from '@/lib/generated/prisma/browser';
 
 interface Props {
   product?: ProductWithRelations;
@@ -30,8 +30,8 @@ export function ProductForm({
 }: Props) {
   if (!product) {
     return (
-      <div className='flex items-center justify-center min-h-[500px]'>
-        <p className='text-gray-500'>Продукт не найден</p>
+      <div className="flex justify-center items-center min-h-[500px]">
+        <p className="text-gray-500">Продукт не найден</p>
       </div>
     );
   }

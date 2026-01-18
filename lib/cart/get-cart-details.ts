@@ -1,4 +1,4 @@
-import { Ingredient } from '@/lib/generated/prisma/client';
+import { Ingredient } from '@/lib/generated/prisma/browser';
 import { CartDto } from '@/services/dto/cart.dto';
 import { calCartItemTotalPrice } from './cal-cart-item-total-price';
 import { CartItemModel } from '@/components/cart/CartItemType';

@@ -1,4 +1,4 @@
-import { Ingredient } from '@/lib/generated/prisma/client';
+import { Ingredient } from '@/lib/generated/prisma/browser';
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { ApiResponse } from './api-response';

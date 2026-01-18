@@ -10,7 +10,7 @@ import Image from 'next/image';
 
 import { cn } from '@/lib';
 import { Api } from '@/services/api-client';
-import { Product } from '@/lib/generated/prisma';
+import { Product } from '@/lib/generated/prisma/browser';
 
 interface Props {
   className?: string;

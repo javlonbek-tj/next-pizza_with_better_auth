@@ -32,7 +32,7 @@ import { FormActions } from '@/components/shared/FormActions';
 
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { MultiSelect } from '@/components/shared/MultiSelect';
-import { Category, Ingredient } from '@/lib/generated/prisma';
+import { Category, Ingredient } from '@/lib/generated/prisma/browser';
 import { useProductForm, useProductItems, useImageUpload } from '@/hooks';
 import {
   useGetCategories,
@@ -141,45 +141,45 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-[850px] overflow-y-auto max-h-[90vh] scrollbar-thin'>
+      <DialogContent className="sm:max-w-[850px] max-h-[90vh] overflow-y-auto scrollbar-thin">
         <DialogHeader>
-          <DialogTitle className='text-2xl font-bold'>
+          <DialogTitle className="font-bold text-2xl">
             {isEditing ? 'Редактировать продукт' : 'Создать новый продукт'}
           </DialogTitle>
         </DialogHeader>
 
         {isLoadingOptions ? (
-          <div className='py-4 space-y-4'>
-            <Skeleton className='w-full h-48 rounded-lg' />
-            <Skeleton className='w-full h-12' />
-            <Skeleton className='w-full h-12' />
-            <Skeleton className='w-full h-32' />
-            <Skeleton className='w-full h-32' />
+          <div className="space-y-4 py-4">
+            <Skeleton className="rounded-lg w-full h-48" />
+            <Skeleton className="w-full h-12" />
+            <Skeleton className="w-full h-12" />
+            <Skeleton className="w-full h-32" />
+            <Skeleton className="w-full h-32" />
           </div>
         ) : (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(handleSubmit)}
-              className='space-y-6'
+              className="space-y-6"
             >
               {/* Basic Information Section */}
-              <div className='space-y-4'>
-                <div className='flex items-center gap-2'>
-                  <div className='bg-primary/10 p-1.5 rounded-md'>
-                    <Info className='w-4 h-4 text-primary' />
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <div className="bg-primary/10 p-1.5 rounded-md">
+                    <Info className="w-4 h-4 text-primary" />
                   </div>
-                  <h3 className='text-lg font-semibold'>Основная информация</h3>
+                  <h3 className="font-semibold text-lg">Основная информация</h3>
                 </div>
 
                 {/* Image Upload */}
                 <FormField
                   control={form.control}
-                  name='imageUrl'
+                  name="imageUrl"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='text-base'>
+                      <FormLabel className="text-base">
                         Изображение продукта{' '}
-                        <span className='text-red-500'>*</span>
+                        <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <ImageUploadInput
@@ -199,20 +199,20 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
                 {/* Name */}
                 <FormField
                   control={form.control}
-                  name='name'
+                  name="name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='text-base'>
+                      <FormLabel className="text-base">
                         Название продукта{' '}
-                        <span className='text-red-500'>*</span>
+                        <span className="text-red-500">*</span>
                       </FormLabel>
                       <FormControl>
                         <Input
-                          placeholder='Например: Пепперони, Маргарита, Четыре сыра'
+                          placeholder="Например: Пепперони, Маргарита, Четыре сыра"
                           {...field}
                           disabled={isPending}
-                          autoComplete='off'
-                          className='text-base'
+                          autoComplete="off"
+                          className="text-base"
                         />
                       </FormControl>
                       <FormMessage />
@@ -223,11 +223,11 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
                 {/* Category */}
                 <FormField
                   control={form.control}
-                  name='categoryId'
+                  name="categoryId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='text-base'>
-                        Категория <span className='text-red-500'>*</span>
+                      <FormLabel className="text-base">
+                        Категория <span className="text-red-500">*</span>
                       </FormLabel>
                       <Select
                         value={field.value ?? 'none'}
@@ -235,12 +235,12 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
                         disabled={isPending || !categories?.length}
                       >
                         <FormControl>
-                          <SelectTrigger className='text-base'>
-                            <SelectValue placeholder='Выберите категорию' />
+                          <SelectTrigger className="text-base">
+                            <SelectValue placeholder="Выберите категорию" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value='none'>
+                          <SelectItem value="none">
                             Выберите категорию
                           </SelectItem>
                           {categories?.map((category: Category) => (
@@ -250,7 +250,7 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
                           ))}
                         </SelectContent>
                       </Select>
-                      <FormMessage className='text-red-500' />
+                      <FormMessage className="text-red-500" />
                     </FormItem>
                   )}
                 />
@@ -258,10 +258,10 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
                 {/* Ingredients */}
                 <FormField
                   control={form.control}
-                  name='ingredientIds'
+                  name="ingredientIds"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className='text-base'>Ингредиенты</FormLabel>
+                      <FormLabel className="text-base">Ингредиенты</FormLabel>
                       <FormControl>
                         <MultiSelect
                           options={
@@ -272,7 +272,7 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
                           }
                           value={field.value}
                           onChange={field.onChange}
-                          placeholder='Выберите ингредиенты'
+                          placeholder="Выберите ингредиенты"
                           disabled={isPending || !ingredients?.length}
                         />
                       </FormControl>
@@ -288,19 +288,19 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
               </div>
 
               {/* Product Items Section */}
-              <div className='space-y-4'>
+              <div className="space-y-4">
                 {/* Only show button container for pizza category */}
                 {isPizzaCategory && (
-                  <div className='flex justify-end'>
+                  <div className="flex justify-end">
                     <Button
-                      type='button'
-                      variant='default'
-                      size='sm'
+                      type="button"
+                      variant="default"
+                      size="sm"
                       onClick={addProductItem}
                       disabled={isPending}
-                      className='cursor-pointer'
+                      className="cursor-pointer"
                     >
-                      <Plus className='w-4 h-4 mr-2' />
+                      <Plus className="mr-2 w-4 h-4" />
                       Добавить вариант
                     </Button>
                   </div>
@@ -331,7 +331,7 @@ export function ProductFormDialog({ open, onClose, product = null }: Props) {
                 isPending={isPending}
                 isLoading={isUploading}
                 onCancel={() => handleClose(false)}
-                className='pt-2'
+                className="pt-2"
               />
             </form>
           </Form>

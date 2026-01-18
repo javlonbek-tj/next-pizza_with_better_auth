@@ -1,4 +1,4 @@
-import { Ingredient } from '@/lib/generated/prisma/client';
+import { Ingredient } from '@/lib/generated/prisma/browser';
 import Decimal from 'decimal.js';
 
 export const totalProductPrice = (

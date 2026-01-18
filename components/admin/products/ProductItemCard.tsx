@@ -17,7 +17,7 @@ import {
   FormControl,
   FormMessage,
 } from '@/components/ui/form';
-import { PizzaSize, PizzaType } from '@/lib/generated/prisma';
+import { PizzaSize, PizzaType } from '@/lib/generated/prisma/browser';
 import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from '../schemas/product-schema';
 import { DecimalInput } from '@/components/shared';

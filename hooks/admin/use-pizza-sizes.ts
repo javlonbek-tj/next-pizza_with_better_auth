@@ -4,7 +4,7 @@ import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { PizzaSize } from '@/lib/generated/prisma';
+import { PizzaSize } from '@/lib/generated/prisma/browser';
 import { queryKeys } from '@/lib';
 import { Api } from '@/services/api-client';
 import { ApiResponse } from '@/services/api-response';

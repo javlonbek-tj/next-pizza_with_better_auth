@@ -6,7 +6,7 @@ import { CategoryWithProductCount } from '@/prisma/@types/prisma';
 import { CategoryFormDialog } from './CategoryFormDialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog } from '@/components/shared';
-import { Category } from '@/lib/generated/prisma';
+import { Category } from '@/lib/generated/prisma/browser';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

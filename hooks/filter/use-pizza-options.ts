@@ -5,7 +5,7 @@ import { useSet } from 'react-use';
 
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { totalPizzaPrice } from '@/lib/product';
-import { PizzaSize } from '@/lib/generated/prisma';
+import { PizzaSize } from '@/lib/generated/prisma/browser';
 
 interface ReturnProps {
   typeId: string;

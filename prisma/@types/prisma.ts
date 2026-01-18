@@ -3,9 +3,9 @@ import {
   PizzaSize,
   PizzaType,
   Product,
-} from '@/lib/generated/prisma/client';
-import { Ingredient } from '@/lib/generated/prisma/client';
-import { ProductItem } from '@/lib/generated/prisma/client';
+} from '@/lib/generated/prisma/browser';
+import { Ingredient } from '@/lib/generated/prisma/browser';
+import { ProductItem } from '@/lib/generated/prisma/browser';
 
 export type ProductItems = ProductItem & {
   size: PizzaSize | null;

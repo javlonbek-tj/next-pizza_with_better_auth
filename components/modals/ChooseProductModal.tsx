@@ -5,7 +5,7 @@ import { ProductForm } from '../product';
 import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { useModalRoute } from '@/hooks';
 import { ChoosePizzaFormSkeleton } from '../skeletons';
-import { PizzaSize, PizzaType } from '@/lib/generated/prisma';
+import { PizzaSize, PizzaType } from '@/lib/generated/prisma/browser';
 
 interface Props {
   className?: string;

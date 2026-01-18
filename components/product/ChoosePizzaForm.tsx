@@ -8,7 +8,7 @@ import { usePizzaOptions } from '@/hooks';
 import { GroupVariants, Variant } from './GroupVariants';
 import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
-import { PizzaSize, PizzaType } from '@/lib/generated/prisma';
+import { PizzaSize, PizzaType } from '@/lib/generated/prisma/browser';
 
 interface Props {
   className?: string;
