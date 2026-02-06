@@ -1,9 +1,9 @@
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const token = req.cookies.get('cartToken')?.value;
@@ -13,7 +13,7 @@ export async function PATCH(
         { success: false, message: 'Token not found.' },
         {
           status: 404,
-        }
+        },
       );
     }
 
@@ -26,7 +26,7 @@ export async function PATCH(
         { success: false, message: 'Invalid quantity' },
         {
           status: 400,
-        }
+        },
       );
     }
 
@@ -49,7 +49,7 @@ export async function PATCH(
         },
         {
           status: 404,
-        }
+        },
       );
     }
 
@@ -71,14 +71,14 @@ export async function PATCH(
     console.error(error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const token = req.cookies.get('cartToken')?.value;
@@ -86,7 +86,7 @@ export async function DELETE(
     if (!token) {
       return NextResponse.json(
         { success: false, message: 'Cart not found.' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -104,7 +104,7 @@ export async function DELETE(
     if (!cartItem) {
       return NextResponse.json(
         { success: false, message: 'Product not found' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -123,7 +123,7 @@ export async function DELETE(
     console.error(error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

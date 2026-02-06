@@ -4,7 +4,8 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 
 import { sendOTPEmail } from '@/app/actions/send-email-action';
 import { emailOTP } from 'better-auth/plugins';
-import prisma from './prisma';
+import { prisma } from './';
+
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_AUTH_API_URL,

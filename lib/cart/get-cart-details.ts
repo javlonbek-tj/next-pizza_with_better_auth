@@ -1,16 +1,17 @@
-import { Ingredient } from '@/lib/generated/prisma/browser';
-import { CartDto } from '@/services/dto/cart.dto';
-import { calCartItemTotalPrice } from './cal-cart-item-total-price';
-import { CartItemModel } from '@/components/cart/CartItemType';
 
-export const getCartDetails = (data: CartDto): CartItemModel[] =>
+
+import { calCartItemTotalPrice } from './cal-cart-item-total-price';
+import { Ingredient } from '@/types';
+import { CartDto } from '@/types/cart';
+
+export const getCartDetails = (data: CartDto) =>
   data.items.map((item) => ({
     id: item.id,
-    name: item.productItem.product.name,
-    pizzaType: item.productItem.pizzaType,
-    pizzaSize: item.productItem.size,
+    name: item.productItems.product.name,
+    pizzaType: item.productItems.type,
+    pizzaSize: item.productItems.size,
     quantity: item.quantity,
-    imageUrl: item.productItem.product.imageUrl,
+    imageUrl: item.productItems.product.imageUrl,
     totalCartItemPrice: calCartItemTotalPrice(item),
     ingredients: item.ingredients.map((ingredient: Ingredient) => ({
       name: ingredient.name,

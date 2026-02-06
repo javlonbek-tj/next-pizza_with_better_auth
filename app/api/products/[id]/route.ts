@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 
 export async function GET(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   const product = await prisma.product.findFirst({
     where: { id: params.id },
@@ -16,7 +16,7 @@ export async function GET(
   if (!product) {
     return NextResponse.json(
       { success: false, message: 'Product not found' },
-      { status: 404 }
+      { status: 404 },
     );
   }
 

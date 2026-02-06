@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { ingredientSchema } from '@/components/admin';
@@ -13,7 +13,7 @@ export async function GET() {
     console.error('[ADMIN_INGREDIENTS_GET]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         { success: false, message: 'Invalid data' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
           success: false,
           message: `Ингредиент "${name}" уже существует`,
         },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     console.error('[ADMIN_INGREDIENTS_POST]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

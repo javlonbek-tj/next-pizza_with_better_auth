@@ -1,6 +1,6 @@
 'use client';
 
-import { Category } from '@/lib/generated/prisma/browser';
+import { Category } from '@/types';
 import { Input } from '@/components/ui/input';
 import {
   Dialog,

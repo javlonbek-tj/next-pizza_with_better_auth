@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+
 
 import { categorySchema } from '@/components/admin';
+import { prisma } from '@/server';
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     /* const session = await auth();
@@ -21,7 +22,7 @@ export async function PUT(
     if (!validationResult.success) {
       return NextResponse.json(
         { success: false, message: 'Invalid data' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -43,7 +44,7 @@ export async function PUT(
           success: false,
           message: `Категория "${name}"  уже существует`,
         },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -57,14 +58,14 @@ export async function PUT(
     console.error('[ADMIN_CATEGORY_PUT]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     /*  const session = await auth();
@@ -82,7 +83,7 @@ export async function DELETE(
     if (productsCount > 0) {
       return NextResponse.json(
         { success: false, message: 'Can not delete category with products' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -95,7 +96,7 @@ export async function DELETE(
     console.error('[ADMIN_CATEGORY_DELETE]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

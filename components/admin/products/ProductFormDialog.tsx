@@ -30,9 +30,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
 import { FormActions } from '@/components/shared/FormActions';
 
-import { ProductWithRelations } from '@/prisma/@types/prisma';
+import { ProductWithRelations, Category, Ingredient } from '@/types';
 import { MultiSelect } from '@/components/shared/MultiSelect';
-import { Category, Ingredient } from '@/lib/generated/prisma/browser';
 import { useProductForm, useProductItems, useImageUpload } from '@/hooks';
 import {
   useGetCategories,

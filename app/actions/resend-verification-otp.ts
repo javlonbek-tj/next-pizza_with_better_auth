@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/lib';
+import { auth } from '@/server';
 import { APIError } from 'better-auth';
 
 export async function resendVerificationOTP(email: string) {

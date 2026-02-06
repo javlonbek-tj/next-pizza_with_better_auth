@@ -2,9 +2,9 @@
 
 import { APIError } from 'better-auth';
 import { headers } from 'next/headers';
+import { auth } from '@/server';
 
 import { loginSchema, LoginValues } from '@/components/auth/schemas';
-import { auth } from '@/lib';
 import { resendVerificationOTP } from './resend-verification-otp';
 
 export async function loginAction(values: LoginValues) {

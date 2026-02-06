@@ -1,6 +1,5 @@
-import { findPizzas } from '@/lib/product';
+import { findPizzas, GetSearchParams } from '@/server/data/find-pizzas';
 import { ProductGroupList } from './ProductGroupList';
-import { GetSearchParams } from '@/lib/product/find-pizzas';
 import { ProductNotFound } from './ProductNotFound';
 
 interface Props {

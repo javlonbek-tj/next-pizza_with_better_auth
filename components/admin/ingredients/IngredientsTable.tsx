@@ -18,7 +18,7 @@ import { Button } from '@/components/ui/button';
 import { IngredientFormDialog } from './IngredientFormDialog';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog } from '@/components/shared';
-import { Ingredient } from '@/lib/generated/prisma/browser';
+import { Ingredient } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { useTableActions } from '@/hooks';
 

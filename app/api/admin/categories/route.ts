@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 
 import { categorySchema } from '@/components/admin';
 
@@ -13,7 +13,7 @@ export async function GET(req: NextRequest) {
     const categories = await prisma.category.findMany({
       include: {
         _count: {
-          select: { products: true },
+          select: { products: true }, 
         },
       },
       orderBy: { createdAt: 'asc' },
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     console.error('[ADMIN_CATEGORIES_GET]', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         { success: false, message: 'Invalid data' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
     if (existingCategory) {
       return NextResponse.json(
         { success: false, message: `Категория "${name}" уже существует` },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     console.error('[ADMIN_CATEGORIES_POST]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

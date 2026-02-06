@@ -1,4 +1,5 @@
-import { Ingredient, ProductItem } from '@/lib/generated/prisma/browser';
+
+import { Ingredient, ProductItem } from '@/types';
 import Decimal from 'decimal.js';
 
 export const totalPizzaPrice = (

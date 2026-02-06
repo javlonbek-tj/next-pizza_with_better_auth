@@ -2,7 +2,7 @@
 
 import { LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Session } from '@/lib';
+import type { Session } from '@/server/auth';
 
 interface Props {
   session: Session | null;

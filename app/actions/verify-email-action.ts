@@ -1,7 +1,7 @@
 'use server';
 
 import { APIError } from 'better-auth';
-import { auth } from '@/lib';
+import { auth } from '@/server';
 
 export async function verifyEmailAction(email: string, otp: string) {
   try {

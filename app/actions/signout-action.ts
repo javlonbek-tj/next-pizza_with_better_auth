@@ -2,7 +2,7 @@
 
 import { APIError } from 'better-auth';
 import { headers } from 'next/headers';
-import { auth } from '@/lib';
+import { auth } from '@/server';
 
 export async function signoutAction() {
   try {

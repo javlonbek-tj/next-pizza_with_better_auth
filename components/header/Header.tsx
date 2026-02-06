@@ -4,12 +4,13 @@ import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 
-import { cn, Session } from '@/lib';
+import { cn } from '@/lib';
 import { Container } from '../shared/';
 import { SearchInput } from '../filters/SearchInput';
 import { CartButton } from '../cart';
 import { ProfileButton } from '../profile/ProfileButton';
 import { AuthModal } from '../modals/AuthModal';
+import type { Session } from '@/server/auth';
 
 interface Props {
   className?: string;

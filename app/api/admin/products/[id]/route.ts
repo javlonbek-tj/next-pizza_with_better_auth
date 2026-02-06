@@ -1,13 +1,13 @@
-// app/api/admin/products/[id]/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 import { deleteImageFile } from '@/app/actions';
 import { ProductItem } from '@/lib/generated/prisma/client';
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     /*  const session = await auth();
@@ -25,7 +25,7 @@ export async function DELETE(
     if (!product) {
       return NextResponse.json(
         { success: false, message: 'Product not found' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -42,14 +42,14 @@ export async function DELETE(
     console.error('[ADMIN_PRODUCT_DELETE]', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const productId = params.id;
@@ -66,7 +66,7 @@ export async function PUT(
     if (!existingProduct) {
       return NextResponse.json(
         { success: false, message: 'Продукт не найден' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -114,7 +114,7 @@ export async function PUT(
     console.error('[PRODUCT_UPDATE_ERROR]', error);
     return NextResponse.json(
       { success: false, message: 'Ошибка при обновлении продукта' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -2,8 +2,8 @@
 
 import { APIError } from 'better-auth';
 import { headers } from 'next/headers';
+import { auth } from '@/server';
 
-import { auth } from '@/lib';
 import { registerSchema, RegisterValues } from '@/components/auth/schemas';
 
 export async function registerAction(values: RegisterValues) {

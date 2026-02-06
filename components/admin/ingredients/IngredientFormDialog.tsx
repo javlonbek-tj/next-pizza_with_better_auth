@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Ingredient } from '@/lib/generated/prisma/browser';
+import { Ingredient } from '@/types';
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
 import { useImageUpload, useIngredientForm } from '@/hooks';
 import { IngredientFormValues } from '../schemas';

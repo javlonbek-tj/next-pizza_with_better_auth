@@ -15,7 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { PizzaType } from '@/lib/generated/prisma/browser';
+import { PizzaType } from '@/types';
 import { usePizzaTypeForm } from '@/hooks';
 import { FormActions } from '@/components/shared/FormActions';
 

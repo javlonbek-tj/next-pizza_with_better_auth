@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 
 import { pizzaSizeSchema } from '@/components/admin';
 
@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     console.error('[ADMIN_PIZZA_SIZES_GET]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
     if (!validationResult.success) {
       return NextResponse.json(
         { success: false, message: 'Invalid data' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
     if (existingSize) {
       return NextResponse.json(
         { success: false, message: `Размер "${size}" уже существует` },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
     console.error('[ADMIN_PIZZA_SIZES_POST]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

@@ -13,14 +13,14 @@ import { Edit, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
-import { PizzaType } from '@/lib/generated/prisma/browser';
+import { PizzaType, PizzaTypeWithProductCount } from '@/types';
 import { PizzaTypeFormDialog } from './PizzaTypeFormDialog';
 import {
   useDeletePizzaType,
   useGetPizzaTypes,
 } from '@/hooks/admin/use-pizza-types';
 import { useTableActions } from '@/hooks';
-import { PizzaTypeWithProductCount } from '@/prisma/@types/prisma';
+
 
 export function PizzaTypeTable() {
   const {

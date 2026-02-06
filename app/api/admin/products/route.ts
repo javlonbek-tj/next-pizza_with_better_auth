@@ -1,7 +1,7 @@
-// app/api/admin/products/route.ts
+
 import { NextRequest, NextResponse } from 'next/server';
 
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 
 export async function GET(req: NextRequest) {
   try {
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
     console.error('[ADMIN_PRODUCTS_GET]', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
     console.error('[ADMIN_PRODUCTS_POST]', error);
     return NextResponse.json(
       { error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

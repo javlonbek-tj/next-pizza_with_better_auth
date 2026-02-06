@@ -16,7 +16,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-import { ProductWithRelations } from '@/prisma/@types/prisma';
+import { ProductWithRelations} from '@/types';
 import { useTableActions } from '@/hooks';
 import { useDeleteProduct, useGetProducts } from '@/hooks/admin/use-products';
 import { ProductFormDialog } from './ProductFormDialog';

@@ -1,8 +1,8 @@
 import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
-import prisma from '@/lib/prisma';
-import { findOrCreateCart } from '@/lib/cart';
+import { prisma } from '@/server/prisma';
+import { findOrCreateCart } from '@/server/data/cart';
 import { AddToCartDto } from '@/services/dto/cart.dto';
 
 export async function GET(req: NextRequest) {
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
     console.error(error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
     console.error('Error adding to cart:', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -141,7 +141,7 @@ export async function DELETE(req: NextRequest) {
     if (!token) {
       return NextResponse.json(
         { success: false, message: 'Cart not found.' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -152,7 +152,7 @@ export async function DELETE(req: NextRequest) {
     if (!userCart) {
       return NextResponse.json(
         { success: false, message: 'Cart not found.' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -171,7 +171,7 @@ export async function DELETE(req: NextRequest) {
     console.error('Error deleting cart:', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

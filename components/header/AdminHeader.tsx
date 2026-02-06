@@ -1,4 +1,4 @@
-import { auth } from '@/lib';
+import { auth } from '@/server';
 import { headers } from 'next/headers';
 import { AdminPageHeader } from '../admin';
 

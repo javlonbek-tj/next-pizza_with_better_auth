@@ -1,8 +1,9 @@
 import Decimal from 'decimal.js';
 
+
 type CartItemCalculation = {
   quantity: number;
-  productItem: {
+  productItems: {
     price: number;
   };
   ingredients: {
@@ -13,7 +14,7 @@ type CartItemCalculation = {
 export const calCartItemTotalPrice = (
   cartItem: CartItemCalculation
 ): number => {
-  const pizzaPrice = new Decimal(cartItem.productItem.price);
+  const pizzaPrice = new Decimal(cartItem.productItems.price);
 
   const totalIngredientsPrice = cartItem.ingredients.reduce<Decimal>(
     (acc, ing) => acc.plus(new Decimal(ing.price)),

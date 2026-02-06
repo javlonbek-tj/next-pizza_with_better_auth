@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 import { pizzaTypeSchema } from '@/components/admin';
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     /* const session = await auth();
@@ -20,7 +20,7 @@ export async function PUT(
     if (!validationResult.success) {
       return NextResponse.json(
         { success: false, message: 'Invalid data' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -42,7 +42,7 @@ export async function PUT(
           success: false,
           message: `Тип "${type}" уже существует`,
         },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -57,7 +57,7 @@ export async function PUT(
     console.error('[ADMIN_PIZZA_TYPE_PUT]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
@@ -65,7 +65,7 @@ export async function PUT(
 // ✅ DELETE — remove pizza size
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     /* const session = await auth();
@@ -95,7 +95,7 @@ export async function DELETE(
     console.error('[ADMIN_PIZZA_TYPE_DELETE]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

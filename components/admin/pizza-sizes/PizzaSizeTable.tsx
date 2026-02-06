@@ -17,10 +17,10 @@ import { Edit, Trash2 } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
-import { PizzaSize } from '@/lib/generated/prisma/browser';
+import { PizzaSize, PizzaSizeWithProductCount } from '@/types';
 import { PizzaSizeFormDialog } from './PizzaSizeFormDialog';
 import { useTableActions } from '@/hooks';
-import { PizzaSizeWithProductCount } from '@/prisma/@types/prisma';
+
 
 export function PizzaSizeTable() {
   const {

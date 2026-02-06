@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
-import { GetSearchParams } from '@/lib/product/find-pizzas';
+
+import { GetSearchParams } from '@/server/data/find-pizzas';
 import { Container, TopBarContent } from '@/components/shared';
 import { ProductsSkeleton } from '@/components/skeletons';
 import { Filters } from '@/components/filters';

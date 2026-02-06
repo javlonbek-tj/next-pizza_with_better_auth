@@ -1,4 +1,4 @@
-import prisma from '@/lib/prisma';
+import {prisma} from '@/server/prisma';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { deleteImageFile } from '@/app/actions';
@@ -6,7 +6,7 @@ import { ingredientSchema } from '@/components/admin';
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const { id } = await params;
@@ -16,7 +16,7 @@ export async function PUT(
     if (!validationResult.success) {
       return NextResponse.json(
         { success: false, message: 'Invalid data' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -29,7 +29,7 @@ export async function PUT(
     if (!currentIngredient) {
       return NextResponse.json(
         { success: false, message: 'Ингредиент не найден' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -46,7 +46,7 @@ export async function PUT(
           success: false,
           message: `Ингредиент "${name}" уже существует`,
         },
-        { status: 409 }
+        { status: 409 },
       );
     }
 
@@ -65,14 +65,14 @@ export async function PUT(
     console.error('[ADMIN_INGREDIENT_PUT]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: { id: string } },
 ) {
   try {
     const { id } = await params;
@@ -84,7 +84,7 @@ export async function DELETE(
     if (!ingredient) {
       return NextResponse.json(
         { success: false, message: 'Ингредиент не найден' },
-        { status: 404 }
+        { status: 404 },
       );
     }
 
@@ -100,7 +100,7 @@ export async function DELETE(
     console.error('[ADMIN_INGREDIENT_DELETE]', error);
     return NextResponse.json(
       { success: false, message: 'Internal server error' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
