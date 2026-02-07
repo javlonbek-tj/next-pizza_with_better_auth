@@ -3,11 +3,11 @@ import { useEffect, useRef, useState } from 'react';
 import { useRouter, useSearchParams, usePathname } from 'next/navigation';
 
 export function useModalRoute(pathSegment: string) {
-  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const [open, setOpen] = useState(() => pathname.includes(pathSegment));
   const hasBeenClosed = useRef(false);
 
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {

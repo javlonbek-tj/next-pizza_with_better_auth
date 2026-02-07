@@ -1,6 +1,7 @@
-import { ProductWithRelations } from '@/prisma/@types/prisma';
+
 import { useAddToCart } from '../use-cart';
 import { usePizzaOptions } from '../filter';
+import { ProductWithRelations } from '@/types';
 
 export const usePizzaDetail = (
   product: ProductWithRelations,

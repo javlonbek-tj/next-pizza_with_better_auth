@@ -1,6 +1,5 @@
 'use client';
 import { Loader } from 'lucide-react';
-import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { cn } from '@/lib';
 import { PizzaImage } from './PizzaImage';
 import { Title } from '../shared';
@@ -8,7 +7,7 @@ import { usePizzaOptions } from '@/hooks';
 import { GroupVariants, Variant } from './GroupVariants';
 import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
-import { PizzaSize, PizzaType } from '@/lib/generated/prisma/browser';
+import { PizzaSize, PizzaType, ProductItem, ProductWithRelations } from '@/types';
 
 interface Props {
   className?: string;
@@ -55,7 +54,7 @@ export function ChoosePizzaForm({
       name: pizzaType.type,
       value: pizzaType.id,
       disabled: !product.productItems.some(
-        (item) => item.type?.id === pizzaType.id
+        (item: ProductItem) => item.typeId === pizzaType.id
       ),
     };
   });
@@ -69,7 +68,7 @@ export function ChoosePizzaForm({
   return (
     <div
       className={cn(
-        'flex h-full',
+        'flex h-full overflow-hidden',
         !isModal && ' max-w-5xl mx-auto ',
         className
       )}
@@ -82,7 +81,7 @@ export function ChoosePizzaForm({
 
       <div
         className={cn(
-          'flex flex-col flex-1',
+          'flex flex-col flex-1 overflow-hidden',
           isModal ? 'bg-[#f7f6f5]' : 'bg-white'
         )}
       >

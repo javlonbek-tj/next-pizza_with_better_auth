@@ -1,13 +1,14 @@
-import { findPizzas, GetSearchParams } from '@/server/data/find-pizzas';
+import { getProducts, GetSearchParams } from '@/server/data/products';
 import { ProductGroupList } from './ProductGroupList';
 import { ProductNotFound } from './ProductNotFound';
+
 
 interface Props {
   searchParams: GetSearchParams;
 }
 
 export async function ProductsContent({ searchParams }: Props) {
-  const categories = await findPizzas(searchParams);
+  const categories = await getProducts(searchParams);
 
   const hasProducts = categories.some(
     (category) => category.products.length > 0

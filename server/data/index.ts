@@ -1,1 +1,1 @@
-export {findPizzas} from './find-pizzas';
+export {getProducts} from './products';

@@ -20,6 +20,8 @@ export function CartButton({ className }: Props) {
     return <CartButtonSkeleton />;
   }
 
+  console.log(cartItems);
+
   if (isError) {
     return (
       <Button

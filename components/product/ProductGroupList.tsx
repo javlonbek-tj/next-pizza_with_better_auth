@@ -6,8 +6,9 @@ import { useIntersection } from 'react-use';
 import { cn } from '@/lib';
 import { Title } from '../shared';
 import { ProductCard } from './ProductCard';
-import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { useCategoryStore } from '@/store/category';
+import { ProductWithRelations } from '@/types';
+
 
 interface Props {
   className?: string;

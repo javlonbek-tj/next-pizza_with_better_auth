@@ -1,7 +1,7 @@
 export interface CartItemModel {
   id: string;
   name: string;
-  pizzaType?: number | null;
+  pizzaType?: string | null;
   pizzaSize?: number | null;
   quantity: number;
   imageUrl: string;

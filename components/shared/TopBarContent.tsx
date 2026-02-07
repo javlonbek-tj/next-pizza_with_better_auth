@@ -3,7 +3,6 @@ import { SortPopup } from '../filters/SortPopup';
 
 import { Categories } from '../categories/Categories';
 
-// TopBarContent.tsx
 export async function TopBarContent() {
   return (
     <div className="top-0 z-20 sticky bg-white shadow-black/5 shadow-lg">

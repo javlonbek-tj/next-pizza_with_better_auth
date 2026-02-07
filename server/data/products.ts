@@ -18,7 +18,7 @@ export interface GetSearchParams {
   sort?: SortValue;
 }
 
-export const findPizzas = async (params: GetSearchParams) => {
+export const getProducts = async (params: GetSearchParams) => {
   const sizes = params.pizzaSize?.split(',').filter(Boolean);
   const pizzaTypes = params.pizzaTypes?.split(',').filter(Boolean);
   const ingredients = params.ingredients?.split(',').filter(Boolean);
@@ -91,5 +91,22 @@ export const findPizzas = async (params: GetSearchParams) => {
     if (a.name === 'Пиццы') return -1;
     if (b.name === 'Пиццы') return 1;
     return 0;
+  });
+};
+
+
+export const getProductById = async (id: string) => {
+  return await prisma.product.findUnique({
+    where: { id },
+    include: {
+      ingredients: true,
+      productItems: {
+        orderBy: { createdAt: 'asc' },
+        include: {
+          size: true,
+          type: true,
+        },
+      },
+    },
   });
 };

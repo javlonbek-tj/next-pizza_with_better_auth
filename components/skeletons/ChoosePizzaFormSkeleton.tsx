@@ -11,7 +11,7 @@ export function ChoosePizzaFormSkeleton({ className, isModal }: Props) {
   return (
     <div
       className={cn(
-        'flex h-full', // same as ChoosePizzaForm
+        'flex h-full overflow-hidden', // same as ChoosePizzaForm
         !isModal && 'max-w-5xl mx-auto',
         className
       )}

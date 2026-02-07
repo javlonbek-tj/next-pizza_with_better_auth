@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
             productItem: {
               include: {
                 product: true,
+                size: true,
+                type: true,
               },
             },
             ingredients: true,

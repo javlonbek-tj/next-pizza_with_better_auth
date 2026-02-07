@@ -2,24 +2,13 @@ import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { ApiResponse } from './api-response';
 import {
-  Category,
-  Ingredient,
-  PizzaSize,
-  PizzaType,
-} from '@/lib/generated/prisma/browser';
-import {
   CategoryFormValues,
   IngredientFormValues,
   PizzaSizeFormValues,
   PizzaTypeFormValues,
 } from '@/components/admin';
-import {
-  CategoryWithProductCount,
-  PizzaSizeWithProductCount,
-  PizzaTypeWithProductCount,
-  ProductWithRelations,
-} from '@/prisma/@types/prisma';
 import { ProductFormValues } from '@/components/admin/schemas/product-schema';
+import { Category, CategoryWithProductCount, Ingredient, PizzaSize, PizzaSizeWithProductCount, PizzaType, PizzaTypeWithProductCount, ProductWithRelations } from '@/types';
 
 export const getCategories = async () => {
   const { data } = (
@@ -59,7 +48,7 @@ export const deleteCategory = (id: string) => {
 
 export const getIngredients = async () => {
   const { data } = (
-    await axiosInstance.get<ApiResponse<Ingredient[]>>(ApiRoutes.INGREDIENTS)
+    await axiosInstance.get<ApiResponse<Ingredient[]>>(`${ApiRoutes.ADMIN}/ingredients`)
   ).data;
   return data;
 };

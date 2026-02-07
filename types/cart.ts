@@ -19,7 +19,7 @@ export type CartItem = {
 }
 
 export type CartItemDto = CartItem & {
-  productItems: ProductItems & { product: Product };
+  productItem: ProductItems & { product: Product };
   ingredients: Ingredient[];
 };
 

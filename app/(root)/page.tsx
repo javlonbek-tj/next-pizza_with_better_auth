@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 
-import { GetSearchParams } from '@/server/data/find-pizzas';
+import { GetSearchParams } from '@/server/data/products';
 import { Container, TopBarContent } from '@/components/shared';
 import { ProductsSkeleton } from '@/components/skeletons';
 import { Filters } from '@/components/filters';
@@ -20,14 +20,14 @@ export default async function Home({
         <aside className="w-[250px]">
           <Filters />
         </aside>
-        <div className="flex-1 space-y-12 min-w-0">
+        <main className="flex-1 space-y-12 min-w-0">
           <Suspense
             key={JSON.stringify(resolvedSearchParams)}
             fallback={<ProductsSkeleton />}
           >
             <ProductsContent searchParams={resolvedSearchParams} />
           </Suspense>
-        </div>
+        </main>
       </Container>
     </>
   );

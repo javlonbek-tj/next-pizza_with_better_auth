@@ -1,29 +1,29 @@
-'use client';
+import { ProductForm } from '@/components/product';
+import { getProductById } from '@/server/data/products';
+import { getPizzaSizes, getPizzaTypes } from '@/server/data/pizza-options';
 
-import { use } from 'react';
-import { ChooseProductModal } from '@/components/modals';
-import { useGetPizzaSizes, useGetPizzaTypes, useGetProduct } from '@/hooks';
-
-export default function ProductModalPage({
+export default async function ProductModalPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
-  const { id } = use(params);
+  const { id } = await params;
+  const product = await getProductById(id);
+  const pizzaSizes = await getPizzaSizes();
+  const pizzaTypes = await getPizzaTypes();
 
-  const { data: product, isPending: isProductPending } = useGetProduct(id);
-  const { data: pizzaSizes = [], isPending: isPizzaSizesPending } =
-    useGetPizzaSizes();
-  const { data: pizzaTypes = [], isPending: isPizzaTypesPending } =
-    useGetPizzaTypes();
-
-  const isPending =
-    isProductPending || isPizzaSizesPending || isPizzaTypesPending;
+  if (!product) {
+    return (
+      <div className="flex flex-col justify-center items-center gap-4 min-h-[500px]">
+        <p className="text-gray-500 text-lg">Продукт не найден</p>
+      </div>
+    );
+  }
 
   return (
-    <ChooseProductModal
+    <ProductForm
       product={product}
-      isPending={isPending}
+      isModal={true}
       pizzaSizes={pizzaSizes}
       pizzaTypes={pizzaTypes}
     />

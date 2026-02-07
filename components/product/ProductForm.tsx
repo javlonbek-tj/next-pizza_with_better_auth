@@ -1,15 +1,15 @@
 'use client';
-import { ProductWithRelations } from '@/prisma/@types/prisma';
+
 import { ChoosePizzaForm } from './ChoosePizzaForm';
 import { ChooseProductForm } from './ChooseProductForm';
 import { usePizzaDetail, useProductDetail } from '@/hooks';
 import { PizzaSize, PizzaType } from '@/lib/generated/prisma/browser';
+import { ProductWithRelations } from '@/types';
 
 interface Props {
-  product?: ProductWithRelations;
+  product: ProductWithRelations;
   isModal: boolean;
   onClose?: () => void;
-  isPending: boolean;
   pizzaSizes?: PizzaSize[];
   pizzaTypes?: PizzaType[];
 }
@@ -28,13 +28,6 @@ export function ProductForm({
   pizzaSizes,
   pizzaTypes,
 }: Props) {
-  if (!product) {
-    return (
-      <div className="flex justify-center items-center min-h-[500px]">
-        <p className="text-gray-500">Продукт не найден</p>
-      </div>
-    );
-  }
 
   const isPizza = Boolean(
     product?.productItems[0]?.sizeId || product?.productItems[0]?.typeId
