@@ -1,6 +1,7 @@
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
 import { getPizzaSizes, getPizzaTypes } from '@/server/data/pizza-options';
+import { ChooseProductModal } from '@/components/modals';
 
 export default async function ProductModalPage({
   params,
@@ -12,20 +13,14 @@ export default async function ProductModalPage({
   const pizzaSizes = await getPizzaSizes();
   const pizzaTypes = await getPizzaTypes();
 
-  if (!product) {
-    return (
-      <div className="flex flex-col justify-center items-center gap-4 min-h-[500px]">
-        <p className="text-gray-500 text-lg">Продукт не найден</p>
-      </div>
-    );
-  }
-
   return (
-    <ProductForm
-      product={product}
-      isModal={true}
-      pizzaSizes={pizzaSizes}
-      pizzaTypes={pizzaTypes}
-    />
+    <ChooseProductModal>
+      <ProductForm
+        product={product}
+        isModal={true}
+        pizzaSizes={pizzaSizes}
+        pizzaTypes={pizzaTypes}
+      />
+    </ChooseProductModal>
   );
 }

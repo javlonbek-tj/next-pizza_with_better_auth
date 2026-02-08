@@ -4,7 +4,8 @@ import Image from 'next/image';
 
 import { Title } from '../shared';
 import { Button } from '../ui/button';
-import { Ingredient, ProductItem } from '@/lib/generated/prisma/browser';
+import { Ingredient, ProductItem } from '@/types';
+
 
 interface Props {
   className?: string;
@@ -13,11 +14,15 @@ interface Props {
   name: string;
   ingredients: Ingredient[];
   productItems: ProductItem[];
+  queryString?: string;
 }
 
-export function ProductCard({ className, ingredients, ...product }: Props) {
+export function ProductCard({ className, ingredients, queryString, ...product }: Props) {
   return (
-    <Link href={`/product/${product.id}`} className={className}>
+    <Link
+      href={`/product/${product.id}${queryString ? `?${queryString}` : ''}`}
+      className={className}
+    >
       <div className="flex justify-center bg-secondary p-6 rounded-lg h-[260px]">
         <Image
           src={product.imageUrl}

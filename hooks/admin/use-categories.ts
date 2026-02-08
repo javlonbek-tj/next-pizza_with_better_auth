@@ -4,11 +4,11 @@ import toast from 'react-hot-toast';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Category } from '@/lib/generated/prisma/browser';
 import { CategoryFormValues, categorySchema } from '@/components/admin';
 import { generateSlug, queryKeys } from '@/lib';
 import { Api } from '@/services/api-client';
 import { ApiResponse } from '@/services/api-response';
+import { Category } from '@/types';
 
 export function useGetCategories() {
   return useQuery({
@@ -76,9 +76,6 @@ export function useDeleteCategory() {
   });
 }
 
-/**
- * Hook to manage category form state and submission
- */
 export function useCategoryForm(
   category: Category | null | undefined,
   open: boolean,

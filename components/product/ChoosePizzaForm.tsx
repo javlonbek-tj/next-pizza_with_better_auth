@@ -3,11 +3,14 @@ import { Loader } from 'lucide-react';
 import { cn } from '@/lib';
 import { PizzaImage } from './PizzaImage';
 import { Title } from '../shared';
-import { usePizzaOptions } from '@/hooks';
+import { usePizzaOptions, useCart, useUpdateCartQuantity } from '@/hooks';
 import { GroupVariants, Variant } from './GroupVariants';
 import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
 import { PizzaSize, PizzaType, ProductItem, ProductWithRelations } from '@/types';
+
+
+import { CartUpdateButtons } from '../cart/CartUpdateButtons';
 
 interface Props {
   className?: string;
@@ -30,6 +33,9 @@ export function ChoosePizzaForm({
   pizzaSizes = [],
   pizzaTypes = [],
 }: Props) {
+  const { data: cartItems } = useCart();
+  const { mutate: updateCartQuantity } = useUpdateCartQuantity();
+
   const {
     typeId,
     sizeId,
@@ -39,7 +45,15 @@ export function ChoosePizzaForm({
     addIngredient,
     totalPrice,
     availableSizes,
+    selectedPizzaItemId,
   } = pizzaOptions;
+
+  const currentItemId = cartItems?.find(
+    (item) =>
+      item.productItemId === selectedPizzaItemId &&
+      item.ingredients.length === selectedIngredients.size &&
+      item.ingredients.every((ingredient) => selectedIngredients.has(ingredient.id))
+  )?.id;
 
   const allPizzaSizes = pizzaSizes.map((pizzaSize): Variant => {
     return {
@@ -132,17 +146,31 @@ export function ChoosePizzaForm({
             isModal ? 'py-4 bg-[#f7f6f5]' : 'bg-white pt-4'
           )}
         >
-          <Button
-            className="py-5 w-full cursor-pointer"
-            disabled={isSubmitting}
-            onClick={onAddToCart}
-          >
-            {isSubmitting ? (
-              <Loader className="w-5 h-5 animate-spin" />
-            ) : (
-              <>Добавить в корзину за {totalPrice} ₽</>
-            )}
-          </Button>
+          {currentItemId ? (
+            <div
+              className="flex justify-between items-center w-full bg-secondary px-5 h-[55px] rounded-[18px] text-base font-bold"
+            >
+              <span className="text-gray-500">
+                В корзине: {cartItems?.find((item) => item.id === currentItemId)?.quantity}
+              </span>
+              <CartUpdateButtons
+                id={currentItemId}
+                quantity={cartItems?.find((item) => item.id === currentItemId)?.quantity || 0}
+              />
+            </div>
+          ) : (
+            <Button
+              className="py-5 w-full cursor-pointer"
+              disabled={isSubmitting}
+              onClick={onAddToCart}
+            >
+              {isSubmitting ? (
+                <Loader className="w-5 h-5 animate-spin" />
+              ) : (
+                <>Добавить в корзину за {totalPrice} ₽</>
+              )}
+            </Button>
+          )}
         </div>
       </div>
     </div>

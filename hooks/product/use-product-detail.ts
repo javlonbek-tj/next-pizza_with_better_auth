@@ -1,6 +1,7 @@
-import { ProductWithRelations } from '@/prisma/@types/prisma';
+
 import { useSet } from 'react-use';
 import { useAddToCart } from '../use-cart';
+import { ProductWithRelations } from '@/types';
 
 export const useProductDetail = (
   product: ProductWithRelations,

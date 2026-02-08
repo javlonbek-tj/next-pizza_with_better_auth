@@ -1,4 +1,5 @@
-'use server';
+
+
 import {
   DEFAULT_PRICE_FROM,
   DEFAULT_PRICE_TO,
@@ -38,9 +39,9 @@ export const getProducts = async (params: GetSearchParams) => {
           productItems: {
             some: {
               price: { gte: priceFrom, lte: priceTo },
-              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }), // Changed: size → sizeId
+              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }), 
               ...(pizzaTypes &&
-                pizzaTypes.length > 0 && { typeId: { in: pizzaTypes } }), // Changed: pizzaType → typeId
+                pizzaTypes.length > 0 && { typeId: { in: pizzaTypes } }),
             },
           },
         },
@@ -49,9 +50,9 @@ export const getProducts = async (params: GetSearchParams) => {
           productItems: {
             where: {
               price: { gte: priceFrom, lte: priceTo },
-              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }), // Changed: size → sizeId
+              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }),
               ...(pizzaTypes &&
-                pizzaTypes.length > 0 && { typeId: { in: pizzaTypes } }), // Changed: pizzaType → typeId
+                pizzaTypes.length > 0 && { typeId: { in: pizzaTypes } }),
             },
             orderBy: { createdAt: 'asc' },
             include: {

@@ -2,16 +2,24 @@ import z from 'zod';
 
 // Base schemas
 export const productItemSchema = z.object({
-  price: z
-    .number({ message: 'Цена обязательна и должна быть больше 0' })
-    .positive('Цена обязательна и должна быть больше 0')
-    .max(1000000000, 'Цена не должна превышать 1,000,000,000')
-    .refine(
-      (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
-      {
-        message: 'Цена должна иметь максимум 2 знака после запятой',
-      }
-    ),
+  price: z.preprocess(
+    (val) => {
+      if (val === '' || val === undefined || val === null) return undefined;
+      const str = val.toString();
+      const num = parseFloat(str);
+      return isNaN(num) ? undefined : num;
+    },
+    z
+      .number({ message: 'Цена обязательна и должна быть больше 0' })
+      .positive('Цена обязательна и должна быть больше 0')
+      .max(1000000000, 'Цена не должна превышать 1,000,000,000')
+      .refine(
+        (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
+        {
+          message: 'Цена должна иметь максимум 2 знака после запятой',
+        }
+      )
+  ),
   sizeId: z.string().nullable().optional(),
   typeId: z.string().nullable().optional(),
 });

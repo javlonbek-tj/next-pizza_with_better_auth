@@ -1,36 +1,44 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import { BackButton } from '../shared';
 import { ChoosePizzaForm } from './ChoosePizzaForm';
 import { ChooseProductForm } from './ChooseProductForm';
 import { usePizzaDetail, useProductDetail } from '@/hooks';
-import { PizzaSize, PizzaType } from '@/lib/generated/prisma/browser';
-import { ProductWithRelations } from '@/types';
+import { PizzaSize, PizzaType, ProductWithRelations } from '@/types';
 
 interface Props {
-  product: ProductWithRelations;
+  product: ProductWithRelations | null;
   isModal: boolean;
-  onClose?: () => void;
   pizzaSizes?: PizzaSize[];
   pizzaTypes?: PizzaType[];
 }
 interface WrapperProps {
   product: ProductWithRelations;
   isModal: boolean;
-  onClose?: () => void;
   pizzaSizes?: PizzaSize[];
   pizzaTypes?: PizzaType[];
+  onClose: () => void;
 }
 
 export function ProductForm({
   product,
   isModal,
-  onClose,
   pizzaSizes,
   pizzaTypes,
 }: Props) {
+  const router = useRouter();
+  if (!product) {
+    return (
+      <div className="flex flex-col justify-center items-center gap-4 min-h-[500px]">
+        <p className="text-gray-500 text-lg">Продукт не найден</p>
+        <BackButton onClick={() => router.back()} />
+      </div>
+    );
+  }
 
   const isPizza = Boolean(
-    product?.productItems[0]?.sizeId || product?.productItems[0]?.typeId
+    product.productItems[0]?.sizeId || product.productItems[0]?.typeId
   );
 
   if (isPizza) {
@@ -38,7 +46,7 @@ export function ProductForm({
       <PizzaFormWrapper
         product={product}
         isModal={isModal}
-        onClose={onClose}
+        onClose={() => router.back()}
         pizzaSizes={pizzaSizes}
         pizzaTypes={pizzaTypes}
       />
@@ -49,7 +57,7 @@ export function ProductForm({
     <RegularProductFormWrapper
       product={product}
       isModal={isModal}
-      onClose={onClose}
+      onClose={() => router.back()}
     />
   );
 }
@@ -82,8 +90,8 @@ function PizzaFormWrapper({
 
 function RegularProductFormWrapper({
   product,
-  isModal,
   onClose,
+  isModal,
 }: WrapperProps) {
   const { handleAddToCart, isPending, selectedIngredients, addIngredient } =
     useProductDetail(product, onClose, isModal);

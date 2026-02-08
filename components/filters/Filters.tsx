@@ -59,7 +59,7 @@ export function Filters({ className }: Props) {
             <FilterCheckboxGroup
               options={pizzaSizeOptions.map((pizzaSize) => ({
                 label: `${pizzaSize.size} см`,
-                value: pizzaSize.size.toString(),
+                value: pizzaSize.id.toString(),
               }))}
               name="pizza-size"
               title="Размеры"

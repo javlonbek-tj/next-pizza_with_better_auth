@@ -44,7 +44,7 @@ export function FilterSkeleton() {
       {/* ---------- Price Range ---------- */}
       <div className='pt-4 mb-6 border-t border-b border-gray-200 pb-7'>
         <Skeleton className='h-5 mb-3 w-28' />
-        <div className='flex gap-3 mb-5'>
+        <div className='flex gap-3 mb-3'>
           <Skeleton className='flex-1 h-11' />
           <Skeleton className='flex-1 h-11' />
         </div>

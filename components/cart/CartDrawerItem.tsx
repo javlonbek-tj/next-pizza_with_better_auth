@@ -3,6 +3,7 @@ import Image from 'next/image';
 
 import { cn } from '@/lib/utils';
 import { CartItemInfo, CartUpdateButtons } from './index';
+import { RemoveCartItem } from './RemoveCartItem';
 import { useRemoveCartItem } from '@/hooks';
 
 interface Props {
@@ -24,12 +25,10 @@ export function CartDrawerItem({
   totalCartItemPrice,
   details,
 }: Props) {
-  const { mutate: removeCartItem, isPending } = useRemoveCartItem();
   return (
     <div
       className={cn(
         'flex items-center gap-4 bg-white px-4 py-3',
-        { 'opacity-50 pointer-events-none': isPending },
         className
       )}
     >
@@ -44,11 +43,7 @@ export function CartDrawerItem({
           {/* Price + Remove */}
           <div className='flex items-center gap-4'>
             <span className='font-bold text-sm'>{totalCartItemPrice} ₽</span>
-            <Trash2Icon
-              className='text-red-500 cursor-pointer'
-              size={16}
-              onClick={() => !isPending && removeCartItem({ id })}
-            />
+            <RemoveCartItem id={id} />
           </div>
         </div>
       </div>

@@ -3,6 +3,8 @@
 import { useEffect, useRef } from 'react';
 import { useIntersection } from 'react-use';
 
+import { useSearchParams } from 'next/navigation';
+
 import { cn } from '@/lib';
 import { Title } from '../shared';
 import { ProductCard } from './ProductCard';
@@ -28,6 +30,8 @@ export function ProductGroupList({
   const setActiveCategoryName = useCategoryStore(
     (state) => state.setActiveName
   );
+  const searchParams = useSearchParams();
+  const queryString = searchParams.toString();
   const intersectionRef = useRef<HTMLDivElement>(null);
   const intersection = useIntersection(
     intersectionRef as React.RefObject<HTMLElement>,
@@ -36,9 +40,10 @@ export function ProductGroupList({
 
   useEffect(() => {
     if (intersection?.isIntersecting) {
-      setActiveCategoryName(categoryTitle);
+      setActiveCategoryName(categorySlug);
     }
-  }, [intersection, categoryTitle, setActiveCategoryName]);
+  }, [intersection, categorySlug, setActiveCategoryName]);
+
 
   return (
     <div className={cn('scroll-mt-20', className)} id={categorySlug}>
@@ -48,7 +53,11 @@ export function ProductGroupList({
 
       <div className={cn('gap-8 grid grid-cols-3', listClassName)}>
         {products.map((product) => (
-          <ProductCard key={product.id} {...product} />
+          <ProductCard
+            key={product.id}
+            {...product}
+            queryString={queryString}
+          />
         ))}
       </div>
     </div>

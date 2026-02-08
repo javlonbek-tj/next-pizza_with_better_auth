@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { cn } from '@/lib';
 import { Slider } from '../ui/slider';
 import { DecimalInput } from '../shared';
@@ -20,129 +19,87 @@ export function PriceRange({
   min,
   max,
   step,
-  value = [min, max],
+  value,
   onValueChange,
 }: Props) {
-  const [minValue, setMinValue] = useState<number | ''>('');
-  const [maxValue, setMaxValue] = useState<number | ''>('');
-  const [error, setError] = useState<string>('');
-
-  useEffect(() => {
-    setMinValue(value[0] === min ? '' : value[0]);
-    setMaxValue(value[1] === max ? '' : value[1]);
-  }, [value, min, max]);
-
-  const updateRange = (newMin: number, newMax: number) => {
-    onValueChange([newMin, newMax]);
-  };
+  const [minValue, maxValue] = value;
 
   const handleMinChange = (val: number | string | undefined) => {
     if (val === '' || val === undefined) {
-      setMinValue('');
-      setError('');
+      onValueChange([min, maxValue]);
       return;
     }
 
     const newMin = Number(val);
     if (isNaN(newMin)) return;
 
-    const currentMax = maxValue === '' ? max : maxValue;
-
-    if (newMin > currentMax) {
-      setError('Конечная стоимость должна быть больше начальной');
-    } else {
-      setError('');
-    }
-
-    setMinValue(newMin);
+    onValueChange([newMin, maxValue]);
   };
 
   const handleMaxChange = (val: number | string | undefined) => {
     if (val === '' || val === undefined) {
-      setMaxValue('');
-      setError('');
+      onValueChange([minValue, max]);
       return;
     }
 
     const newMax = Number(val);
     if (isNaN(newMax)) return;
 
-    const currentMin = minValue === '' ? min : minValue;
-
-    if (newMax < currentMin) {
-      setError('Конечная стоимость должна быть больше начальной');
-    } else {
-      setError('');
-    }
-
-    setMaxValue(newMax);
+    onValueChange([minValue, newMax]);
   };
 
   const handleMinBlur = () => {
-    const actualMin = minValue === '' ? min : minValue;
-    const actualMax = maxValue === '' ? max : maxValue;
-    const clamped = Math.max(min, Math.min(actualMin, actualMax));
-    setMinValue(clamped);
-    setError('');
-    updateRange(clamped, actualMax);
+    const clamped = Math.max(min, Math.min(minValue, maxValue));
+    onValueChange([clamped, maxValue]);
   };
 
   const handleMaxBlur = () => {
-    const actualMin = minValue === '' ? min : minValue;
-    const actualMax = maxValue === '' ? max : maxValue;
-    const clamped = Math.min(max, Math.max(actualMax, actualMin));
-    setMaxValue(clamped);
-    setError('');
-    updateRange(actualMin, clamped);
+    const clamped = Math.min(max, Math.max(maxValue, minValue));
+    onValueChange([minValue, clamped]);
   };
 
-  const sliderMin = minValue === '' ? min : minValue;
-  const sliderMax = maxValue === '' ? max : maxValue;
+  const hasError = maxValue < minValue;
 
   return (
     <div className={cn(className)}>
       {title && <h4 className="font-bold">{title}:</h4>}
-      <div className="flex items-center gap-2 mt-3 mb-5">
+      <div className={`flex items-center gap-2 mt-3 ${hasError ? 'mb-1' : 'mb-3'}`}>
         <DecimalInput
           maxDecimals={0}
-          value={minValue}
+          value={minValue === min ? '' : minValue}
           onChange={handleMinChange}
           onBlur={handleMinBlur}
-          min={min}
-          max={max}
           step={step}
           hideZero={false}
           placeholder="0"
         />
         <DecimalInput
           maxDecimals={0}
-          value={maxValue}
+          value={maxValue === max ? '' : maxValue}
           onChange={handleMaxChange}
           onBlur={handleMaxBlur}
-          min={min}
-          max={max}
           step={step}
           hideZero={false}
           placeholder="1000"
         />
       </div>
-      {error && <p className="mb-3 text-red-500 text-sm">{error}</p>}
+      {hasError && (
+        <p className="mb-3 text-red-500 text-sm">
+          Конечная стоимость должна быть больше начальной
+        </p>
+      )}
       <div className="relative mt-6">
         <Slider
           min={min}
           max={max}
           step={step}
-          value={[sliderMin, sliderMax]}
-          onValueChange={(val) => {
-            setMinValue(val[0]);
-            setMaxValue(val[1]);
-            updateRange(val[0], val[1]);
-          }}
+          value={value}
+          onValueChange={onValueChange}
           className="w-full"
         />
         <div className="-bottom-6 left-0 absolute flex justify-between px-1 w-full">
-          <span className="text-gray-600 text-sm">{sliderMin}</span>
-          <span className="text-gray-600 text-sm">{sliderMax}</span>
+          <span className="text-gray-600 text-sm">{minValue}</span>
+          <span className="text-gray-600 text-sm">{maxValue}</span>
         </div>
       </div>
     </div>

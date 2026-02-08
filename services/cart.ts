@@ -1,7 +1,7 @@
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
-import { AddToCartDto, CartDto } from './dto/cart.dto';
 import { ApiResponse } from './api-response';
+import { AddToCartDto, CartDto } from '@/types';
 
 export const getCart = async () => {
   const { data } = (

@@ -1,18 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import {prisma} from '@/server/prisma';
+import { prisma } from '@/server/prisma';
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    /*  const session = await auth();
-    if (session?.user?.role !== 'admin') {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    } */
-
-    const { id } = await params;
+    const { id } = params;
     const { status } = await req.json();
+
+    if (!['PENDING', 'SUCCEEDED', 'CANCELLED'].includes(status)) {
+      return NextResponse.json({ message: 'Invalid status' }, { status: 400 });
+    }
 
     const order = await prisma.order.update({
       where: { id },
@@ -22,9 +18,6 @@ export async function PATCH(
     return NextResponse.json(order);
   } catch (error) {
     console.error('[ADMIN_ORDER_PATCH]', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
   }
 }

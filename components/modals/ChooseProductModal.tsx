@@ -25,7 +25,7 @@ export function ChooseProductModal({
     >
       <DialogContent
         size="xl"
-        className={cn('flex flex-col p-0 h-[620px] overflow-hidden', className)}
+        className={cn('flex flex-col p-0 h-[38.75rem] overflow-hidden', className)}
       >
         <DialogTitle className="sr-only">
           {title || 'Choose Product'}

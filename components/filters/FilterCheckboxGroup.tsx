@@ -40,16 +40,6 @@ export function FilterCheckboxGroup({
       )
     : options.slice(0, limit);
 
-  const handleCheckboxChange = (id: string, checked: boolean) => {
-    const newValues = new Set(values);
-    if (checked) {
-      newValues.add(id);
-    } else {
-      newValues.delete(id);
-    }
-    onClickCheckbox(id);
-  };
-
   return (
     <div
       className={cn(
@@ -78,7 +68,7 @@ export function FilterCheckboxGroup({
             label={option.label}
             value={option.value}
             checked={values.has(option.value)}
-            onChange={(checked) => handleCheckboxChange(option.value, checked)}
+            onChange={() => onClickCheckbox(option.value)}
             name={name}
           />
         ))}

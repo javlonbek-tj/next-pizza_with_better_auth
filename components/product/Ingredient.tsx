@@ -1,8 +1,8 @@
 import Image from 'next/image';
 import { Check } from 'lucide-react';
 
-import { Ingredient } from '@/lib/generated/prisma/browser';
 import { cn } from '@/lib/utils';
+import { Ingredient } from '@/types';
 
 interface Props {
   className?: string;

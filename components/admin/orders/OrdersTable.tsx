@@ -34,6 +34,8 @@ export function OrdersTable() {
     status: status === 'all' ? undefined : status,
   });
 
+  const orders = (data as any[]) || [];
+
   if (isPending) {
     return (
       <div className='space-y-4'>
@@ -52,11 +54,10 @@ export function OrdersTable() {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='all'>All Orders</SelectItem>
-            <SelectItem value='pending'>Pending</SelectItem>
-            <SelectItem value='processing'>Processing</SelectItem>
-            <SelectItem value='completed'>Completed</SelectItem>
-            <SelectItem value='cancelled'>Cancelled</SelectItem>
+            <SelectItem value='all'>Все заказы</SelectItem>
+            <SelectItem value='PENDING'>В ожидании</SelectItem>
+            <SelectItem value='SUCCEEDED'>Оплачен</SelectItem>
+            <SelectItem value='CANCELLED'>Отменен</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -65,28 +66,28 @@ export function OrdersTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Order ID</TableHead>
-              <TableHead>Customer</TableHead>
-              <TableHead>Total</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead className='text-right'>Actions</TableHead>
+              <TableHead>Номер заказа</TableHead>
+              <TableHead>Покупатель</TableHead>
+              <TableHead>Сумма</TableHead>
+              <TableHead>Статус</TableHead>
+              <TableHead>Дата</TableHead>
+              <TableHead className='text-right'>Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.orders.map((order) => (
+            {orders.map((order) => (
               <TableRow key={order.id}>
                 <TableCell className='font-mono text-sm'>
                   #{order.id.slice(0, 8)}
                 </TableCell>
                 <TableCell>
                   <div>
-                    <p className='font-medium'>{order.fullName}</p>
+                    <p className='font-medium'>{order.firstName} {order.lastName}</p>
                     <p className='text-sm text-gray-500'>{order.email}</p>
                   </div>
                 </TableCell>
                 <TableCell className='font-semibold'>
-                  ${order.totalAmount}
+                  {order.totalAmount} ₽
                 </TableCell>
                 <TableCell>
                   <OrderStatusBadge status={order.status} />

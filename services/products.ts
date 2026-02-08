@@ -1,7 +1,8 @@
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { ApiResponse } from './api-response';
-import { ProductWithRelations } from '@/prisma/@types/prisma';
+import { ProductWithRelations } from '@/types';
+
 
 export const search = async (query: string) => {
   const { data } = (

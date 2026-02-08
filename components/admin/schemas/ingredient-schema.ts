@@ -10,16 +10,24 @@ export const ingredientSchema = z.object({
     .transform((val) => val.toLowerCase())
     .transform((val) => val.charAt(0).toUpperCase() + val.slice(1)),
 
-  price: z
-    .number('Цена должна быть числом')
-    .positive('Цена должна быть больше 0')
-    .max(1000000000, 'Цена не должна превышать 1,000,000,000')
-    .refine(
-      (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
-      {
-        message: 'Цена должна иметь максимум 2 знака после запятой',
-      }
-    ),
+  price: z.preprocess(
+    (val) => {
+      if (val === '' || val === undefined || val === null) return undefined;
+      const str = val.toString();
+      const num = parseFloat(str);
+      return isNaN(num) ? undefined : num;
+    },
+    z
+      .number({ message: 'Цена обязательна и должна быть больше 0' })
+      .positive('Цена обязательна и должна быть больше 0')
+      .max(1000000000, 'Цена не должна превышать 1,000,000,000')
+      .refine(
+        (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
+        {
+          message: 'Цена должна иметь максимум 2 знака после запятой',
+        }
+      )
+  ),
 
   imageUrl: z
     .string()

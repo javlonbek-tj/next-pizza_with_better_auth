@@ -28,10 +28,9 @@ export function DecimalInput({
     }
 
     const normalized = inputValue.replace(',', '.');
-    const regex =
-      maxDecimals === 0
-        ? /^\d+$/
-        : new RegExp(`^\\d*\\.?\\d{0,${maxDecimals}}$`);
+    const regex = maxDecimals === 0
+      ? /^\d+$/
+      : new RegExp(`^\\d*\\.?\\d{0,${maxDecimals}}$`);
 
     if (regex.test(normalized)) {
       onChange?.(normalized);
@@ -47,8 +46,7 @@ export function DecimalInput({
       return;
     }
 
-    const numValue = parseFloat(stringValue.replace(',', '.'));
-
+    const numValue = parseFloat(stringValue);
     if (!isNaN(numValue)) {
       onChange?.(numValue);
     } else {
@@ -60,12 +58,12 @@ export function DecimalInput({
 
   return (
     <Input
-      inputMode={maxDecimals === 0 ? 'numeric' : 'decimal'}
-      autoComplete='off'
-      placeholder={placeholder}
+      type="text"
+      inputMode="decimal"
       value={hideZero && value === 0 ? '' : value ?? ''}
       onChange={handleChange}
       onBlur={handleBlur}
+      placeholder={placeholder}
       {...props}
     />
   );

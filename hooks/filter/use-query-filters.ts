@@ -1,8 +1,9 @@
-// hooks/useQueryFilters.ts
+
 'use client';
 
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useRef, useTransition } from 'react';
+import { useCallback, useRef, useTransition } from 'react';
+import { useDebounce } from 'react-use';
 import qs from 'qs';
 import { Filters } from './use-filters';
 
@@ -44,9 +45,13 @@ export const useQueryFilters = (filters: Filters) => {
     }
   }, [filters, router, searchParams, startTransition]);
 
-  useEffect(() => {
-    updateUrl();
-  }, [updateUrl]);
+  useDebounce(
+    () => {
+      updateUrl();
+    },
+    300,
+    [updateUrl]
+  );
 
   return { isPending: isPending && !isInitialMount.current };
 };

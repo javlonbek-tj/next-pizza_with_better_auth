@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { useSet } from 'react-use';
+import { useSearchParams } from 'next/navigation';
 
-import { ProductWithRelations } from '@/prisma/@types/prisma';
 import { totalPizzaPrice } from '@/lib/product';
-import { PizzaSize } from '@/lib/generated/prisma/browser';
+import { PizzaSize, ProductWithRelations } from '@/types';
 
 interface ReturnProps {
   typeId: string;
@@ -20,14 +20,48 @@ interface ReturnProps {
 }
 
 export const usePizzaOptions = (product: ProductWithRelations): ReturnProps => {
+  const searchParams = useSearchParams();
   const productItems = product.productItems;
 
-  const cheapestPizzaItem = productItems.reduce((cheapest, current) =>
-    current.price < cheapest.price ? current : cheapest
-  );
+  // Get filter params from URL
+  const filterSizeId = searchParams.get('pizzaSize')?.split(',')[0]; // First selected size
+  const filterTypeId = searchParams.get('pizzaTypes')?.split(',')[0]; // First selected type
 
-  const defaultTypeId = cheapestPizzaItem?.type?.id as string;
-  const defaultSizeId = cheapestPizzaItem?.size?.id as string;
+  // Find the item that matches filters
+  const getDefaultItem = () => {
+    // Try to find item matching both filters
+    if (filterSizeId && filterTypeId) {
+      const matchingItem = productItems.find(
+        (item) => item.size?.id === filterSizeId && item.type?.id === filterTypeId
+      );
+      if (matchingItem) return matchingItem;
+    }
+
+    // Try to find item matching size filter only
+    if (filterSizeId) {
+      const matchingItem = productItems.find(
+        (item) => item.size?.id === filterSizeId
+      );
+      if (matchingItem) return matchingItem;
+    }
+
+    // Try to find item matching type filter only
+    if (filterTypeId) {
+      const matchingItem = productItems.find(
+        (item) => item.type?.id === filterTypeId
+      );
+      if (matchingItem) return matchingItem;
+    }
+
+    // Fallback to cheapest item
+    return productItems.reduce((cheapest, current) =>
+      current.price < cheapest.price ? current : cheapest
+    );
+  };
+
+  const defaultItem = getDefaultItem();
+  const defaultTypeId = defaultItem?.type?.id as string;
+  const defaultSizeId = defaultItem?.size?.id as string;
 
   const [typeId, setTypeId] = useState<string>(defaultTypeId);
   const [sizeId, setSizeId] = useState<string>(defaultSizeId);

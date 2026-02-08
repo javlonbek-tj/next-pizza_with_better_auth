@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 
 import { Title } from '../shared';
 import { IngredientItem } from './Ingredient';
-import { Ingredient } from '@/lib/generated/prisma/browser';
 import { totalProductPrice } from '@/lib';
+import { Ingredient } from '@/types';
 
 interface Props {
   className?: string;

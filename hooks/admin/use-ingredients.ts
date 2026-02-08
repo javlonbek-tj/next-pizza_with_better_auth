@@ -4,12 +4,12 @@ import toast from 'react-hot-toast';
 import { IngredientFormValues, ingredientSchema } from '@/components/admin';
 import { AxiosError } from 'axios';
 import { ApiResponse } from '@/services/api-response';
-import { Ingredient } from '@/lib/generated/prisma/browser';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 
 import { queryKeys } from '@/lib';
+import { Ingredient } from '@/types';
 
 export function useGetIngredients() {
   return useQuery({
@@ -97,9 +97,6 @@ export function useUploadImage(folder: UploadFolder) {
   });
 }
 
-/**
- * Hook to manage ingredient form state and submission
- */
 export function useIngredientForm(
   ingredient: Ingredient | null | undefined,
   open: boolean,

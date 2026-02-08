@@ -10,7 +10,8 @@ import Image from 'next/image';
 
 import { cn } from '@/lib';
 import { Api } from '@/services/api-client';
-import { Product } from '@/lib/generated/prisma/browser';
+import { Product } from '@/types';
+
 
 interface Props {
   className?: string;
@@ -36,7 +37,7 @@ export function SearchInput({ className }: Props) {
   return (
     <>
       {focused && (
-        <div className="top-0 right-0 bottom-0 left-0 z-40 fixed bg-black/50" />
+        <div className="inset-0 z-40 fixed bg-black/50" />
       )}
       <div
         ref={ref}

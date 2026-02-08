@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { PizzaSize } from '@/lib/generated/prisma/browser';
+import { PizzaSize } from '@/types';
+
 
 interface Props {
   className?: string;

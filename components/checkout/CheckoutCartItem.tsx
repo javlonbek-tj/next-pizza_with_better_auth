@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { CartItemModel } from '../cart/CartItemType';
 import { CartUpdateButtons } from '../cart';
+import { RemoveCartItem } from '../cart/RemoveCartItem';
 import { cn } from '@/lib';
 
 interface Props {
@@ -36,11 +37,18 @@ export function CheckoutCartItem({ cartItem, className }: Props) {
       </p>
 
       {/* Right: quantity controls */}
-      <CartUpdateButtons
-        id={cartItem.id}
-        quantity={cartItem.quantity}
-        cartBtnSize='md'
-      />
+      <div className="flex items-center gap-5 ml-20">
+        <CartUpdateButtons
+          id={cartItem.id}
+          quantity={cartItem.quantity}
+          cartBtnSize='md'
+        />
+
+        <RemoveCartItem
+          id={cartItem.id}
+          className="text-gray-400 cursor-pointer hover:text-red-500"
+        />
+      </div>
     </div>
   );
 }

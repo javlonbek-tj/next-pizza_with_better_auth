@@ -2,8 +2,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Api } from '@/services/api-client';
 import { getCartDetails } from '@/lib/cart';
-import { AddToCartDto } from '@/services/dto/cart.dto';
 import { queryKeys } from '@/lib/constants';
+import { AddToCartDto } from '@/types/cart';
+import { sleep } from '@/lib';
 
 export function useCart() {
   return useQuery({
@@ -35,9 +36,10 @@ type RemoveCartItemVars = { id: string };
 export function useRemoveCartItem() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async ({ id }: RemoveCartItemVars) =>
-      Api.cart.removeCartItem(id),
-
+    mutationFn: async ({ id }: RemoveCartItemVars) => {
+      await sleep(2000);
+      Api.cart.removeCartItem(id);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cart });
     },

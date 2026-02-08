@@ -36,6 +36,7 @@ export function FormField({
     register,
     watch,
     setValue,
+    clearErrors,
     formState: { errors },
   } = useFormContext();
 
@@ -82,7 +83,13 @@ export function FormField({
         // Regular Input
         <div className="relative">
           <Input
-            {...register(name)}
+            {...register(name, {
+              onChange: () => {
+                if (errors[name]) {
+                  clearErrors(name);
+                }
+              },
+            })}
             {...props}
             className={cn('pr-20 h-10 text-md', className)}
           />

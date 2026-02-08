@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 
 interface Props {
   className?: string;
-  onClick?: VoidFunction;
+  onClick?: () => void;
 }
 
 export function ClearButton({ className, onClick }: Props) {

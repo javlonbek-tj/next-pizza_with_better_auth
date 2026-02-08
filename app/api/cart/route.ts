@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/server/prisma';
 import { findOrCreateCart } from '@/server/data/cart';
-import { AddToCartDto } from '@/services/dto/cart.dto';
+import { AddToCartDto } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {

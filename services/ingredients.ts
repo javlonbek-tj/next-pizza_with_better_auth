@@ -1,7 +1,7 @@
-import { Ingredient } from '@/lib/generated/prisma/browser';
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { ApiResponse } from './api-response';
+import { Ingredient } from '@/types';
 
 export const getAll = async () => {
   const { data } = (
