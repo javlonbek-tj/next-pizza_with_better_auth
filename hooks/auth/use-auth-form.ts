@@ -37,6 +37,7 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
     } else if (result.error) {
       setError(result.error);
     } else {
+      window.dispatchEvent(new Event('auth-success'));
       router.refresh();
       onClose();
     }
@@ -45,6 +46,7 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
   };
 
   const handleVerificationSuccess = () => {
+    window.dispatchEvent(new Event('auth-success'));
     onClose();
     router.refresh();
   };

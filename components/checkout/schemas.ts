@@ -33,6 +33,9 @@ export const checkoutSchema = z.object({
     .trim()
     .max(1000, 'Комментарии не может превышать 1000 символов')
     .optional(),
+  totalAmount: z.number().optional(),
+  totalCartPrice: z.number().optional(),
+  deliveryPrice: z.number().optional(),
 });
 
 export type CheckoutValues = z.infer<typeof checkoutSchema>;

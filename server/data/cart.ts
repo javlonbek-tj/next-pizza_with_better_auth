@@ -1,3 +1,4 @@
+
 import { prisma } from '@/server/prisma';
 
 export const findOrCreateCart = async (token: string) => {
@@ -14,6 +15,29 @@ export const findOrCreateCart = async (token: string) => {
       },
     });
   }
+
+  return userCart;
+};
+
+export const getUserCart = async (cartToken: string) => {
+  const userCart = await prisma.cart.findFirst({
+    where: {
+      token: cartToken,
+    },
+    include: {
+      user: true,
+      items: {
+        include: {
+          ingredients: true,
+          productItem: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      },
+    },
+  });
 
   return userCart;
 };

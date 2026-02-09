@@ -2,7 +2,7 @@ import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/server/prisma';
-import { findOrCreateCart } from '@/server/data/cart';
+import { findOrCreateCart, getUserCart } from '@/server/data/cart';
 import { AddToCartDto } from '@/types';
 
 export async function GET(req: NextRequest) {
@@ -17,24 +17,7 @@ export async function GET(req: NextRequest) {
       });
     }
 
-    const cart = await prisma.cart.findFirst({
-      where: { token },
-      include: {
-        items: {
-          orderBy: { createdAt: 'desc' },
-          include: {
-            productItem: {
-              include: {
-                product: true,
-                size: true,
-                type: true,
-              },
-            },
-            ingredients: true,
-          },
-        },
-      },
-    });
+    const cart = await getUserCart(token);
 
     if (!cart) {
       return NextResponse.json({

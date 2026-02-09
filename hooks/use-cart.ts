@@ -4,7 +4,6 @@ import { Api } from '@/services/api-client';
 import { getCartDetails } from '@/lib/cart';
 import { queryKeys } from '@/lib/constants';
 import { AddToCartDto } from '@/types/cart';
-import { sleep } from '@/lib';
 
 export function useCart() {
   return useQuery({
@@ -23,7 +22,7 @@ export function useUpdateCartQuantity() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: queryKeys.cart,
+    mutationKey: ['cart', 'update'],
     mutationFn: (vars: UpdateQtyVars) =>
       Api.cart.updateCartQty(vars.id, vars.quantity),
     onSuccess: () => {
@@ -37,11 +36,8 @@ type RemoveCartItemVars = { id: string };
 export function useRemoveCartItem() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: queryKeys.cart,
-    mutationFn: async ({ id }: RemoveCartItemVars) => {
-      await sleep(2000);
-      await Api.cart.removeCartItem(id);
-    },
+    mutationKey: ['cart', 'critical'],
+    mutationFn: ({ id }: RemoveCartItemVars) => Api.cart.removeCartItem(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cart });
     },
@@ -54,7 +50,7 @@ export function useRemoveCartItem() {
 export function useClearCart() {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: queryKeys.cart,
+    mutationKey: ['cart', 'critical'],
     mutationFn: () => Api.cart.clearCart(),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cart });
@@ -69,7 +65,7 @@ export function useAddToCart() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationKey: queryKeys.cart,
+    mutationKey: ['cart', 'update'],
     mutationFn: (vars: AddToCartDto) => Api.cart.addToCart(vars),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cart });

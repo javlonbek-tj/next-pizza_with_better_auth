@@ -1,13 +1,12 @@
 'use client';
 
-import { useEffect } from 'react';
 import { Loader2, Trash2 } from 'lucide-react';
 import { CheckoutCard } from './CheckoutCard';
 import { CheckoutCartItem } from './CheckoutCartItem';
 import { useClearCart } from '@/hooks';
 import { cn } from '@/lib';
 import { CartItemModel } from '@/types';
-import { useCheckoutState } from '@/store/checkout-state';
+
 
 interface Props {
   cartItems: CartItemModel[];
@@ -16,11 +15,6 @@ interface Props {
 
 export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
   const { mutate: clearCart, isPending: isClearing } = useClearCart();
-  const { setIsProcessing } = useCheckoutState();
-
-  useEffect(() => {
-    setIsProcessing(isClearing);
-  }, [isClearing, setIsProcessing]);
 
   const isDisabled = isClearing || isProcessing;
 

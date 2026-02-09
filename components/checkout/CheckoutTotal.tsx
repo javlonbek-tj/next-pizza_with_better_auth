@@ -1,10 +1,12 @@
 import { Package, Truck } from 'lucide-react';
+import { useFormContext } from 'react-hook-form';
 import { CheckoutCard } from './CheckoutCard';
 import { CheckoutPriceInfo } from './CheckoutPriceInfo';
 import { Button } from '../ui/button';
 import { calculateTotalAmount, DELIVERY_PRICE } from '@/lib';
 import { CartItemModel } from '@/types';
 import { cn } from '@/lib';
+import { useEffect } from 'react';
 
 interface Props {
   cartItems: CartItemModel[];
@@ -12,9 +14,17 @@ interface Props {
 }
 
 export function CheckoutTotal({ cartItems, isProcessing }: Props) {
+  const { register, setValue } = useFormContext();
+
   const totalCartPrice = calculateTotalAmount(cartItems);
   const totalPriceWithDelivery = totalCartPrice + DELIVERY_PRICE;
   const isDisabled = isProcessing || cartItems.length === 0;
+
+  useEffect(() => {
+    setValue('totalAmount', totalPriceWithDelivery);
+    setValue('totalCartPrice', totalCartPrice);
+    setValue('deliveryPrice', DELIVERY_PRICE);
+  }, [totalPriceWithDelivery, totalCartPrice, setValue]);
 
   return (
     <div className="basis-1/3">
@@ -24,7 +34,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
           <span
             className={cn(
               'font-extrabold text-2xl transition-opacity',
-              isProcessing && 'opacity-50'
+              isProcessing && 'opacity-90'
             )}
           >
             {totalPriceWithDelivery} ₽
@@ -37,6 +47,10 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
             isProcessing && 'opacity-50'
           )}
         >
+          <input type="hidden" {...register('totalAmount')} />
+          <input type="hidden" {...register('totalCartPrice')} />
+          <input type="hidden" {...register('deliveryPrice')} />
+
           <CheckoutPriceInfo
             title={
               <div className="flex items-center gap-2">

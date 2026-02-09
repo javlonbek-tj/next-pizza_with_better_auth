@@ -3,6 +3,8 @@
 import { prisma } from '@/server/prisma';
 import { CheckoutValues } from '@/components/checkout';
 import { cookies } from 'next/headers';
+import { DELIVERY_PRICE } from '@/lib';
+import { getUserCart } from '@/server/data/cart';
 
 export async function createOrder(data: CheckoutValues) {
   try {
@@ -13,41 +15,29 @@ export async function createOrder(data: CheckoutValues) {
       throw new Error('Cart token not found');
     }
 
-    // 1. Get cart and items
-    const userCart = await prisma.cart.findFirst({
-      where: {
-        token: cartToken,
-      },
-      include: {
-        user: true,
-        items: {
-          include: {
-            ingredients: true,
-            productItem: {
-              include: {
-                product: true,
-              },
-            },
-          },
-        },
-      },
-    });
+    const userCart = await getUserCart(cartToken);
 
     if (!userCart || userCart.items.length === 0) {
       throw new Error('Cart is empty');
     }
 
-    // 2. Calculate total price
-    const totalAmount = userCart.items.reduce((acc, item) => {
-      const ingredientsPrice = item.ingredients.reduce((acc, ing) => acc + ing.price, 0);
-      return acc + (item.productItem.price + ingredientsPrice) * item.quantity;
-    }, 100); // 100 is delivery price
+    const totalAmount =
+      data.totalAmount ??
+      userCart.items.reduce((acc, item) => {
+        const ingredientsPrice = item.ingredients.reduce(
+          (acc, ing) => acc + ing.price,
+          0
+        );
+        return acc + (item.productItem.price + ingredientsPrice) * item.quantity;
+      }, DELIVERY_PRICE);
 
-    // 3. Create order
+    const deliveryPrice = data.deliveryPrice ?? DELIVERY_PRICE;
+
     const order = await prisma.order.create({
       data: {
         token: cartToken,
         totalAmount,
+        deliveryPrice,
         status: 'PENDING',
         firstName: data.firstName,
         lastName: data.lastName,

@@ -22,7 +22,7 @@ export function CheckoutDetails({ className, cartItems, isProcessing }: Props) {
       <div
         className={cn(
           'transition-opacity duration-200',
-          isProcessing && 'pointer-events-none opacity-50'
+          isProcessing && 'pointer-events-none opacity-90'
         )}
       >
         <CheckoutPersonalInfo />
@@ -31,7 +31,7 @@ export function CheckoutDetails({ className, cartItems, isProcessing }: Props) {
       <div
         className={cn(
           'transition-opacity duration-200',
-          isProcessing && 'pointer-events-none opacity-50'
+          isProcessing && 'pointer-events-none opacity-90'
         )}
       >
         <CheckoutAddress />

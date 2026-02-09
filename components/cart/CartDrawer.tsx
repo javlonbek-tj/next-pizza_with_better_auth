@@ -1,4 +1,4 @@
-import { ArrowRight, Loader2 } from 'lucide-react'; // ⬅️ import spinner icon
+import { ArrowRight } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { useIsMutating } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -15,25 +15,21 @@ import { CartDrawerItem } from './CartDrawerItem';
 import { calculateTotalAmount, getCartItemDetails } from '@/lib/cart';
 import { useCart } from '@/hooks';
 import { cn } from '@/lib';
-import { queryKeys } from '@/lib/constants';
 import { EmptyCart } from './index';
 import { AuthModal } from '../modals/AuthModal';
 import { authClient } from '@/lib/auth-client';
 
 export function CartDrawer({ children }: PropsWithChildren) {
   const [authOpen, setAuthOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { data } = useCart();
 
   const isDeleting =
     useIsMutating({
-      mutationKey: queryKeys.cart,
+      mutationKey: ['cart', 'critical'],
     }) > 0;
 
   const handleClick = async () => {
-    setIsLoading(true); // Show loader IMMEDIATELY
-
     try {
       const currentSession = await authClient.getSession();
       const isAuthenticated = !!currentSession?.data?.session?.userId;
@@ -47,8 +43,6 @@ export function CartDrawer({ children }: PropsWithChildren) {
     } catch (error) {
       console.error('Session check failed:', error);
       setAuthOpen(true);
-    } finally {
-      setIsLoading(false); // Always hide loader
     }
   };
 
@@ -113,20 +107,11 @@ export function CartDrawer({ children }: PropsWithChildren) {
                 <Button
                   className="h-12 cursor-pointer"
                   onClick={handleClick}
-                  disabled={isLoading || isDeleting}
+                  disabled={isDeleting}
                 >
                   <span className="flex items-center gap-2">
-                    {isLoading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        <span>Проверка...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Оформить заказ</span>
-                        <ArrowRight />
-                      </>
-                    )}
+                    <span>Оформить заказ</span>
+                    <ArrowRight />
                   </span>
                 </Button>
               </SheetFooter>

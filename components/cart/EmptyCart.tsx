@@ -1,9 +1,17 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 import { BackButton, Title } from '../shared';
 import { SheetClose } from '../ui/sheet';
 
-export function EmptyCart() {
+interface Props {
+  className?: string;
+  useSheetClose?: boolean;
+}
+
+export function EmptyCart({ useSheetClose = false }: Props) {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col justify-center items-center mx-auto w-72">
       <Image
@@ -21,9 +29,13 @@ export function EmptyCart() {
         Добавьте хотя бы одну пиццу, чтобы совершить заказ
       </p>
 
-      <SheetClose asChild>
-        <BackButton />
-      </SheetClose>
+      {useSheetClose ? (
+        <SheetClose asChild>
+          <BackButton />
+        </SheetClose>
+      ) : (
+        <BackButton onClick={() => router.back()} />
+      )}
     </div>
   );
 }

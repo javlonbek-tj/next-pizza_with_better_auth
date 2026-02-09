@@ -32,6 +32,16 @@ export function CheckoutPersonalInfo() {
     }
   }, [isAuthenticated, userEmail, userName, setValue]);
 
+  // Sync session when login happens from outside (e.g. Header)
+  useEffect(() => {
+    const handleAuthSuccess = () => {
+      refetch();
+    };
+
+    window.addEventListener('auth-success', handleAuthSuccess);
+    return () => window.removeEventListener('auth-success', handleAuthSuccess);
+  }, [refetch]);
+
   const handleAuthModalClose = async () => {
     setAuthOpen(false);
     try {
