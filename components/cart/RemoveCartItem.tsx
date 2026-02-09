@@ -1,8 +1,6 @@
 import { Trash2Icon } from 'lucide-react';
 import { useRemoveCartItem } from '@/hooks';
 import { cn } from '@/lib/utils';
-import { useCheckoutState } from '@/store/checkout-state';
-import { useEffect } from 'react';
 
 interface Props {
   className?: string;
@@ -11,11 +9,6 @@ interface Props {
 
 export function RemoveCartItem({ className, id }: Props) {
   const { mutate: removeCartItem, isPending } = useRemoveCartItem();
-  const { setIsProcessing } = useCheckoutState();
-
-  useEffect(() => {
-    setIsProcessing(isPending);
-  }, [isPending, setIsProcessing]);
 
   return (
     <div

@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { CartItemInfo, CartUpdateButtons } from './index';
 import { RemoveCartItem } from './RemoveCartItem';
-import { useRemoveCartItem } from '@/hooks';
+
 
 interface Props {
   className?: string;

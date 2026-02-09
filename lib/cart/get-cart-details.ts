@@ -11,8 +11,8 @@ export const getCartDetails = (data: CartDto) =>
     name: item.productItem.product.name,
     imageUrl: item.productItem.product.imageUrl,
     totalCartItemPrice: calCartItemTotalPrice(item),
-    pizzaSize: item.productItem.size?.size,
-    pizzaType: item.productItem.type?.type,
+    pizzaSize: item.productItem.size,
+    pizzaType: item.productItem.type,
     disabled: false,
     ingredients: item.ingredients.map((ingredient: Ingredient) => ({
       name: ingredient.name,

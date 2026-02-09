@@ -1,4 +1,4 @@
-import { CartItemModel } from '@/components/cart/CartItemType';
+import { CartItemModel } from '@/types';
 
 import Decimal from 'decimal.js';
 

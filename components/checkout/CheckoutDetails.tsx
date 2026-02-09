@@ -6,7 +6,7 @@ import {
   CheckoutCartItems,
   CheckoutPersonalInfo,
 } from './index';
-import { CartItemModel } from '../cart/CartItemType';
+import { CartItemModel } from '@/types';
 
 interface Props {
   className?: string;

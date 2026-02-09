@@ -3,7 +3,7 @@ import { CheckoutCard } from './CheckoutCard';
 import { CheckoutPriceInfo } from './CheckoutPriceInfo';
 import { Button } from '../ui/button';
 import { calculateTotalAmount, DELIVERY_PRICE } from '@/lib';
-import { CartItemModel } from '../cart/CartItemType';
+import { CartItemModel } from '@/types';
 import { cn } from '@/lib';
 
 interface Props {

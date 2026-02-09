@@ -1,22 +1,17 @@
-import { CartItemModel } from '@/components/cart/CartItemType';
-import {
-  mapPizzaSize,
-  mapPizzaType,
-  PizzaSize,
-  PizzaType,
-} from '@/lib/constants';
+import { CartItemModel } from '@/types';
+import { PizzaSize, PizzaType } from '@/types';
 
 export const getCartItemDetails = (
   ingredients: CartItemModel['ingredients'],
-  pizzaSize?: number | null,
-  pizzaType?: number | null
+  pizzaSize: PizzaSize | null,
+  pizzaType: PizzaType | null
 ) => {
   const details: string[] = [];
 
   if (pizzaSize && pizzaType) {
     details.push(
-      `${mapPizzaSize[pizzaSize as PizzaSize]} ${pizzaSize} см - ${
-        mapPizzaType[pizzaType as PizzaType]
+      `${pizzaSize.label} ${pizzaSize.size} см - ${
+        pizzaType.type
       }`
     );
   }

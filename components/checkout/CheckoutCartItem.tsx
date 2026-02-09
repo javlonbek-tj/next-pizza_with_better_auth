@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { CartItemModel } from '../cart/CartItemType';
+import { CartItemModel } from '@/types';
 import { CartUpdateButtons } from '../cart';
 import { RemoveCartItem } from '../cart/RemoveCartItem';
 import { cn } from '@/lib';

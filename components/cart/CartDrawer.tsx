@@ -78,7 +78,14 @@ export function CartDrawer({ children }: PropsWithChildren) {
 
           {totalAmount > 0 && (
             <>
-              <div className="flex flex-col gap-4 overflow-auto scrollbar-thin">
+              <div
+                className={cn(
+                  'flex flex-col gap-4 overflow-auto scrollbar-thin transition-opacity duration-200',
+                  {
+                    'opacity-60 pointer-events-none': isDeleting,
+                  }
+                )}
+              >
                 {data?.map((item) => (
                   <CartDrawerItem
                     key={item.id}
@@ -106,7 +113,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
                 <Button
                   className="h-12 cursor-pointer"
                   onClick={handleClick}
-                  disabled={isLoading || isDeleting} // Disable during loading or mutation
+                  disabled={isLoading || isDeleting}
                 >
                   <span className="flex items-center gap-2">
                     {isLoading ? (

@@ -1,12 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 
 import { createOrder } from '@/app/actions';
+import { useIsMutating } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/constants';
 import { useCart } from '@/hooks';
 import { checkoutSchema, CheckoutValues, EmptyCart } from '@/components/checkout';
 import { CheckoutDetails, CheckoutTotal } from '@/components/checkout';
@@ -15,8 +17,9 @@ import { cn } from '@/lib';
 import { useCheckoutState } from '@/store/checkout-state';
 
 export default function CheckoutPage() {
-  const { data: cartItems = [], isPending } = useCart();
+  const { data: cartItems = [], isPending: isCartPending } = useCart();
   const { isProcessing, setIsProcessing } = useCheckoutState();
+  const isMutating = useIsMutating({ mutationKey: queryKeys.cart }) > 0;
   const router = useRouter();
 
   const form = useForm<CheckoutValues>({
@@ -48,12 +51,11 @@ export default function CheckoutPage() {
     }
   };
 
-  // Sync isProcessing with isSubmitting
-  React.useEffect(() => {
-    setIsProcessing(isSubmitting);
-  }, [isSubmitting, setIsProcessing]);
+  useEffect(() => {
+    setIsProcessing(isSubmitting || isMutating);
+  }, [isSubmitting, isMutating, setIsProcessing]);
 
-  if (!isPending && cartItems.length === 0) {
+  if (!isCartPending && cartItems.length === 0) {
     return <EmptyCart />;
   }
 

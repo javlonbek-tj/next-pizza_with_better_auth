@@ -6,7 +6,7 @@ import { CheckoutCard } from './CheckoutCard';
 import { CheckoutCartItem } from './CheckoutCartItem';
 import { useClearCart } from '@/hooks';
 import { cn } from '@/lib';
-import { CartItemModel } from '../cart/CartItemType';
+import { CartItemModel } from '@/types';
 import { useCheckoutState } from '@/store/checkout-state';
 
 interface Props {
