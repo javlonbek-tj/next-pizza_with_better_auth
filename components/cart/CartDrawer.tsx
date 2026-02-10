@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Loader2 } from 'lucide-react';
 import { PropsWithChildren, useState } from 'react';
 import { useIsMutating } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
@@ -14,13 +14,14 @@ import {
 import { CartDrawerItem } from './CartDrawerItem';
 import { calculateTotalAmount, getCartItemDetails } from '@/lib/cart';
 import { useCart } from '@/hooks';
-import { cn } from '@/lib';
+import { cn} from '@/lib';
 import { EmptyCart } from './index';
 import { AuthModal } from '../modals/AuthModal';
 import { authClient } from '@/lib/auth-client';
 
 export function CartDrawer({ children }: PropsWithChildren) {
   const [authOpen, setAuthOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { data } = useCart();
 
@@ -31,6 +32,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
 
   const handleClick = async () => {
     try {
+      setIsLoading(true);
       const currentSession = await authClient.getSession();
       const isAuthenticated = !!currentSession?.data?.session?.userId;
 
@@ -43,6 +45,8 @@ export function CartDrawer({ children }: PropsWithChildren) {
     } catch (error) {
       console.error('Session check failed:', error);
       setAuthOpen(true);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -68,7 +72,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
             </SheetTitle>
           </SheetHeader>
 
-          {!totalAmount && <EmptyCart />}
+          {!totalAmount && <EmptyCart useSheetClose={true}/>}
 
           {totalAmount > 0 && (
             <>
@@ -107,11 +111,17 @@ export function CartDrawer({ children }: PropsWithChildren) {
                 <Button
                   className="h-12 cursor-pointer"
                   onClick={handleClick}
-                  disabled={isDeleting}
+                  disabled={isLoading || isDeleting}
                 >
                   <span className="flex items-center gap-2">
-                    <span>Оформить заказ</span>
-                    <ArrowRight />
+                   
+                    {isLoading ? (
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                    ) : (
+                       <>
+                       <span>Оформить заказ</span> <ArrowRight />
+                       </>
+                    )}
                   </span>
                 </Button>
               </SheetFooter>

@@ -1,10 +1,6 @@
 'use client';
 
 import {
-  useGetPizzaSizes,
-  useDeletePizzaSize,
-} from '@/hooks/admin/use-pizza-sizes';
-import {
   Table,
   TableBody,
   TableCell,
@@ -14,15 +10,20 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Edit, Trash2 } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import { PizzaSize, PizzaSizeWithProductCount } from '@/types';
 import { PizzaSizeFormDialog } from './PizzaSizeFormDialog';
 import { useTableActions } from '@/hooks';
+import { deletePizzaSize } from '@/app/actions';
+import toast from 'react-hot-toast';
+
+interface PizzaSizeTableProps {
+  data: PizzaSizeWithProductCount[]
+}
 
 
-export function PizzaSizeTable() {
+export function PizzaSizeTable({ data }: PizzaSizeTableProps) {
   const {
     editingItem: editingPizzaSize,
     deleteId,
@@ -34,14 +35,17 @@ export function PizzaSizeTable() {
     handleCloseDelete,
   } = useTableActions<PizzaSize>();
 
-  const { data: sizes, isPending } = useGetPizzaSizes();
-  const { mutate: deleteSize, isPending: isDeleting } = useDeletePizzaSize();
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (deleteId) {
-      deleteSize(deleteId, {
-        onSuccess: handleCloseDelete,
-      });
+      const result = await deletePizzaSize(deleteId);
+      if (result.success) {
+        toast.success('Размер успешно удален');
+        handleCloseDelete();
+      }
+      if (!result.success) {
+        toast.error(result.message || 'Ошибка при удалении размера');
+      }
     }
   };
 
@@ -51,15 +55,7 @@ export function PizzaSizeTable() {
         <AddButton onClick={handleCreate} text="размер" />
       </div>
 
-      {isPending ? (
-        <Card className="shadow-md border border-gray-200 rounded-xl">
-          <CardContent className="space-y-4 p-6">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="w-full h-16" />
-            ))}
-          </CardContent>
-        </Card>
-      ) : !sizes?.length ? (
+      {data.length === 0 ? (
         <div className="mt-10 text-muted-foreground text-2xl text-center">
           Размеры не найдены
         </div>
@@ -88,7 +84,7 @@ export function PizzaSizeTable() {
               </TableHeader>
 
               <TableBody>
-                {sizes.map((size: PizzaSizeWithProductCount, index: number) => (
+                {data.map((size: PizzaSizeWithProductCount, index: number) => (
                   <TableRow
                     key={size.id}
                     className="hover:bg-gray-50 transition-colors"
@@ -127,7 +123,7 @@ export function PizzaSizeTable() {
                         variant="destructive"
                         size="sm"
                         onClick={() => handleOpenDelete(size.id)}
-                        disabled={size._count?.ProductItem > 0}
+                        disabled={size._count?.productItems > 0}
                       >
                         <Trash2 className="w-4 h-4" />
                       </Button>
@@ -150,7 +146,6 @@ export function PizzaSizeTable() {
         open={!!deleteId}
         onClose={handleCloseDelete}
         onConfirm={handleDelete}
-        isDeleting={isDeleting}
         title="Удалить размер"
         description="Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить."
         showAlert={true}

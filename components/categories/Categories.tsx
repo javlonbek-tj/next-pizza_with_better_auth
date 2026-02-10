@@ -1,21 +1,19 @@
 'use client';
 
-import { useGetCategories } from '@/hooks';
 import { cn } from '@/lib';
 import { useCategoryStore } from '@/store/category';
-import { CategoriesSkeleton } from '../skeletons';
+import { Category } from '@/types';
 
 interface Props {
   className?: string;
+  categories: Omit<Category, 'createdAt' | 'updatedAt'>[]
 }
 
-export function Categories({ className }: Props) {
+export function Categories({ className, categories }: Props) {
   const activeCategoryName = useCategoryStore((state) => state.activeName);
   const setActiveCategoryName = useCategoryStore(
     (state) => state.setActiveName
   );
-
-  const { data: categories = [], isPending } = useGetCategories();
 
   const handleClick = (categoryName: string) => {
     setActiveCategoryName(categoryName);
@@ -28,10 +26,7 @@ export function Categories({ className }: Props) {
         className
       )}
     >
-      {isPending ? (
-        <CategoriesSkeleton />
-      ) : (
-        categories.map((category) => (
+        {categories.map((category) => (
           <a
             key={category.id}
             href={`/#${category.slug}`}
@@ -43,8 +38,7 @@ export function Categories({ className }: Props) {
           >
             {category.name}
           </a>
-        ))
-      )}
+        ))}
     </div>
   );
 }

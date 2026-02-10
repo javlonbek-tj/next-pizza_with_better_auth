@@ -1,8 +1,8 @@
 
-import { Container, Spinner } from '@/components/shared';
+import { Container } from '@/components/shared';
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
-import { getPizzaSizes, getPizzaTypes } from '@/server/data/pizza-options';
+import { getPizzaSizes, getPizzaTypes } from '@/server';
 
 
 export default async function ProductPage({ params }: { params: Promise<{ id: string }> }) {

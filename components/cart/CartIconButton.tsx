@@ -17,7 +17,7 @@ export function CartIconButton({
   cartItemId,
   size = 'sm',
 }: Props) {
-  const { mutate: updateQuantity, isPending } = useUpdateCartQuantity();
+  const { mutate: updateQuantity} = useUpdateCartQuantity();
 
   const handleClick = () => {
     const newQty = type === 'plus' ? quantity + 1 : quantity - 1;
@@ -25,7 +25,7 @@ export function CartIconButton({
     updateQuantity({ id: cartItemId, quantity: newQty });
   };
 
-  const isDisabled = isPending || (type === 'minus' && quantity <= 1);
+  const isDisabled = (type === 'minus' && quantity <= 1);
 
   const sizeClasses = {
     sm: 'w-6 h-6 text-[10px]',

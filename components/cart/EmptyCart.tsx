@@ -5,7 +5,6 @@ import { BackButton, Title } from '../shared';
 import { SheetClose } from '../ui/sheet';
 
 interface Props {
-  className?: string;
   useSheetClose?: boolean;
 }
 

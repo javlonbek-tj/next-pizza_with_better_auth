@@ -27,6 +27,9 @@ export const getUserCart = async (cartToken: string) => {
     include: {
       user: true,
       items: {
+        orderBy: {
+          createdAt: 'desc',
+        },
         include: {
           ingredients: true,
           productItem: {

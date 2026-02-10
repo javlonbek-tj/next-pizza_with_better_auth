@@ -1,5 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import toast from 'react-hot-toast';
 import {
   Dialog,
   DialogContent,
@@ -15,10 +18,13 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { PizzaSize } from '@/types';
-import { usePizzaSizeForm } from '@/hooks';
+import { PizzaSize, ActionResult } from '@/types';
 import { FormActions } from '@/components/shared/FormActions';
 import { DecimalInput } from '@/components/shared';
+import { PizzaSizeFormValues, pizzaSizeSchema } from '../schemas';
+import { createPizzaSize, updatePizzaSize } from '@/app/actions';
+import { zodResolver } from '@hookform/resolvers/zod';
+
 
 interface Props {
   open: boolean;
@@ -27,11 +33,57 @@ interface Props {
 }
 
 export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
-  const { form, isEditing, isPending, onSubmit } = usePizzaSizeForm(
-    pizzaSize,
-    open,
-    onClose
-  );
+  const [isPending, setIsPending] = useState(false);
+
+  const isEditing = !!pizzaSize;
+
+    const form = useForm<PizzaSizeFormValues>({
+      resolver: zodResolver(pizzaSizeSchema),
+      defaultValues: {
+        size: 0,
+        label: '',
+      },
+    });
+
+    useEffect(() => {
+      if (pizzaSize) {
+        form.reset({
+          label: pizzaSize.label,
+          size: pizzaSize.size,
+        });
+      } else {
+        form.reset({
+          label: '',
+          size: 0,
+        });
+      }
+    }, [pizzaSize, open, form]);
+
+  const onSubmit = async (data: PizzaSizeFormValues) => {
+    setIsPending(true);
+    try {
+      let result: ActionResult<PizzaSize>;
+      if (isEditing) {
+        result = await updatePizzaSize(pizzaSize.id, data);
+      } else {
+        result = await createPizzaSize(data);
+      }
+
+      if (!result.success) {
+        toast.error(result.message || `Не удалось ${isEditing ? 'изменить' : 'создать'} размер пиццы`);
+        return;
+      }
+
+      toast.success(`Размер пиццы успешно ${isEditing ? 'изменён' : 'создан'}`);
+    
+      onClose();
+      form.reset();
+    } catch (error) {
+      toast.error(`Не удалось ${isEditing ? 'изменить' : 'создать'} размер пиццы`);
+    } finally {
+      setIsPending(false);
+    }
+  };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

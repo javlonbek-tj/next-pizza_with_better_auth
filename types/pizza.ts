@@ -8,7 +8,7 @@ export type PizzaSize = {
 
 export type PizzaSizeWithProductCount = PizzaSize & {
     _count: {
-        ProductItem: number;
+        productItems: number;
     };
 }
 
@@ -21,6 +21,6 @@ export type PizzaType = {
 
 export type PizzaTypeWithProductCount = PizzaType & {
     _count: {
-        ProductItem: number;
+        productItems: number;
     };
 }

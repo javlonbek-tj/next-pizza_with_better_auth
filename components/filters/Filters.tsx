@@ -5,29 +5,19 @@ import { PriceRange } from './PriceRange';
 import { DEFAULT_PRICE_FROM, DEFAULT_PRICE_TO } from '@/lib/constants';
 import {
   useFilters,
-  useGetIngredients,
-  useGetPizzaSizes,
-  usePizzaTypes,
   useQueryFilters,
 } from '@/hooks';
-import { FilterSkeleton } from '../skeletons/FiltersSkeleton';
+import { Ingredient, PizzaSize, PizzaType } from '@/types';
 
 interface Props {
   className?: string;
+  ingredients: Ingredient[];
+  pizzaSizes: PizzaSize[];
+  pizzaTypes: PizzaType[];
 }
 
-export function Filters({ className }: Props) {
+export function Filters({ className, ingredients, pizzaSizes, pizzaTypes }: Props) {
   const filters = useFilters();
-
-  const { data: ingredients = [], isPending: isIngredientsLoading } =
-    useGetIngredients();
-  const { data: pizzaSizeOptions = [], isPending: isSizesLoading } =
-    useGetPizzaSizes();
-  const { data: pizzaTypeOptions = [], isPending: isTypesLoading } =
-    usePizzaTypes();
-
-  const initialDataLoading =
-    isIngredientsLoading || isSizesLoading || isTypesLoading;
 
   useQueryFilters(filters);
 
@@ -35,14 +25,11 @@ export function Filters({ className }: Props) {
     <div className={cn('relative', className)}>
       <h2 className="mb-5 font-bold text-xl">Фильтры</h2>
 
-      {initialDataLoading ? (
-        <FilterSkeleton />
-      ) : (
         <div className="">
           {/* ----- Pizza Types ----- */}
-          {pizzaTypeOptions.length > 0 && (
+          {pizzaTypes.length > 0 && (
             <FilterCheckboxGroup
-              options={pizzaTypeOptions.map((pizzaType) => ({
+              options={pizzaTypes.map((pizzaType) => ({
                 label: pizzaType.type,
                 value: pizzaType.id.toString(),
               }))}
@@ -55,9 +42,9 @@ export function Filters({ className }: Props) {
           )}
 
           {/* ----- Pizza Sizes ----- */}
-          {pizzaSizeOptions.length > 0 && (
+          {pizzaSizes.length > 0 && (
             <FilterCheckboxGroup
-              options={pizzaSizeOptions.map((pizzaSize) => ({
+              options={pizzaSizes.map((pizzaSize) => ({
                 label: `${pizzaSize.size} см`,
                 value: pizzaSize.id.toString(),
               }))}
@@ -99,7 +86,6 @@ export function Filters({ className }: Props) {
             />
           )}
         </div>
-      )}
     </div>
   );
 }

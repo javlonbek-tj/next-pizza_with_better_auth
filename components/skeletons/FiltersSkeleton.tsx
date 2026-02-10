@@ -1,6 +1,6 @@
 import { Skeleton } from '@/components/ui/skeleton';
 
-export function FilterSkeleton() {
+export function FiltersSkeleton() {
   return (
     <div>
       {/* ---------- Pizza Types ---------- */}

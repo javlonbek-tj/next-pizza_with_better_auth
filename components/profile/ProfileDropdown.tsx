@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut, Settings, User, Loader2, Shield } from 'lucide-react';
 import { Button } from '../ui/button';
-import { signoutAction } from '@/app/actions/signout-action';
+import { signoutAction } from '@/app/actions/auth/signout-action';
 import { cn } from '@/lib/utils';
 
 interface Props {

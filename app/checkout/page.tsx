@@ -11,7 +11,7 @@ import { useIsMutating } from '@tanstack/react-query';
 import { useCart } from '@/hooks';
 import { checkoutSchema, CheckoutValues } from '@/components/checkout';
 import { CheckoutDetails, CheckoutTotal } from '@/components/checkout';
-import { Container, Title } from '@/components/shared';
+import { Container, Spinner, Title } from '@/components/shared';
 import { cn } from '@/lib';
 import { EmptyCart } from '@/components/cart';
 
@@ -38,7 +38,6 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onSubmit = async (data: CheckoutValues) => {
-    console.log(data);
     try {
       setIsSubmitting(true);
       const order = await createOrder(data);
@@ -58,11 +57,15 @@ export default function CheckoutPage() {
   return (
     <Container className='mt-10 pb-10'>
       <Title text='Оформление заказа' size='md' className='mb-2 font-bold' />
-      {!isCartPending && cartItems.length === 0 ? (
-        <EmptyCart/>
-      ) : null}
-      {!isCartPending && cartItems.length > 0 ? (
-      <FormProvider {...form}>
+
+      {isCartPending ? (
+        <Spinner className='mt-20' />
+      ) : (
+        <>
+          {cartItems.length === 0 ? (
+            <EmptyCart/>
+          ) : (
+            <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
           className={cn(
@@ -74,7 +77,9 @@ export default function CheckoutPage() {
           <CheckoutTotal cartItems={cartItems} isProcessing={isProcessing} />
         </form>
       </FormProvider>
-      ) : null}
+          )}
+        </>
+      )}
     </Container>
   );
 }

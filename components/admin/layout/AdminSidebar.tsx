@@ -27,7 +27,7 @@ export function AdminSidebar() {
   return (
     <aside className='bg-white border-r w-64'>
       <div className='p-6'>
-        <h2 className='font-bold text-gray-800 text-2xl'>Админ-панель</h2>
+        <h1 className='font-bold text-gray-800 text-2xl'>Админ-панель</h1>
       </div>
       <nav className='space-y-2 px-4'>
         {navItems.map((item) => {

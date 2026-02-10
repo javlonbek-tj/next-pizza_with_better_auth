@@ -1,6 +1,6 @@
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
-import { getPizzaSizes, getPizzaTypes } from '@/server/data/pizza-options';
+import { getPizzaSizes, getPizzaTypes } from '@/server';
 import { ChooseProductModal } from '@/components/modals';
 
 export default async function ProductModalPage({

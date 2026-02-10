@@ -2,7 +2,7 @@ import { betterAuth } from 'better-auth';
 import { nextCookies } from 'better-auth/next-js';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 
-import { sendOTPEmail } from '@/app/actions/send-email-action';
+import { sendOTPEmail } from '@/app/actions/auth/send-email-action';
 import { emailOTP } from 'better-auth/plugins';
 import { prisma } from './';
 

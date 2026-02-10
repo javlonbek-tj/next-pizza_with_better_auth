@@ -10,13 +10,12 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, AlertCircle } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 interface Props {
   open: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  isDeleting: boolean;
   title: string;
   description: string;
   showAlert?: boolean;
@@ -27,7 +26,6 @@ export function DeleteDialog({
   open,
   onClose,
   onConfirm,
-  isDeleting,
   title,
   description,
   showAlert = false,
@@ -53,24 +51,16 @@ export function DeleteDialog({
           <Button
             variant='outline'
             onClick={onClose}
-            disabled={isDeleting}
-            className={`cursor-pointer min-w-[90px] transition-colors ${
-              isDeleting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-muted'
-            }`}
+            className={`cursor-pointer min-w-[90px] transition-colors hover:bg-muted`}
           >
             Отмена
           </Button>
           <Button
             variant='destructive'
             onClick={onConfirm}
-            disabled={isDeleting}
             className='min-w-[100px] cursor-pointer'
           >
-            {isDeleting ? (
-              <Loader2 className='w-4 h-4 mx-auto animate-spin' />
-            ) : (
-              'Удалить'
-            )}
+            Удалить
           </Button>
         </DialogFooter>
       </DialogContent>

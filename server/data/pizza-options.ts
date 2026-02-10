@@ -5,5 +5,13 @@ export const getPizzaTypes = async () => {
 }
 
 export const getPizzaSizes = async () => {
-    return await prisma.pizzaSize.findMany();
+    return await prisma.pizzaSize.findMany({
+        include: {
+            _count: {
+                select: {
+                    productItems: true,
+                },
+            },
+        },
+    });
 }

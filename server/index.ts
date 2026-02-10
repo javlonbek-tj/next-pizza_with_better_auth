@@ -1,3 +1,3 @@
 export * from './auth';
-export {prisma} from './prisma';
 export * from './data';
+export {prisma} from './prisma';
