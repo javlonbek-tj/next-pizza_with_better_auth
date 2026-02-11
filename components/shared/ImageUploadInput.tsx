@@ -4,7 +4,6 @@ import { Upload, X, Loader2 } from 'lucide-react';
 
 interface ImageUploadInputProps {
   value?: string;
-  onChange: (url: string) => void;
   onUpload: (file: File) => Promise<void>;
   onRemove: () => void;
   isUploading?: boolean;
@@ -59,7 +58,6 @@ export function ImageUploadInput({
     if (file) {
       await onUpload(file);
     }
-    // Reset input value to allow uploading the same file again
     e.target.value = '';
   };
 
@@ -72,7 +70,7 @@ export function ImageUploadInput({
             src={value}
             alt='Preview'
             fill
-            className='object-contain'
+            className='object-cover'
             unoptimized
           />
           {!disabled && !isUploading && (
@@ -89,7 +87,7 @@ export function ImageUploadInput({
       ) : (
         // Upload Mode
         <label
-          className={`relative flex flex-col justify-center items-center border-2 border-dashed rounded-lg w-full h-48 transition-all ${
+          className={`flex flex-col justify-center items-center border-2 border-dashed rounded-lg w-full h-52 transition-all ${
             isDragging
               ? 'border-primary bg-primary/5'
               : 'border-gray-300 hover:border-primary'
@@ -105,7 +103,7 @@ export function ImageUploadInput({
         >
           {isUploading ? (
             // Loading State
-            <div className='flex flex-col items-center justify-center h-48 gap-2 pointer-events-none'>
+            <div className='flex flex-col items-center justify-center gap-2 pointer-events-none'>
               <Loader2 className='w-10 h-10 text-primary animate-spin' />
               <span className='text-sm text-gray-600'>
                 Загрузка изображения...
@@ -113,7 +111,7 @@ export function ImageUploadInput({
             </div>
           ) : (
             // Upload Prompt
-            <div className='flex flex-col items-center justify-center pt-5 pb-6 pointer-events-none'>
+            <div className='flex flex-col items-center justify-center pointer-events-none'>
               <Upload
                 className={`mb-3 w-10 h-10 transition-colors ${
                   isDragging ? 'text-primary' : 'text-gray-400'

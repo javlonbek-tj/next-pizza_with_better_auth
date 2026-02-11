@@ -8,21 +8,19 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Edit, Trash2 } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { AddButton, DeleteDialog } from '@/components/shared';
+import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import { PizzaType, PizzaTypeWithProductCount } from '@/types';
 import { PizzaTypeFormDialog } from './PizzaTypeFormDialog';
-import {
-  useDeletePizzaType,
-  useGetPizzaTypes,
-} from '@/hooks/admin/use-pizza-types';
 import { useTableActions } from '@/hooks';
+import { useDelete } from '@/hooks/admin/use-delete';
+import { deletePizzaType } from '@/app/actions';
 
+interface PizzaTypeTableProps {
+  data: PizzaTypeWithProductCount[];
+}
 
-export function PizzaTypeTable() {
+export function PizzaTypeTable({ data }: PizzaTypeTableProps) {
   const {
     editingItem: editingPizzaType,
     deleteId,
@@ -34,97 +32,71 @@ export function PizzaTypeTable() {
     handleCloseDelete,
   } = useTableActions<PizzaType>();
 
-  const { data: types, isPending } = useGetPizzaTypes();
-  const { mutate: deleteType, isPending: isDeleting } = useDeletePizzaType();
-
-  const handleDelete = () => {
-    if (deleteId) {
-      deleteType(deleteId, {
-        onSuccess: handleCloseDelete,
-      });
-    }
-  };
+  const { isDeleting, handleDelete } = useDelete(deletePizzaType, {
+    onSuccess: handleCloseDelete,
+    successMessage: 'Тип пиццы успешно удален',
+    errorMessage: 'Ошибка при удалении типа пиццы',
+  });
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <AddButton onClick={handleCreate} text="тип пиццы" />
+    <div className='space-y-4'>
+      <div className='flex justify-end'>
+        <AddButton onClick={handleCreate} text='тип пиццы' />
       </div>
-
-      {isPending ? (
-        <Card className="shadow-md border border-gray-200 rounded-xl">
-          <CardContent className="space-y-4 p-6">
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className="w-full h-16" />
-            ))}
-          </CardContent>
-        </Card>
-      ) : !types?.length ? (
-        <div className="mt-10 text-muted-foreground text-2xl text-center">
+      {data.length === 0 ? (
+        <div className='mt-10 text-2xl text-center text-muted-foreground'>
           Типы пицц не найдены
         </div>
       ) : (
-        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
-          <CardContent className="p-6">
+        <Card className='overflow-x-auto border border-gray-200 shadow-md rounded-xl'>
+          <CardContent className='p-6'>
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50 hover:bg-gray-50">
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                <TableRow className='bg-gray-50 hover:bg-gray-50'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     №
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     Название
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
                     Дата создания
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold tracking-wide text-right text-gray-700 uppercase'>
                     Действия
                   </TableHead>
                 </TableRow>
               </TableHeader>
 
               <TableBody>
-                {types.map((type: PizzaTypeWithProductCount, index: number) => (
+                {data.map((type: PizzaTypeWithProductCount, index: number) => (
                   <TableRow
                     key={type.id}
-                    className="hover:bg-gray-50 transition-colors"
+                    className='transition-colors hover:bg-gray-50'
                   >
-                    <TableCell className="py-4">
-                      <div className="flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
+                    <TableCell className='py-4'>
+                      <div className='flex items-center justify-center w-8 h-8 font-bold text-white rounded-lg shadow-md bg-linear-to-br from-primary to-primary/80'>
                         {index + 1}
                       </div>
                     </TableCell>
-                    <TableCell className="py-4">
-                      <span className="font-semibold text-gray-900">
+                    <TableCell className='py-4'>
+                      <span className='font-semibold text-gray-900'>
                         {type.type}
                       </span>
                     </TableCell>
-                    <TableCell className="py-4 text-gray-600 text-center">
+                    <TableCell className='py-4 text-center text-gray-600'>
                       {new Date(type.createdAt).toLocaleDateString('ru-RU', {
                         day: '2-digit',
                         month: 'short',
                         year: 'numeric',
                       })}
                     </TableCell>
-                    <TableCell className="space-x-2 text-right">
-                      <Button
-                        className="cursor-pointer"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(type)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        className="cursor-pointer"
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleOpenDelete(type.id)}
-                        disabled={type._count?.ProductItem > 0}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                    <TableCell className='space-x-2 text-right'>
+                      <TableActions
+                        edit={() => handleEdit(type)}
+                        deleteAction={() => handleOpenDelete(type.id)}
+                        disabled={type._count?.productItems > 0}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -143,10 +115,10 @@ export function PizzaTypeTable() {
       <DeleteDialog
         open={!!deleteId}
         onClose={handleCloseDelete}
-        onConfirm={handleDelete}
+        onConfirm={() => handleDelete(deleteId!)}
         isDeleting={isDeleting}
-        title="Удалить размер"
-        description="Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить."
+        title='Удалить тип пиццы'
+        description='Вы уверены, что хотите удалить этот тип пиццы? Это действие нельзя отменить.'
       />
     </div>
   );

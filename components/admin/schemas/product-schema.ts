@@ -17,8 +17,8 @@ export const productItemSchema = z.object({
         (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
         {
           message: 'Цена должна иметь максимум 2 знака после запятой',
-        }
-      )
+        },
+      ),
   ),
   sizeId: z.string().nullable().optional(),
   typeId: z.string().nullable().optional(),
@@ -52,7 +52,7 @@ export const createProductSchema = (isPizzaCategory: boolean) => {
   if (isPizzaCategory) {
     productItemsValidation = productItemsValidation.min(
       1,
-      'Добавьте хотя бы один вариант пиццы (размер и тип теста обязательны)'
+      'Добавьте хотя бы один вариант пиццы (размер и тип теста обязательны)',
     );
   }
 
@@ -64,7 +64,7 @@ export const createProductSchema = (isPizzaCategory: boolean) => {
       .min(1, 'Загрузите изображение')
       .refine(
         (val) => /\.(png|jpg|jpeg|gif|webp)$/i.test(val),
-        'URL должен указывать на изображение (png, jpg, jpeg, gif, webp)'
+        'URL должен указывать на изображение (png, jpg, jpeg, gif, webp)',
       ),
     categoryId: z.string().trim().min(1, 'Выберите категорию'),
     ingredientIds: z.array(z.string()).min(0),

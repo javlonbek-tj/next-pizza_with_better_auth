@@ -1,12 +1,9 @@
 'use client';
 
-import { Edit, Trash2 } from 'lucide-react';
-
 import { CategoryFormDialog } from './CategoryFormDialog';
 import { Skeleton } from '@/components/ui/skeleton';
-import { AddButton, DeleteDialog } from '@/components/shared';
+import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   useDeleteCategory,
@@ -139,23 +136,11 @@ export function CategoriesTable() {
                         )}
                       </TableCell>
                       <TableCell className='space-x-2 text-right'>
-                        <Button
-                          className='cursor-pointer'
-                          variant='outline'
-                          size='sm'
-                          onClick={() => handleEdit(category)}
-                        >
-                          <Edit className='w-4 h-4' />
-                        </Button>
-                        <Button
-                          className='cursor-pointer'
-                          variant='destructive'
-                          size='sm'
-                          onClick={() => handleOpenDelete(category.id)}
+                        <TableActions
+                          edit={() => handleEdit(category)}
+                          deleteAction={() => handleOpenDelete(category.id)}
                           disabled={category._count?.products > 0}
-                        >
-                          <Trash2 className='w-4 h-4' />
-                        </Button>
+                        />
                       </TableCell>
                     </TableRow>
                   ),

@@ -8,20 +8,17 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { Button } from '@/components/ui/button';
-import { Edit, Trash2 } from 'lucide-react';
-import { AddButton, DeleteDialog } from '@/components/shared';
+import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import { PizzaSize, PizzaSizeWithProductCount } from '@/types';
 import { PizzaSizeFormDialog } from './PizzaSizeFormDialog';
 import { useTableActions } from '@/hooks';
+import { useDelete } from '@/hooks/admin/use-delete';
 import { deletePizzaSize } from '@/app/actions';
-import toast from 'react-hot-toast';
 
 interface PizzaSizeTableProps {
-  data: PizzaSizeWithProductCount[]
+  data: PizzaSizeWithProductCount[];
 }
-
 
 export function PizzaSizeTable({ data }: PizzaSizeTableProps) {
   const {
@@ -34,50 +31,41 @@ export function PizzaSizeTable({ data }: PizzaSizeTableProps) {
     handleOpenDelete,
     handleCloseDelete,
   } = useTableActions<PizzaSize>();
-
-
-  const handleDelete = async () => {
-    if (deleteId) {
-      const result = await deletePizzaSize(deleteId);
-      if (result.success) {
-        toast.success('Размер успешно удален');
-        handleCloseDelete();
-      }
-      if (!result.success) {
-        toast.error(result.message || 'Ошибка при удалении размера');
-      }
-    }
-  };
+  const { isDeleting, handleDelete } = useDelete(deletePizzaSize, {
+    onSuccess: handleCloseDelete,
+    successMessage: 'Размер успешно удален',
+    errorMessage: 'Ошибка при удалении размера',
+  });
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <AddButton onClick={handleCreate} text="размер" />
+    <div className='space-y-4'>
+      <div className='flex justify-end'>
+        <AddButton onClick={handleCreate} text='размер' />
       </div>
 
       {data.length === 0 ? (
-        <div className="mt-10 text-muted-foreground text-2xl text-center">
+        <div className='mt-10 text-2xl text-center text-muted-foreground'>
           Размеры не найдены
         </div>
       ) : (
-        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
-          <CardContent className="p-6">
+        <Card className='overflow-x-auto border border-gray-200 shadow-md rounded-xl'>
+          <CardContent className='p-6'>
             <Table>
               <TableHeader>
-                <TableRow className="bg-gray-50 hover:bg-gray-50">
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                <TableRow className='bg-gray-50 hover:bg-gray-50'>
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     №
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
                     Название
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
                     Диаметр (см)
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
                     Дата создания
                   </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
+                  <TableHead className='py-3 font-extrabold tracking-wide text-right text-gray-700 uppercase'>
                     Действия
                   </TableHead>
                 </TableRow>
@@ -87,46 +75,34 @@ export function PizzaSizeTable({ data }: PizzaSizeTableProps) {
                 {data.map((size: PizzaSizeWithProductCount, index: number) => (
                   <TableRow
                     key={size.id}
-                    className="hover:bg-gray-50 transition-colors"
+                    className='transition-colors hover:bg-gray-50'
                   >
-                    <TableCell className="py-4">
-                      <div className="flex justify-center items-center bg-gradient-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
+                    <TableCell className='py-4'>
+                      <div className='flex items-center justify-center w-8 h-8 font-bold text-white rounded-lg shadow-md bg-linear-to-br from-primary to-primary/80'>
                         {index + 1}
                       </div>
                     </TableCell>
-                    <TableCell className="py-4">
-                      <span className="font-semibold text-gray-900">
+                    <TableCell className='py-4'>
+                      <span className='font-semibold text-gray-900'>
                         {size.label}
                       </span>
                     </TableCell>
-                    <TableCell className="py-4 text-gray-700 text-center">
+                    <TableCell className='py-4 text-center text-gray-700'>
                       {size.size}
                     </TableCell>
-                    <TableCell className="py-4 text-gray-600 text-center">
+                    <TableCell className='py-4 text-center text-gray-600'>
                       {new Date(size.createdAt).toLocaleDateString('ru-RU', {
                         day: '2-digit',
                         month: 'short',
                         year: 'numeric',
                       })}
                     </TableCell>
-                    <TableCell className="space-x-2 text-right">
-                      <Button
-                        className="cursor-pointer"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleEdit(size)}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        className="cursor-pointer"
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleOpenDelete(size.id)}
+                    <TableCell className='space-x-2 text-right'>
+                      <TableActions
+                        edit={() => handleEdit(size)}
+                        deleteAction={() => handleOpenDelete(size.id)}
                         disabled={size._count?.productItems > 0}
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </Button>
+                      />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -145,12 +121,13 @@ export function PizzaSizeTable({ data }: PizzaSizeTableProps) {
       <DeleteDialog
         open={!!deleteId}
         onClose={handleCloseDelete}
-        onConfirm={handleDelete}
-        title="Удалить размер"
-        description="Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить."
+        onConfirm={() => handleDelete(deleteId!)}
+        title='Удалить размер'
+        description='Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить.'
         showAlert={true}
-        alertDescription="Все связанные элементы продукта, использующие этот размер,
-              будут установлены как «Стандартный» после удаления."
+        alertDescription='Все связанные элементы продукта, использующие этот размер,
+              будут установлены как «Стандартный» после удаления.'
+        isDeleting={isDeleting}
       />
     </div>
   );

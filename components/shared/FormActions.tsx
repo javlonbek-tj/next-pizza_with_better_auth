@@ -32,24 +32,24 @@ export function FormActions({
   return (
     <div className={`flex justify-end gap-2 pt-4 ${className}`}>
       <Button
-        type="button"
-        variant="outline"
+        type='button'
+        variant='secondary'
         onClick={onCancel}
         disabled={disabled}
-        className={`cursor-pointer min-w-[90px] transition-colors ${
-          disabled ? 'opacity-70 cursor-not-allowed' : 'hover:bg-muted'
+        className={`cursor-pointer min-w-25 transition-colors ${
+          disabled ? 'opacity-70 cursor-default' : ''
         }`}
       >
         {cancelText}
       </Button>
 
       <Button
-        type="submit"
+        type='submit'
         disabled={disabled}
-        className="min-w-[110px] cursor-pointer"
+        className='cursor-pointer min-w-25'
       >
         {isPending && showLoader ? (
-          <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+          <Loader2 className='w-4 h-4 mr-2 animate-spin' />
         ) : (
           <>{buttonText}</>
         )}

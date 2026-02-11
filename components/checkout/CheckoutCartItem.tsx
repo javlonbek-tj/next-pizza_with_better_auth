@@ -21,7 +21,7 @@ export function CheckoutCartItem({ cartItem, className }: Props) {
           alt={cartItem.name}
           width={60}
           height={60}
-          className='flex-shrink-0 rounded-full'
+          className='shrink-0 rounded-full'
         />
         <div>
           <p className='font-bold'>{cartItem.name}</p>
@@ -37,7 +37,7 @@ export function CheckoutCartItem({ cartItem, className }: Props) {
       </p>
 
       {/* Right: quantity controls */}
-      <div className="flex items-center gap-5 ml-20">
+      <div className='flex items-center gap-5 ml-20'>
         <CartUpdateButtons
           id={cartItem.id}
           quantity={cartItem.quantity}
@@ -46,7 +46,7 @@ export function CheckoutCartItem({ cartItem, className }: Props) {
 
         <RemoveCartItem
           id={cartItem.id}
-          className="text-gray-400 cursor-pointer hover:text-red-500"
+          className='text-gray-400 cursor-pointer hover:text-red-500'
         />
       </div>
     </div>

@@ -25,7 +25,6 @@ import { PizzaSizeFormValues, pizzaSizeSchema } from '../schemas';
 import { createPizzaSize, updatePizzaSize } from '@/app/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-
 interface Props {
   open: boolean;
   onClose: () => void;
@@ -37,27 +36,23 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
 
   const isEditing = !!pizzaSize;
 
-    const form = useForm<PizzaSizeFormValues>({
-      resolver: zodResolver(pizzaSizeSchema),
-      defaultValues: {
-        size: 0,
-        label: '',
-      },
-    });
+  const form = useForm<PizzaSizeFormValues>({
+    resolver: zodResolver(pizzaSizeSchema),
+    defaultValues: {
+      size: 0,
+      label: '',
+    },
+  });
 
-    useEffect(() => {
-      if (pizzaSize) {
-        form.reset({
-          label: pizzaSize.label,
-          size: pizzaSize.size,
-        });
-      } else {
-        form.reset({
-          label: '',
-          size: 0,
-        });
-      }
-    }, [pizzaSize, open, form]);
+  useEffect(() => {
+    if (!open) return;
+
+    form.reset(
+      pizzaSize
+        ? { label: pizzaSize.label, size: pizzaSize.size }
+        : { label: '', size: 0 },
+    );
+  }, [open, pizzaSize, form]);
 
   const onSubmit = async (data: PizzaSizeFormValues) => {
     setIsPending(true);
@@ -70,16 +65,22 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
       }
 
       if (!result.success) {
-        toast.error(result.message || `Не удалось ${isEditing ? 'изменить' : 'создать'} размер пиццы`);
+        toast.error(
+          result.message ||
+            `Не удалось ${isEditing ? 'изменить' : 'создать'} размер пиццы`,
+        );
         return;
       }
 
       toast.success(`Размер пиццы успешно ${isEditing ? 'изменён' : 'создан'}`);
-    
+
       onClose();
       form.reset();
     } catch (error) {
-      toast.error(`Не удалось ${isEditing ? 'изменить' : 'создать'} размер пиццы`);
+      console.error('[PizzaSizeFormDialog] Error:', error);
+      toast.error(
+        `Не удалось ${isEditing ? 'изменить' : 'создать'} размер пиццы`,
+      );
     } finally {
       setIsPending(false);
     }
@@ -87,7 +88,7 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className='sm:max-w-sm'>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать размер пиццы' : 'Создать размер пиццы'}
@@ -95,19 +96,19 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Label Field */}
             <FormField
               control={form.control}
-              name="label"
+              name='label'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Например: Маленькая, Средняя, Большая"
+                      placeholder='Например: Маленькая, Средняя, Большая'
                       {...field}
-                      autoComplete="off"
+                      autoComplete='off'
                     />
                   </FormControl>
                   <FormMessage />
@@ -118,12 +119,12 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
             {/* Size Field */}
             <FormField
               control={form.control}
-              name="size"
+              name='size'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Значение (см)</FormLabel>
                   <FormControl>
-                    <DecimalInput {...field} maxDecimals={0} placeholder="30" />
+                    <DecimalInput {...field} maxDecimals={0} placeholder='30' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -131,7 +132,7 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
             />
 
             {/* Actions */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className='flex justify-end gap-2 pt-4'>
               <FormActions
                 onCancel={onClose}
                 isEditing={isEditing}

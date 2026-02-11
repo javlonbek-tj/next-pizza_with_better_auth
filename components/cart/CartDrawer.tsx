@@ -14,7 +14,7 @@ import {
 import { CartDrawerItem } from './CartDrawerItem';
 import { calculateTotalAmount, getCartItemDetails } from '@/lib/cart';
 import { useCart } from '@/hooks';
-import { cn} from '@/lib';
+import { cn } from '@/lib';
 import { EmptyCart } from './index';
 import { AuthModal } from '../modals/AuthModal';
 import { authClient } from '@/lib/auth-client';
@@ -58,7 +58,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
       <SheetContent
         className={cn(
           'bg-[#F4F1EE] pb-0',
-          !totalAmount && 'flex items-center justify-center'
+          !totalAmount && 'flex items-center justify-center',
         )}
       >
         <>
@@ -72,7 +72,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
             </SheetTitle>
           </SheetHeader>
 
-          {!totalAmount && <EmptyCart useSheetClose={true}/>}
+          {!totalAmount && <EmptyCart useSheetClose={true} />}
 
           {totalAmount > 0 && (
             <>
@@ -81,7 +81,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
                   'flex flex-col gap-4 overflow-auto scrollbar-thin transition-opacity duration-200',
                   {
                     'opacity-60 pointer-events-none': isDeleting,
-                  }
+                  },
                 )}
               >
                 {data?.map((item) => (
@@ -91,7 +91,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
                     details={getCartItemDetails(
                       item.ingredients,
                       item.pizzaSize,
-                      item.pizzaType
+                      item.pizzaType,
                     )}
                   />
                 ))}
@@ -102,25 +102,24 @@ export function CartDrawer({ children }: PropsWithChildren) {
                   'opacity-60 pointer-events-none': isDeleting,
                 })}
               >
-                <div className="flex justify-between items-center gap-4 mb-4">
+                <div className='flex items-center justify-between gap-4 mb-4'>
                   <span>Итого</span>
-                  <span className="top-1 relative flex-1 border-b border-b-neutral-200 border-dashed"></span>
-                  <span className="font-bold">{totalAmount} ₽</span>
+                  <span className='relative flex-1 border-b border-dashed top-1 border-b-neutral-200'></span>
+                  <span className='font-bold'>{totalAmount} ₽</span>
                 </div>
 
                 <Button
-                  className="h-12 cursor-pointer"
+                  className='h-12 cursor-pointer'
                   onClick={handleClick}
                   disabled={isLoading || isDeleting}
                 >
-                  <span className="flex items-center gap-2">
-                   
+                  <span className='flex items-center gap-2'>
                     {isLoading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <Loader2 className='w-5 h-5 animate-spin' />
                     ) : (
-                       <>
-                       <span>Оформить заказ</span> <ArrowRight />
-                       </>
+                      <>
+                        <span>Оформить заказ</span> <ArrowRight />
+                      </>
                     )}
                   </span>
                 </Button>
@@ -129,7 +128,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
               <AuthModal
                 open={authOpen}
                 onClose={() => setAuthOpen(false)}
-                callbackUrl="/checkout"
+                callbackUrl='/checkout'
               />
             </>
           )}

@@ -5,5 +5,6 @@ export { DeleteDialog } from './DeleteDialog';
 export { ErrorText } from './ErrorText';
 export { PhoneInput } from './PhoneInput';
 export { Spinner } from './Spinner';
+export { TableActions } from './TableActions';
 export { Title } from './Title';
 export { TopBarContent } from './TopBarContent';
