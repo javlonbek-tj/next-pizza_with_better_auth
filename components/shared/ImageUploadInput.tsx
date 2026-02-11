@@ -70,7 +70,7 @@ export function ImageUploadInput({
             src={value}
             alt='Preview'
             fill
-            className='object-cover'
+            className='object-contain'
             unoptimized
           />
           {!disabled && !isUploading && (

@@ -6,14 +6,13 @@ import { ProductFormValues } from '@/components/admin/schemas/product-schema';
 import {
   Category,
   CategoryWithProductCount,
-  Ingredient,
   ProductWithRelations,
 } from '@/types';
 
 export const getCategories = async () => {
   const { data } = (
     await axiosInstance.get<ApiResponse<CategoryWithProductCount[]>>(
-      `${ApiRoutes.ADMIN}/categories`,
+      `${ApiRoutes.ADMIN}/categories`
     )
   ).data;
 
@@ -24,7 +23,7 @@ export const createCategory = async (dto: CategoryFormValues) => {
   const { data } = (
     await axiosInstance.post<ApiResponse<Category>>(
       `${ApiRoutes.ADMIN}/categories`,
-      dto,
+      dto
     )
   ).data;
 
@@ -35,7 +34,7 @@ export const updateCategory = async (id: string, dto: CategoryFormValues) => {
   const { data } = (
     await axiosInstance.put<ApiResponse<Category>>(
       `${ApiRoutes.ADMIN}/categories/${id}`,
-      dto,
+      dto
     )
   ).data;
 
@@ -46,34 +45,10 @@ export const deleteCategory = (id: string) => {
   return axiosInstance.delete(`${ApiRoutes.ADMIN}/categories/${id}`);
 };
 
-export const getIngredients = async () => {
-  const { data } = (
-    await axiosInstance.get<ApiResponse<Ingredient[]>>(
-      `${ApiRoutes.ADMIN}/ingredients`,
-    )
-  ).data;
-  return data;
-};
-
-export const uploadImage = async (formData: FormData) => {
-  const { data } = (
-    await axiosInstance.post<ApiResponse<{ imageUrl: string }>>(
-      `${ApiRoutes.ADMIN}/upload`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      },
-    )
-  ).data;
-  return data;
-};
-
 export const getProducts = async () => {
   const { data } = (
     await axiosInstance.get<ApiResponse<ProductWithRelations[]>>(
-      `${ApiRoutes.ADMIN}/products`,
+      `${ApiRoutes.ADMIN}/products`
     )
   ).data;
 
@@ -84,7 +59,7 @@ export const createProduct = async (dto: ProductFormValues) => {
   const { data } = (
     await axiosInstance.post<ApiResponse<ProductWithRelations>>(
       `${ApiRoutes.ADMIN}/products`,
-      dto,
+      dto
     )
   ).data;
 
@@ -97,12 +72,12 @@ export const deleteProduct = (id: string) => {
 
 export const updateProduct = async (
   productId: string,
-  dto: ProductFormValues,
+  dto: ProductFormValues
 ) => {
   const { data } = (
     await axiosInstance.put<ApiResponse<ProductWithRelations>>(
       `${ApiRoutes.ADMIN}/products/${productId}`,
-      dto,
+      dto
     )
   ).data;
 

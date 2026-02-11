@@ -57,22 +57,22 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             price: ingredient.price,
             imageUrl: ingredient.imageUrl,
           }
-        : { name: '', price: 0, imageUrl: '' },
+        : { name: '', price: 0, imageUrl: '' }
     );
   }, [open, ingredient, form]);
 
   const {
     previewUrl,
-    isUploading,
-    uploadFile,
     removeImage,
     cleanupOrphanedImage,
     markAsSubmitted,
+    uploadFile,
+    isUploading,
   } = useImageUpload(
     ingredient?.imageUrl,
     open,
     'ingredients',
-    ingredient?.imageUrl,
+    ingredient?.imageUrl
   );
 
   const onSubmit = async (data: IngredientFormValues) => {
@@ -89,7 +89,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
       if (!result.success) {
         toast.error(
           result.message ||
-            `Не удалось ${isEditing ? 'изменить' : 'создать'} ингредиент`,
+            `Не удалось ${isEditing ? 'изменить' : 'создать'} ингредиент`
         );
         return;
       }
@@ -99,7 +99,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
     } catch (error) {
       console.error('[IngredientFormDialog] Error:', error);
       toast.error(
-        `Не удалось ${isEditing ? 'изменить' : 'создать'} ингредиент`,
+        `Не удалось ${isEditing ? 'изменить' : 'создать'} ингредиент`
       );
     } finally {
       setIsPending(false);
@@ -128,12 +128,14 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
       return;
     }
     form.clearErrors('imageUrl');
-    form.setValue('imageUrl', res.imageUrl, { shouldValidate: true });
+    form.setValue('imageUrl', res.data?.imageUrl || '', {
+      shouldValidate: true,
+    });
   };
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-lg'>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать ингредиент' : 'Создать ингредиент'}
@@ -141,11 +143,11 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Image Upload */}
             <FormField
               control={form.control}
-              name='imageUrl'
+              name="imageUrl"
               render={() => (
                 <FormItem>
                   <FormLabel>Изображение</FormLabel>
@@ -166,12 +168,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Name Field */}
             <FormField
               control={form.control}
-              name='name'
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название (на русском)</FormLabel>
                   <FormControl>
-                    <Input placeholder='Например: Сыр моцарелла' {...field} />
+                    <Input placeholder="Например: Сыр моцарелла" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -181,12 +183,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Price Field */}
             <FormField
               control={form.control}
-              name='price'
+              name="price"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Цена</FormLabel>
                   <FormControl>
-                    <DecimalInput {...field} placeholder='17' />
+                    <DecimalInput {...field} placeholder="17" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -194,7 +196,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             />
 
             {/* Actions */}
-            <div className='flex justify-end gap-2 pt-4'>
+            <div className="flex justify-end gap-2 pt-4">
               <FormActions
                 onCancel={() => handleClose(false)}
                 isPending={isPending}
