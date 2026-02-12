@@ -1,9 +1,5 @@
 import { useState } from 'react';
 
-/**
- * Reusable hook for managing table CRUD actions state
- * @template T - The type of the entity being managed
- */
 export function useTableActions<T>() {
   const [editingItem, setEditingItem] = useState<T | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);

@@ -3,8 +3,8 @@
 import { prisma } from '@/server';
 import { revalidatePath } from 'next/cache';
 import { ActionResult, Ingredient } from '@/types';
-import { IngredientFormValues, ingredientSchema } from '@/components/admin';
 import { deleteImageFile } from '../delete-image-file';
+import { IngredientFormValues, ingredientSchema } from '@/lib';
 
 export async function createIngredient(
   data: IngredientFormValues,

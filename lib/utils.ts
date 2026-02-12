@@ -74,6 +74,7 @@ export function generateSlug(name: string): string {
   if (!name) return '';
 
   const transliterated = name
+    .trim()
     .toLowerCase()
     .split('')
     .map((char) => cyrillicToLatinMap[char] ?? char)

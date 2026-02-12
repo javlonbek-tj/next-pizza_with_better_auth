@@ -5,7 +5,7 @@ export function useImageUpload(
   initialImageUrl: string | undefined,
   open: boolean,
   imageFolder: 'products' | 'ingredients',
-  originalImageUrl: string | undefined
+  originalImageUrl: string | null | undefined,
 ) {
   const [previewUrl, setPreviewUrl] = useState('');
   const [uploadedImageUrl, setUploadedImageUrl] = useState('');

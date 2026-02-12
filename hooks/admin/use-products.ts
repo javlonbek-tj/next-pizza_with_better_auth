@@ -1,67 +1,40 @@
-// hooks/admin/use-products.ts
+// hooks/useProductForm.ts
 import { useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  createProductSchema,
   ProductFormValues,
   ProductItemFormValues,
-  createProductSchema,
-} from '@/components/admin/schemas/product-schema';
-import { queryKeys } from '@/lib';
-import { Api } from '@/services/api-client';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+} from '@/lib';
 import toast from 'react-hot-toast';
-import { ProductWithRelations } from '@/prisma/@types/prisma';
-import { useGetCategories } from '@/hooks';
-import { AxiosError } from 'axios';
-import { ApiResponse } from '@/services/api-response';
-import { deleteImageFile } from '@/app/actions';
+import { ActionResult, Product, ProductWithRelations } from '@/types';
+import { createProduct, updateProduct } from '@/app/actions';
 
-export function useGetProducts() {
-  return useQuery({
-    queryKey: queryKeys.products,
-    queryFn: Api.admin.getProducts,
-  });
+interface Props {
+  product: ProductWithRelations | null;
+  open: boolean;
+  onClose: () => void;
+  markAsSubmitted: () => void;
 }
 
-export function useCreateProduct() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (vars: ProductFormValues) => Api.admin.createProduct(vars),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.products });
-      toast.success('Товар успешно создан');
-    },
-    onError: () => {
-      toast.error('Не удалось создать товар');
-    },
-  });
-}
-
-/**
- * Hook to manage product form state and submission
- */
-export function useProductForm(
-  product: ProductWithRelations | null | undefined,
-  open: boolean,
-  onClose: () => void
-) {
+export function useProductForm({
+  product,
+  open,
+  onClose,
+  markAsSubmitted,
+}: Props) {
+  const [isPending, setIsPending] = useState(false);
   const isEditing = !!product;
-  const { mutate: createProduct, isPending: isCreating } = useCreateProduct();
-  const { mutate: updateProduct, isPending: isUpdating } = useUpdateProduct();
-  const { data: categories } = useGetCategories();
-
-  const isPending = isCreating || isUpdating;
-
-  // Track the original image URL when editing
-  const [originalImageUrl, setOriginalImageUrl] = useState<string | null>(null);
-
-  // Watch the selected category to determine if it's pizza
-  const [isPizzaCategory, setIsPizzaCategory] = useState(false);
 
   const form = useForm<ProductFormValues>({
-    resolver: zodResolver(createProductSchema(isPizzaCategory)),
+    resolver: (values, context, options) => {
+      return zodResolver(createProductSchema(values.isPizza))(
+        values,
+        context,
+        options,
+      );
+    },
     defaultValues: {
       name: '',
       imageUrl: '',
@@ -74,36 +47,15 @@ export function useProductForm(
           typeId: null,
         },
       ],
+      isPizza: false,
     },
   });
 
-  const selectedCategoryId = form.watch('categoryId');
+  const isPizzaWatched = form.watch('isPizza');
 
-  // Update isPizzaCategory when category changes
-  useEffect(() => {
-    if (!selectedCategoryId || !categories) {
-      setIsPizzaCategory(false);
-      return;
-    }
-    const selectedCategory = categories.find(
-      (cat) => cat.id === selectedCategoryId
-    );
-    const isNowPizza = selectedCategory?.name.toLowerCase() === 'пиццы';
-    setIsPizzaCategory(isNowPizza);
-  }, [selectedCategoryId, categories]);
-
+  // Reset form when dialog opens/closes or product changes
   useEffect(() => {
     if (product) {
-      // Store the original image URL
-      setOriginalImageUrl(product.imageUrl);
-
-      // Determine if the product is pizza category
-      const productCategory = categories?.find(
-        (cat) => cat.id === product.categoryId
-      );
-      const isProductPizza = productCategory?.name.toLowerCase() === 'пиццы';
-      setIsPizzaCategory(isProductPizza);
-
       form.reset({
         name: product.name,
         imageUrl: product.imageUrl,
@@ -116,10 +68,9 @@ export function useProductForm(
             sizeId: item.size?.id || null,
             typeId: item.type?.id || null,
           })) || [],
+        isPizza: product.isPizza ?? false,
       });
     } else {
-      setOriginalImageUrl(null);
-      setIsPizzaCategory(false);
       form.reset({
         name: '',
         imageUrl: '',
@@ -132,68 +83,37 @@ export function useProductForm(
             typeId: null,
           },
         ],
+        isPizza: false,
       });
     }
-  }, [product, form, open, categories]);
+  }, [product, form, open]);
 
-  const onSubmit = async (data: ProductFormValues, onSuccess?: () => void) => {
-    // Transform data to ensure proper types and handle edge cases
-    const transformedData: ProductFormValues = {
-      name: data.name.trim(),
-      imageUrl: data.imageUrl.trim(),
-      categoryId: data.categoryId.trim(),
-      ingredientIds: data.ingredientIds,
-      productItems: data.productItems.map((item) => {
-        return {
-          ...(item.id ? { id: item.id } : {}),
-          price: item.price,
-          sizeId: !item.sizeId || item.sizeId === 'none' ? null : item.sizeId,
-          typeId: !item.typeId || item.typeId === 'none' ? null : item.typeId,
-        };
-      }),
-    };
+  const onSubmit = async (data: ProductFormValues) => {
+    setIsPending(true);
+    try {
+      let result: ActionResult<Product>;
+      if (isEditing) {
+        result = await updateProduct(product.id, data);
+      } else {
+        result = await createProduct(data);
+      }
 
-    // Check if image was changed during edit
-    const imageChanged =
-      isEditing &&
-      originalImageUrl &&
-      transformedData.imageUrl !== originalImageUrl;
+      if (!result.success) {
+        toast.error(
+          result.message ||
+            `Не удалось ${isEditing ? 'изменить' : 'создать'} продукт`,
+        );
+        return;
+      }
 
-    if (isEditing && product?.id) {
-      // UPDATE existing product
-      updateProduct(
-        { productId: product.id, data: transformedData },
-        {
-          onSuccess: async () => {
-            // Delete old image if a new one was uploaded
-            if (imageChanged && originalImageUrl) {
-              await deleteImageFile(originalImageUrl);
-            }
-
-            toast.success('Продукт успешно обновлен');
-            onSuccess?.();
-            onClose();
-            form.reset();
-            setOriginalImageUrl(null);
-          },
-          onError: () => {
-            toast.error('Ошибка при обновлении продукта');
-          },
-        }
-      );
-    } else {
-      // CREATE new product
-      createProduct(transformedData, {
-        onSuccess: () => {
-          toast.success('Продукт успешно создан');
-          onSuccess?.();
-          onClose();
-          form.reset();
-        },
-        onError: () => {
-          toast.error('Ошибка при создании продукта');
-        },
-      });
+      markAsSubmitted();
+      toast.success(`Продукт успешно ${isEditing ? 'изменен' : 'создан'}`);
+      onClose();
+    } catch (error) {
+      console.error('[ProductFormDialog] Error:', error);
+      toast.error(`Не удалось ${isEditing ? 'изменить' : 'создать'} продукт`);
+    } finally {
+      setIsPending(false);
     }
   };
 
@@ -202,14 +122,10 @@ export function useProductForm(
     isEditing,
     isPending,
     onSubmit,
-    isPizzaCategory,
-    originalImageUrl,
+    isPizza: isPizzaWatched, // Return the watched value
   };
 }
 
-/**
- * Hook to manage product items (variations)
- */
 export function useProductItems(form: UseFormReturn<ProductFormValues>) {
   const productItems = form.watch('productItems') || [];
 
@@ -225,17 +141,17 @@ export function useProductItems(form: UseFormReturn<ProductFormValues>) {
           typeId: null,
         },
       ],
-      { shouldValidate: false }
+      { shouldValidate: false },
     );
   };
 
   const updateProductItem = (
     index: number,
-    updated: Partial<ProductItemFormValues>
+    updated: Partial<ProductItemFormValues>,
   ) => {
     const currentItems = form.getValues('productItems') || [];
     const updatedItems = currentItems.map((item, i) =>
-      i === index ? { ...item, ...updated } : item
+      i === index ? { ...item, ...updated } : item,
     );
     form.setValue('productItems', updatedItems, { shouldValidate: false });
 
@@ -264,44 +180,4 @@ export function useProductItems(form: UseFormReturn<ProductFormValues>) {
     updateProductItem,
     removeProductItem,
   };
-}
-
-// useDeleteProduct
-
-export function useDeleteProduct() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (productId: string) => Api.admin.deleteProduct(productId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.products });
-      toast.success('Товар успешно удален');
-    },
-    onError: () => {
-      toast.error('Не удалось удалить товар');
-    },
-  });
-}
-
-export function useUpdateProduct() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({
-      productId,
-      data,
-    }: {
-      productId: string;
-      data: ProductFormValues;
-    }) => {
-      return Api.admin.updateProduct(productId, data);
-    },
-    onSuccess: () => {
-      // Invalidate products list to refetch
-      queryClient.invalidateQueries({ queryKey: ['products'] });
-    },
-    onError: (error: AxiosError<ApiResponse<null>>) => {
-      console.error('Update product error:', error);
-    },
-  });
 }

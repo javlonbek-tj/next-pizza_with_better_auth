@@ -2,24 +2,16 @@ import z from 'zod';
 
 // Base schemas
 export const productItemSchema = z.object({
-  price: z.preprocess(
-    (val) => {
-      if (val === '' || val === undefined || val === null) return undefined;
-      const str = val.toString();
-      const num = parseFloat(str);
-      return isNaN(num) ? undefined : num;
-    },
-    z
-      .number({ message: 'Цена обязательна и должна быть больше 0' })
-      .positive('Цена обязательна и должна быть больше 0')
-      .max(1000000000, 'Цена не должна превышать 1,000,000,000')
-      .refine(
-        (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
-        {
-          message: 'Цена должна иметь максимум 2 знака после запятой',
-        }
-      )
-  ),
+  price: z
+    .number({ message: 'Цена обязательна' })
+    .positive('Цена обязательна')
+    .max(1000000000, 'Цена не должна превышать 1,000,000,000')
+    .refine(
+      (val) => Number.isFinite(val) && Math.floor(val * 100) === val * 100,
+      {
+        message: 'Цена должна иметь максимум 2 знака после запятой',
+      },
+    ),
   sizeId: z.string().nullable().optional(),
   typeId: z.string().nullable().optional(),
 });
@@ -33,26 +25,15 @@ export const pizzaProductItemSchema = productItemSchema.extend({
     .min(1, 'Тип теста обязателен'),
 });
 
-// Schema for editing (includes optional id)
-export const productItemSchemaWithId = productItemSchema.extend({
-  id: z.string().optional(),
-});
-
-export const pizzaProductItemSchemaWithId = pizzaProductItemSchema.extend({
-  id: z.string().optional(),
-});
-
-export const createProductSchema = (isPizzaCategory: boolean) => {
-  const itemSchema = isPizzaCategory
-    ? pizzaProductItemSchemaWithId
-    : productItemSchemaWithId;
+export const createProductSchema = (isPizza: boolean) => {
+  const itemSchema = isPizza ? pizzaProductItemSchema : productItemSchema;
 
   let productItemsValidation = z.array(itemSchema);
 
-  if (isPizzaCategory) {
+  if (isPizza) {
     productItemsValidation = productItemsValidation.min(
       1,
-      'Добавьте хотя бы один вариант пиццы (размер и тип теста обязательны)'
+      'Добавьте хотя бы один вариант пиццы (размер и тип теста обязательны)',
     );
   }
 
@@ -64,13 +45,14 @@ export const createProductSchema = (isPizzaCategory: boolean) => {
       .min(1, 'Загрузите изображение')
       .refine(
         (val) => /\.(png|jpg|jpeg|gif|webp)$/i.test(val),
-        'URL должен указывать на изображение (png, jpg, jpeg, gif, webp)'
+        'URL должен указывать на изображение (png, jpg, jpeg, gif, webp)',
       ),
     categoryId: z.string().trim().min(1, 'Выберите категорию'),
     ingredientIds: z.array(z.string()).min(0),
     productItems: productItemsValidation,
+    isPizza: z.boolean(),
   });
 };
 
-export type ProductItemFormValues = z.infer<typeof productItemSchemaWithId>;
+export type ProductItemFormValues = z.infer<typeof productItemSchema>;
 export type ProductFormValues = z.infer<ReturnType<typeof createProductSchema>>;

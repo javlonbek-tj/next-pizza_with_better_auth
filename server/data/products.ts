@@ -1,12 +1,9 @@
-
-
 import {
   DEFAULT_PRICE_FROM,
   DEFAULT_PRICE_TO,
   SortValue,
 } from '@/lib/constants';
 import { prisma } from '../prisma';
-
 
 export interface GetSearchParams {
   query?: string;
@@ -19,7 +16,7 @@ export interface GetSearchParams {
   sort?: SortValue;
 }
 
-export const getProducts = async (params: GetSearchParams) => {
+export const getFilteredProducts = async (params: GetSearchParams) => {
   const sizes = params.pizzaSize?.split(',').filter(Boolean);
   const pizzaTypes = params.pizzaTypes?.split(',').filter(Boolean);
   const ingredients = params.ingredients?.split(',').filter(Boolean);
@@ -39,7 +36,7 @@ export const getProducts = async (params: GetSearchParams) => {
           productItems: {
             some: {
               price: { gte: priceFrom, lte: priceTo },
-              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }), 
+              ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }),
               ...(pizzaTypes &&
                 pizzaTypes.length > 0 && { typeId: { in: pizzaTypes } }),
             },
@@ -95,7 +92,6 @@ export const getProducts = async (params: GetSearchParams) => {
   });
 };
 
-
 export const getProductById = async (id: string) => {
   return await prisma.product.findUnique({
     where: { id },
@@ -109,5 +105,21 @@ export const getProductById = async (id: string) => {
         },
       },
     },
+  });
+};
+
+export const getAllProducts = async () => {
+  return await prisma.product.findMany({
+    include: {
+      category: true,
+      ingredients: true,
+      productItems: {
+        include: {
+          size: true,
+          type: true,
+        },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
   });
 };

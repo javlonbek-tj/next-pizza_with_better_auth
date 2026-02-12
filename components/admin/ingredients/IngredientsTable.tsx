@@ -13,15 +13,14 @@ import { IngredientFormDialog } from './IngredientFormDialog';
 import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
 import { Ingredient } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
-import { useTableActions } from '@/hooks';
+import { useTableActions, useDelete } from '@/hooks';
 import { deleteIngredient } from '@/app/actions';
-import { useDelete } from '@/hooks/admin/use-delete';
 
-interface IngredientsTableProps {
+interface Props {
   data: Ingredient[];
 }
 
-export function IngredientsTable({ data }: IngredientsTableProps) {
+export function IngredientsTable({ data }: Props) {
   const {
     editingItem: editingIngredient,
     deleteId,

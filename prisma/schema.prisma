@@ -1,7 +1,6 @@
 generator client {
   provider = "prisma-client"
   output   = "../lib/generated/prisma"
-  previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
@@ -84,6 +83,7 @@ model Product {
 
   name     String
   imageUrl String
+  isPizza  Boolean @default(false)
 
   productItems ProductItem[]
   ingredients  Ingredient[]

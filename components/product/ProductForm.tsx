@@ -30,16 +30,14 @@ export function ProductForm({
   const router = useRouter();
   if (!product) {
     return (
-      <div className="flex flex-col justify-center items-center gap-4 min-h-[500px]">
-        <p className="text-gray-500 text-lg">Продукт не найден</p>
+      <div className='flex flex-col items-center justify-center gap-4 min-h-lg'>
+        <p className='text-lg text-gray-500'>Продукт не найден</p>
         <BackButton onClick={() => router.back()} />
       </div>
     );
   }
 
-  const isPizza = Boolean(
-    product.productItems[0]?.sizeId || product.productItems[0]?.typeId
-  );
+  const isPizza = product.isPizza;
 
   if (isPizza) {
     return (
@@ -72,7 +70,7 @@ function PizzaFormWrapper({
   const { pizzaOptions, handleAddToCart, isSubmitting } = usePizzaDetail(
     product,
     onClose,
-    isModal
+    isModal,
   );
 
   return (

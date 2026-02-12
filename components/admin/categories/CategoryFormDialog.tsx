@@ -22,7 +22,7 @@ import { FormActions } from '@/components/shared/FormActions';
 interface Props {
   open: boolean;
   onClose: () => void;
-  category?: Category | null;
+  category: Category | null;
 }
 
 export function CategoryFormDialog({ open, onClose, category }: Props) {
@@ -33,11 +33,11 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
     handleNameChange,
     handleSlugChange,
     onSubmit,
-  } = useCategoryForm(category, open, onClose);
+  } = useCategoryForm({ category, open, onClose });
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className='sm:max-w-lg'>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать категорию' : 'Создать категорию'}
@@ -45,20 +45,20 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Name Field */}
             <FormField
               control={form.control}
-              name="name"
+              name='name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Введите название категории на кириллице"
+                      placeholder='Введите название категории на кириллице'
                       {...field}
                       onChange={(e) => handleNameChange(e.target.value)}
-                      autoComplete="off"
+                      autoComplete='off'
                     />
                   </FormControl>
                   <FormMessage />
@@ -69,18 +69,18 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
             {/* Slug Field */}
             <FormField
               control={form.control}
-              name="slug"
+              name='slug'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Slug (URL)</FormLabel>
-                  <div className="flex gap-2">
+                  <div className='flex gap-2'>
                     <FormControl>
                       <Input
-                        placeholder="автоматически генерируется"
+                        placeholder='автоматически генерируется'
                         {...field}
                         onChange={(e) => handleSlugChange(e.target.value)}
-                        className="font-mono text-sm"
-                        autoComplete="off"
+                        className='font-mono text-sm'
+                        autoComplete='off'
                       />
                     </FormControl>
                   </div>
@@ -91,18 +91,18 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
 
             {/* Preview */}
             {form.watch('slug') && (
-              <div className="bg-gray-50 p-3 border border-gray-200 rounded-lg">
-                <p className="mb-1 font-medium text-gray-600 text-xs">
+              <div className='p-3 border border-gray-200 rounded-lg bg-gray-50'>
+                <p className='mb-1 text-xs font-medium text-gray-600'>
                   Предпросмотр URL:
                 </p>
-                <code className="font-mono text-violet-600 text-sm">
+                <code className='font-mono text-sm text-violet-600'>
                   /categories/{form.watch('slug')}
                 </code>
               </div>
             )}
 
             {/* Actions */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className='flex justify-end gap-2 pt-4'>
               <FormActions
                 onCancel={onClose}
                 isEditing={isEditing}

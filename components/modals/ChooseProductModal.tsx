@@ -9,11 +9,7 @@ interface Props {
   title?: string;
 }
 
-export function ChooseProductModal({
-  className,
-  children,
-  title,
-}: Props) {
+export function ChooseProductModal({ className, children, title }: Props) {
   const { open, handleClose } = useModalRoute('/product/');
 
   return (
@@ -24,10 +20,10 @@ export function ChooseProductModal({
       }}
     >
       <DialogContent
-        size="xl"
-        className={cn('flex flex-col p-0 h-[38.75rem] overflow-hidden', className)}
+        size='xl'
+        className={cn('flex flex-col p-0 h-2xl overflow-hidden', className)}
       >
-        <DialogTitle className="sr-only">
+        <DialogTitle className='sr-only'>
           {title || 'Choose Product'}
         </DialogTitle>
 

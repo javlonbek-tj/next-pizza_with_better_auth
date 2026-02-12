@@ -1,14 +1,10 @@
 'use client';
 
 import { CategoryFormDialog } from './CategoryFormDialog';
-import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import {
-  useDeleteCategory,
-  useGetCategories,
-} from '@/hooks/admin/use-categories';
+import { useDelete, useTableActions } from '@/hooks';
 import {
   Table,
   TableBody,
@@ -17,10 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { useTableActions } from '@/hooks';
 import { Category, CategoryWithProductCount } from '@/types';
+import { deleteCategory } from '@/app/actions';
 
-export function CategoriesTable() {
+interface Props {
+  data: CategoryWithProductCount[];
+}
+
+export function CategoriesTable({ data }: Props) {
   const {
     editingItem: editingCategory,
     deleteId,
@@ -32,16 +32,11 @@ export function CategoriesTable() {
     handleCloseDelete,
   } = useTableActions<Category>();
 
-  const { data: categories, isPending } = useGetCategories();
-  const { mutate: deleteCategory, isPending: isDeleting } = useDeleteCategory();
-
-  const handleDelete = () => {
-    if (deleteId) {
-      deleteCategory(deleteId, {
-        onSuccess: handleCloseDelete,
-      });
-    }
-  };
+  const { isDeleting, handleDelete } = useDelete(deleteCategory, {
+    onSuccess: handleCloseDelete,
+    successMessage: 'Категория успешно удалена',
+    errorMessage: 'Ошибка удаления категории',
+  });
 
   return (
     <div className='space-y-4'>
@@ -49,15 +44,7 @@ export function CategoriesTable() {
         <AddButton onClick={handleCreate} text='категория' />
       </div>
 
-      {isPending ? (
-        <Card className='border border-gray-200 shadow-md rounded-xl'>
-          <CardContent className='p-6 space-y-4'>
-            {[...Array(5)].map((_, i) => (
-              <Skeleton key={i} className='w-full h-16' />
-            ))}
-          </CardContent>
-        </Card>
-      ) : !categories?.length ? (
+      {data?.length === 0 ? (
         <div className='mt-10 text-2xl text-center text-muted-foreground'>
           Категории не найдены
         </div>
@@ -88,7 +75,7 @@ export function CategoriesTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {categories?.map(
+                {data?.map(
                   (category: CategoryWithProductCount, index: number) => (
                     <TableRow
                       key={category.id}
@@ -160,7 +147,7 @@ export function CategoriesTable() {
       <DeleteDialog
         open={!!deleteId}
         onClose={handleCloseDelete}
-        onConfirm={handleDelete}
+        onConfirm={() => handleDelete(deleteId!)}
         isDeleting={isDeleting}
         title='Удалить категорию'
         description='Вы уверены, что хотите удалить эту категорию? Это действие нельзя отменить.'

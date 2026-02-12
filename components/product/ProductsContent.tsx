@@ -1,17 +1,16 @@
-import { getProducts, GetSearchParams } from '@/server/data/products';
+import { getFilteredProducts, GetSearchParams } from '@/server/data/products';
 import { ProductGroupList } from './ProductGroupList';
 import { ProductNotFound } from './ProductNotFound';
-
 
 interface Props {
   searchParams: GetSearchParams;
 }
 
 export async function ProductsContent({ searchParams }: Props) {
-  const categories = await getProducts(searchParams);
+  const categories = await getFilteredProducts(searchParams);
 
   const hasProducts = categories.some(
-    (category) => category.products.length > 0
+    (category) => category.products.length > 0,
   );
 
   if (!hasProducts) return <ProductNotFound />;
@@ -27,7 +26,7 @@ export async function ProductsContent({ searchParams }: Props) {
               categorySlug={category.slug}
               products={category.products}
             />
-          )
+          ),
       )}
     </>
   );

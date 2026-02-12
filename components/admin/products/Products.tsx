@@ -1,20 +1,40 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useTransition, Fragment } from 'react';
 import { Package, Pizza, ChevronDown, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
-import { Skeleton } from '@/components/ui/skeleton';
 import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 
-import { ProductWithRelations } from '@/types';
+import {
+  Category,
+  Ingredient,
+  PizzaSize,
+  PizzaType,
+  ProductWithRelations,
+} from '@/types';
 import { useTableActions } from '@/hooks';
-import { useDeleteProduct, useGetProducts } from '@/hooks/admin/use-products';
+import { deleteProduct } from '@/app/actions';
+import toast from 'react-hot-toast';
 import { ProductFormDialog } from './ProductFormDialog';
 
-export function Products() {
+interface Props {
+  products: ProductWithRelations[];
+  ingredients: Ingredient[];
+  categories: Category[];
+  sizes: PizzaSize[];
+  types: PizzaType[];
+}
+
+export function Products({
+  products,
+  ingredients,
+  categories,
+  sizes,
+  types,
+}: Props) {
   const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
 
   const {
@@ -28,8 +48,7 @@ export function Products() {
     handleCloseDelete,
   } = useTableActions<ProductWithRelations>();
 
-  const { data: products, isPending } = useGetProducts();
-  const { mutate: deleteProduct, isPending: isDeleting } = useDeleteProduct();
+  const [isDeleting, startTransition] = useTransition();
 
   const toggleRow = (productId: string) => {
     const newExpanded = new Set(expandedRows);
@@ -43,83 +62,24 @@ export function Products() {
 
   const handleDelete = () => {
     if (deleteId) {
-      deleteProduct(deleteId, {
-        onSuccess: handleCloseDelete,
+      startTransition(async () => {
+        try {
+          const result = await deleteProduct(deleteId);
+          if (result.success) {
+            toast.success('Продукт успешно удален');
+            handleCloseDelete();
+          } else {
+            toast.error(result.message || 'Ошибка при удалении продукта');
+          }
+        } catch (error) {
+          console.error('[DELETE_PRODUCT_ERROR]', error);
+          toast.error('Произошла непредвиденная ошибка');
+        }
       });
     }
   };
 
-  if (isPending) {
-    return (
-      <div className='space-y-6'>
-        <div className='flex justify-end'>
-          <AddButton onClick={handleCreate} text='продукт' />
-        </div>
-        <div className='overflow-hidden border rounded-lg'>
-          <table className='w-full'>
-            <thead className='border-b bg-gray-50'>
-              <tr>
-                <th className='w-12 px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'></th>
-                <th className='w-20 px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
-                  Фото
-                </th>
-                <th className='px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
-                  Название
-                </th>
-                <th className='px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
-                  Категория
-                </th>
-                <th className='px-4 py-3 text-xs font-medium text-center text-gray-500 uppercase'>
-                  Варианты
-                </th>
-                <th className='px-4 py-3 text-xs font-medium text-center text-gray-500 uppercase'>
-                  Ингредиенты
-                </th>
-                <th className='px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
-                  Дата
-                </th>
-                <th className='px-4 py-3 text-xs font-medium text-right text-gray-500 uppercase'>
-                  Действия
-                </th>
-              </tr>
-            </thead>
-            <tbody className='divide-y'>
-              {[...Array(5)].map((_, i) => (
-                <tr key={i}>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-6 h-6' />
-                  </td>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-16 h-16' />
-                  </td>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-32 h-4' />
-                  </td>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-20 h-4' />
-                  </td>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-8 h-4 mx-auto' />
-                  </td>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-8 h-4 mx-auto' />
-                  </td>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-24 h-4' />
-                  </td>
-                  <td className='px-4 py-4'>
-                    <Skeleton className='w-16 h-8 ml-auto' />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  }
-
-  if (!products?.length) {
+  if (products?.length === 0) {
     return (
       <div className='space-y-6'>
         <div className='flex justify-end'>
@@ -142,6 +102,10 @@ export function Products() {
           open={isFormOpen}
           onClose={handleCloseForm}
           product={editingProduct}
+          categories={categories}
+          ingredients={ingredients}
+          sizes={sizes}
+          types={types}
         />
       </div>
     );
@@ -190,12 +154,9 @@ export function Products() {
                 product.ingredients && product.ingredients.length > 0;
 
               return (
-                <>
+                <Fragment key={product.id}>
                   {/* Main Row */}
-                  <tr
-                    key={product.id}
-                    className='transition-colors hover:bg-gray-50'
-                  >
+                  <tr className='transition-colors hover:bg-gray-50'>
                     <td className='px-4 py-4'>
                       <Button
                         variant='ghost'
@@ -363,7 +324,7 @@ export function Products() {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </tbody>
@@ -374,6 +335,10 @@ export function Products() {
         open={isFormOpen}
         onClose={handleCloseForm}
         product={editingProduct}
+        categories={categories}
+        ingredients={ingredients}
+        sizes={sizes}
+        types={types}
       />
 
       <DeleteDialog

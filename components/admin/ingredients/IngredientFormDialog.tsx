@@ -1,8 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 import {
   Dialog,
   DialogContent,
@@ -18,93 +15,39 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { ActionResult, Ingredient } from '@/types';
+import { Ingredient } from '@/types';
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
-import { useImageUpload } from '@/hooks';
-import { IngredientFormValues, ingredientSchema } from '../schemas';
+import { useImageUpload, useIngredientForm } from '@/hooks';
 import { FormActions } from '@/components/shared/FormActions';
 import { DecimalInput } from '@/components/shared';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { createIngredient, updateIngredient } from '@/app/actions';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  ingredient?: Ingredient | null;
+  ingredient: Ingredient | null;
 }
 
 export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
-  const [isPending, setIsPending] = useState(false);
-
-  const isEditing = !!ingredient;
-
-  const form = useForm<IngredientFormValues>({
-    resolver: zodResolver(ingredientSchema),
-    defaultValues: {
-      name: '',
-      price: 0,
-      imageUrl: '',
-    },
-  });
-
-  useEffect(() => {
-    if (!open) return;
-
-    form.reset(
-      ingredient
-        ? {
-            name: ingredient.name,
-            price: ingredient.price,
-            imageUrl: ingredient.imageUrl,
-          }
-        : { name: '', price: 0, imageUrl: '' }
-    );
-  }, [open, ingredient, form]);
-
   const {
     previewUrl,
     removeImage,
     cleanupOrphanedImage,
     markAsSubmitted,
     uploadFile,
-    isUploading,
+    isUploading: isImageUploading,
   } = useImageUpload(
     ingredient?.imageUrl,
     open,
     'ingredients',
-    ingredient?.imageUrl
+    ingredient?.imageUrl,
   );
 
-  const onSubmit = async (data: IngredientFormValues) => {
-    setIsPending(true);
-
-    try {
-      let result: ActionResult<Ingredient>;
-      if (isEditing) {
-        result = await updateIngredient(ingredient.id, data);
-      } else {
-        result = await createIngredient(data);
-      }
-
-      if (!result.success) {
-        toast.error(
-          result.message ||
-            `Не удалось ${isEditing ? 'изменить' : 'создать'} ингредиент`
-        );
-        return;
-      }
-      markAsSubmitted();
-      toast.success(`Ингредиент успешно ${isEditing ? 'изменён' : 'создан'}`);
-      onClose();
-    } catch (error) {
-      console.error('[IngredientFormDialog] Error:', error);
-      toast.error(
-        `Не удалось ${isEditing ? 'изменить' : 'создать'} ингредиент`
-      );
-    } finally {
-      setIsPending(false);
-    }
-  };
+  const { isEditing, onSubmit, isPending, form } = useIngredientForm({
+    ingredient,
+    open,
+    onClose,
+    markAsSubmitted,
+  });
 
   const handleClose = async (isOpen: boolean) => {
     if (!isOpen) {
@@ -113,7 +56,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
     onClose();
   };
 
-  const onRemove = async () => {
+  const handleRemoveImage = async () => {
     await removeImage();
     form.setValue('imageUrl', '', { shouldValidate: true });
   };
@@ -135,7 +78,7 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className='sm:max-w-lg'>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать ингредиент' : 'Создать ингредиент'}
@@ -143,11 +86,11 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Image Upload */}
             <FormField
               control={form.control}
-              name="imageUrl"
+              name='imageUrl'
               render={() => (
                 <FormItem>
                   <FormLabel>Изображение</FormLabel>
@@ -155,8 +98,8 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
                     <ImageUploadInput
                       value={previewUrl}
                       onUpload={handleUploadFile}
-                      onRemove={onRemove}
-                      isUploading={isUploading}
+                      onRemove={handleRemoveImage}
+                      isUploading={isImageUploading}
                       disabled={isPending}
                     />
                   </FormControl>
@@ -168,12 +111,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Name Field */}
             <FormField
               control={form.control}
-              name="name"
+              name='name'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название (на русском)</FormLabel>
                   <FormControl>
-                    <Input placeholder="Например: Сыр моцарелла" {...field} />
+                    <Input placeholder='Например: Сыр моцарелла' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -183,12 +126,12 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             {/* Price Field */}
             <FormField
               control={form.control}
-              name="price"
+              name='price'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Цена</FormLabel>
                   <FormControl>
-                    <DecimalInput {...field} placeholder="17" />
+                    <DecimalInput {...field} placeholder='17' />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -196,11 +139,11 @@ export function IngredientFormDialog({ open, onClose, ingredient }: Props) {
             />
 
             {/* Actions */}
-            <div className="flex justify-end gap-2 pt-4">
+            <div className='flex justify-end gap-2 pt-4'>
               <FormActions
                 onCancel={() => handleClose(false)}
                 isPending={isPending}
-                isLoading={isUploading}
+                isLoading={isImageUploading}
                 isEditing={isEditing}
               />
             </div>
