@@ -83,7 +83,6 @@ model Product {
 
   name     String
   imageUrl String
-  isPizza  Boolean @default(false)
 
   productItems ProductItem[]
   ingredients  Ingredient[]
@@ -124,6 +123,7 @@ model Category {
   name String @unique
 
   slug String @unique
+  isPizza Boolean @default(false)
 
   products Product[]
 

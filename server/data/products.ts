@@ -84,10 +84,9 @@ export const getFilteredProducts = async (params: GetSearchParams) => {
     }),
   }));
 
-  // Always put "Пиццы" first
   return sortedCategories.sort((a, b) => {
-    if (a.name === 'Пиццы') return -1;
-    if (b.name === 'Пиццы') return 1;
+    if (a.isPizza && !b.isPizza) return -1;
+    if (!a.isPizza && b.isPizza) return 1;
     return 0;
   });
 };
@@ -97,6 +96,7 @@ export const getProductById = async (id: string) => {
     where: { id },
     include: {
       ingredients: true,
+      category: true,
       productItems: {
         orderBy: { createdAt: 'asc' },
         include: {

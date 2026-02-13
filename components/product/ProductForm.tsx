@@ -37,7 +37,7 @@ export function ProductForm({
     );
   }
 
-  const isPizza = product.isPizza;
+  const isPizza = product.category?.isPizza;
 
   if (isPizza) {
     return (

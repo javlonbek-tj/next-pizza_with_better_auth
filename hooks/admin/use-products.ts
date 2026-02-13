@@ -1,12 +1,7 @@
-// hooks/useProductForm.ts
 import { useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  createProductSchema,
-  ProductFormValues,
-  ProductItemFormValues,
-} from '@/lib';
+import { createProductSchema, ProductFormValues } from '@/lib';
 import toast from 'react-hot-toast';
 import { ActionResult, Product, ProductWithRelations } from '@/types';
 import { createProduct, updateProduct } from '@/app/actions';
@@ -16,6 +11,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   markAsSubmitted: () => void;
+  isPizza: boolean;
 }
 
 export function useProductForm({
@@ -23,13 +19,14 @@ export function useProductForm({
   open,
   onClose,
   markAsSubmitted,
+  isPizza,
 }: Props) {
   const [isPending, setIsPending] = useState(false);
   const isEditing = !!product;
 
   const form = useForm<ProductFormValues>({
     resolver: (values, context, options) => {
-      return zodResolver(createProductSchema(values.isPizza))(
+      return zodResolver(createProductSchema(isPizza))(
         values,
         context,
         options,
@@ -47,14 +44,12 @@ export function useProductForm({
           typeId: null,
         },
       ],
-      isPizza: false,
     },
   });
 
-  const isPizzaWatched = form.watch('isPizza');
-
-  // Reset form when dialog opens/closes or product changes
   useEffect(() => {
+    if (!open) return;
+
     if (product) {
       form.reset({
         name: product.name,
@@ -68,7 +63,6 @@ export function useProductForm({
             sizeId: item.size?.id || null,
             typeId: item.type?.id || null,
           })) || [],
-        isPizza: product.isPizza ?? false,
       });
     } else {
       form.reset({
@@ -83,7 +77,6 @@ export function useProductForm({
             typeId: null,
           },
         ],
-        isPizza: false,
       });
     }
   }, [product, form, open]);
@@ -122,7 +115,6 @@ export function useProductForm({
     isEditing,
     isPending,
     onSubmit,
-    isPizza: isPizzaWatched, // Return the watched value
   };
 }
 
@@ -145,23 +137,6 @@ export function useProductItems(form: UseFormReturn<ProductFormValues>) {
     );
   };
 
-  const updateProductItem = (
-    index: number,
-    updated: Partial<ProductItemFormValues>,
-  ) => {
-    const currentItems = form.getValues('productItems') || [];
-    const updatedItems = currentItems.map((item, i) =>
-      i === index ? { ...item, ...updated } : item,
-    );
-    form.setValue('productItems', updatedItems, { shouldValidate: false });
-
-    if (form.formState.isSubmitted) {
-      setTimeout(() => {
-        form.trigger('productItems');
-      }, 100);
-    }
-  };
-
   const removeProductItem = (index: number) => {
     const currentItems = form.getValues('productItems') || [];
     const updatedItems = currentItems.filter((_, i) => i !== index);
@@ -177,7 +152,6 @@ export function useProductItems(form: UseFormReturn<ProductFormValues>) {
   return {
     productItems,
     addProductItem,
-    updateProductItem,
     removeProductItem,
   };
 }

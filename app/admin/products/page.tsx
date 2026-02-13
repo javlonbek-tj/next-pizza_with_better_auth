@@ -15,6 +15,7 @@ export default async function ProductsPage() {
   const ingredients = await getIngredients();
   const sizes = await getPizzaSizes();
   const types = await getPizzaTypes();
+
   return (
     <div className='space-y-6'>
       <div>

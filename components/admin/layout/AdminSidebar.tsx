@@ -25,11 +25,11 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className='bg-white border-r w-64'>
+    <aside className='w-64 bg-white border-r'>
       <div className='p-6'>
-        <h1 className='font-bold text-gray-800 text-2xl'>Админ-панель</h1>
+        <h1 className='text-2xl font-bold text-gray-800'>Админ-панель</h1>
       </div>
-      <nav className='space-y-2 px-4'>
+      <nav className='px-4 space-y-2'>
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -44,7 +44,7 @@ export function AdminSidebar() {
                 'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
                 isActive
                   ? 'bg-primary text-primary-foreground'
-                  : 'hover:bg-gray-100'
+                  : 'hover:bg-gray-100',
               )}
             >
               <Icon className='w-5 h-5' />

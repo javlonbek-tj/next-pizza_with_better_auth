@@ -22,6 +22,7 @@ export function useCategoryForm({ category, open, onClose }: Props) {
     defaultValues: {
       name: '',
       slug: '',
+      isPizza: false,
     },
   });
 
@@ -29,6 +30,7 @@ export function useCategoryForm({ category, open, onClose }: Props) {
     form.reset({
       name: category?.name || '',
       slug: category?.slug || '',
+      isPizza: category?.isPizza || false,
     });
   }, [category, form, open]);
 

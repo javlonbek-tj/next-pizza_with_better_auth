@@ -1,6 +1,7 @@
 'use client';
 
 import { Plus, Info } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Dialog,
   DialogContent,
@@ -25,7 +26,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
 
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
 import { FormActions } from '@/components/shared/FormActions';
@@ -40,6 +40,7 @@ import {
 import { MultiSelect } from '@/components/shared/MultiSelect';
 import { useProductForm, useProductItems, useImageUpload } from '@/hooks';
 import { ProductItemCard } from './ProductItemCard';
+import { useState, useEffect } from 'react';
 
 interface Props {
   open: boolean;
@@ -68,12 +69,14 @@ export function ProductFormDialog({
     cleanupOrphanedImage,
     markAsSubmitted,
   } = useImageUpload(product?.imageUrl, open, 'products', product?.imageUrl);
+  const [isPizza, setIsPizza] = useState(false);
 
-  const { form, isEditing, isPending, onSubmit, isPizza } = useProductForm({
+  const { form, isEditing, isPending, onSubmit } = useProductForm({
     product,
     open,
     onClose,
     markAsSubmitted,
+    isPizza,
   });
 
   const { productItems, addProductItem, removeProductItem } =
@@ -108,8 +111,29 @@ export function ProductFormDialog({
 
   const handleCategoryChange = (value: string) => {
     const newCategoryId = value === 'none' ? '' : value;
+    const category = categories.find((c) => c.id === newCategoryId);
+    const newIsPizza = category?.isPizza || false;
+
+    setIsPizza(newIsPizza);
     form.setValue('categoryId', newCategoryId, { shouldValidate: true });
+
+    form.setValue('ingredientIds', []);
+    form.setValue('productItems', [
+      {
+        price: 0,
+        sizeId: null,
+        typeId: null,
+      },
+    ]);
   };
+
+  useEffect(() => {
+    if (open && product) {
+      setIsPizza(product.category?.isPizza || false);
+    } else if (open && !product) {
+      setIsPizza(false);
+    }
+  }, [open, product]);
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
@@ -154,32 +178,6 @@ export function ProductFormDialog({
                 )}
               />
 
-              {/* Is Pizza Toggle */}
-              <FormField
-                control={form.control}
-                name='isPizza'
-                render={({ field }) => (
-                  <FormItem className='flex flex-row items-center p-4 space-x-3 space-y-0 border rounded-md bg-gray-50/50'>
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <div className='space-y-1 leading-none'>
-                      <FormLabel className='text-base font-semibold cursor-pointer'>
-                        Это пицца
-                      </FormLabel>
-                      <FormDescription>
-                        Включите, если продукт является пиццей (будут доступны
-                        размеры и типы теста)
-                      </FormDescription>
-                    </div>
-                  </FormItem>
-                )}
-              />
-
               {/* Name */}
               <FormField
                 control={form.control}
@@ -203,46 +201,37 @@ export function ProductFormDialog({
                 )}
               />
 
-              {/* Category - Only shown if not pizza */}
-              {!form.watch('isPizza') && (
-                <FormField
-                  control={form.control}
-                  name='categoryId'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className='text-base'>
-                        Категория <span className='text-red-500'>*</span>
-                      </FormLabel>
-                      <Select
-                        value={field.value ?? 'none'}
-                        onValueChange={handleCategoryChange}
-                        disabled={isPending || !categories?.length}
-                      >
-                        <FormControl>
-                          <SelectTrigger className='text-base'>
-                            <SelectValue placeholder='Выберите категорию' />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value='none'>
-                            Выберите категорию
+              <FormField
+                control={form.control}
+                name='categoryId'
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className='text-base'>
+                      Категория <span className='text-red-500'>*</span>
+                    </FormLabel>
+                    <Select
+                      value={field.value || 'none'}
+                      onValueChange={handleCategoryChange}
+                      disabled={isPending || !categories?.length}
+                    >
+                      <FormControl>
+                        <SelectTrigger className='text-base'>
+                          <SelectValue placeholder='Выберите категорию' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value='none'>Выберите категорию</SelectItem>
+                        {categories.map((category: Category) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
                           </SelectItem>
-                          {categories
-                            ?.filter(
-                              (cat) => cat.name.toLowerCase() !== 'пиццы',
-                            )
-                            .map((category: Category) => (
-                              <SelectItem key={category.id} value={category.id}>
-                                {category.name}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className='text-red-500' />
-                    </FormItem>
-                  )}
-                />
-              )}
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage className='text-red-500' />
+                  </FormItem>
+                )}
+              />
 
               {/* Ingredients */}
               <FormField
@@ -278,37 +267,46 @@ export function ProductFormDialog({
 
             {/* Product Items Section */}
             <div className='space-y-4'>
-              {/* Only show button container for pizza category */}
-              {isPizza && (
-                <div className='flex justify-end'>
-                  <Button
-                    type='button'
-                    variant='default'
-                    size='sm'
-                    onClick={addProductItem}
-                    disabled={isPending}
-                    className='cursor-pointer'
+              <AnimatePresence>
+                {isPizza && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.2, ease: 'easeOut' }}
+                    className='flex justify-end overflow-hidden'
                   >
-                    <Plus className='w-4 h-4 mr-2' />
-                    Добавить вариант
-                  </Button>
-                </div>
-              )}
+                    <Button
+                      type='button'
+                      variant='default'
+                      size='sm'
+                      onClick={addProductItem}
+                      disabled={isPending}
+                      className='cursor-pointer'
+                    >
+                      <Plus className='w-4 h-4 mr-2' />
+                      Добавить вариант
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <div className={isPizza ? 'space-y-3' : ''}>
-                {productItems.map((_, index: number) => (
-                  <ProductItemCard
-                    key={index}
-                    form={form}
-                    index={index}
-                    pizzaSizes={sizes || []}
-                    pizzaTypes={types || []}
-                    onRemove={removeProductItem}
-                    disabled={isPending}
-                    canRemove={isPizza ? productItems.length > 1 : false}
-                    isPizzaCategory={isPizza}
-                  />
-                ))}
+                <AnimatePresence mode='popLayout'>
+                  {productItems.map((_, index: number) => (
+                    <ProductItemCard
+                      key={index}
+                      form={form}
+                      index={index}
+                      pizzaSizes={sizes || []}
+                      pizzaTypes={types || []}
+                      onRemove={removeProductItem}
+                      disabled={isPending}
+                      canRemove={isPizza ? productItems.length > 1 : false}
+                      isPizza={isPizza}
+                    />
+                  ))}
+                </AnimatePresence>
               </div>
             </div>
 

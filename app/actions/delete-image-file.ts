@@ -20,10 +20,8 @@ export async function deleteImageFile(imageUrl: string) {
 
     if (existsSync(filepath)) {
       await unlink(filepath);
-      console.log('[IMAGE_DELETE] Deleted:', filepath);
     }
   } catch (error) {
     console.error('[IMAGE_DELETE_ERROR]', error);
-    // Don't throw error - we don't want to fail the operation if image deletion fails
   }
 }

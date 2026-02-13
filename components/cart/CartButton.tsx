@@ -20,15 +20,10 @@ export function CartButton({ className }: Props) {
     return <CartButtonSkeleton />;
   }
 
-  console.log(cartItems);
-
   if (isError) {
     return (
-      <Button
-        className={cn('flex items-center min-w-[120px]', className)}
-        disabled
-      >
-        <span className="text-red-500 text-sm">Ошибка</span>
+      <Button className={cn('flex items-center min-w-30', className)} disabled>
+        <span className='text-sm text-red-500'>Ошибка</span>
       </Button>
     );
   }
@@ -40,21 +35,21 @@ export function CartButton({ className }: Props) {
     <CartDrawer>
       <Button
         className={cn(
-          'group relative flex items-center min-w-[120px] cursor-pointer',
-          className
+          'group relative flex items-center min-w-30 cursor-pointer',
+          className,
         )}
       >
         {totalAmount > 0 && (
           <>
             <b>{totalAmount} ₽</b>
-            <span className="bg-gray-100 mx-1 w-px h-4" />
+            <span className='w-px h-4 mx-1 bg-gray-100' />
           </>
         )}
-        <span className="flex items-center gap-1 group-hover:opacity-0 transition duration-300">
+        <span className='flex items-center gap-1 transition duration-300 group-hover:opacity-0'>
           <ShoppingCart />
           <span>{totalItems}</span>
         </span>
-        <ArrowRight className="right-5 absolute opacity-0 group-hover:opacity-100 transition -translate-x-2 group-hover:translate-x-0 duration-300" />
+        <ArrowRight className='absolute transition duration-300 -translate-x-2 opacity-0 right-5 group-hover:opacity-100 group-hover:translate-x-0' />
       </Button>
     </CartDrawer>
   );

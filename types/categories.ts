@@ -2,6 +2,7 @@ export type Category = {
   id: string;
   name: string;
   slug: string;
+  isPizza: boolean;
   createdAt: Date;
   updatedAt: Date;
 };

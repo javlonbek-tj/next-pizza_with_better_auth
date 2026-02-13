@@ -1,5 +1,6 @@
 'use client';
 import { Trash2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 
 import {
@@ -19,7 +20,7 @@ import {
 } from '@/components/ui/form';
 import { PizzaSize, PizzaType } from '@/types';
 import { UseFormReturn } from 'react-hook-form';
-import { ProductFormValues } from '../schemas/product-schema';
+import { ProductFormValues } from '@/lib';
 import { DecimalInput } from '@/components/shared';
 
 interface ProductItemCardProps {
@@ -30,7 +31,7 @@ interface ProductItemCardProps {
   onRemove: (index: number) => void;
   disabled?: boolean;
   canRemove?: boolean;
-  isPizzaCategory?: boolean;
+  isPizza?: boolean;
 }
 
 export function ProductItemCard({
@@ -41,166 +42,163 @@ export function ProductItemCard({
   onRemove,
   disabled,
   canRemove = true,
-  isPizzaCategory = false,
+  isPizza = false,
 }: ProductItemCardProps) {
-  // --- Non-pizza: inline ---
-  if (!isPizzaCategory) {
+  if (!isPizza) {
     return (
-      <div className="flex items-end gap-3">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.2 }}
+      >
         <FormField
           control={form.control}
           name={`productItems.${index}.price`}
           render={({ field }) => {
             return (
-              <FormItem className="flex-1">
-                <FormLabel className="font-medium text-md">
-                  Цена (₽) <span className="text-red-500">*</span>
+              <FormItem className='flex-1'>
+                <FormLabel className='font-medium text-md'>
+                  Цена (₽) <span className='text-red-500'>*</span>
                 </FormLabel>
                 <FormControl>
-                  <DecimalInput {...field} className="max-w-xs" />
+                  <DecimalInput {...field} className='max-w-xs' />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             );
           }}
         />
-
-        {canRemove && (
-          <Button
-            type="button"
-            variant="destructive"
-            size="icon"
-            onClick={() => onRemove(index)}
-            disabled={disabled}
-            className="mb-1"
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        )}
-      </div>
+      </motion.div>
     );
   }
 
-  // --- Pizza category card ---
   return (
-    <Card className="space-y-4 bg-white shadow-sm p-4 border rounded-lg">
-      <div className="flex justify-between items-center">
-        <h4 className="font-medium text-base">Вариант #{index + 1}</h4>
-        {canRemove && (
-          <Button
-            type="button"
-            variant="destructive"
-            size="sm"
-            onClick={() => onRemove(index)}
-            disabled={disabled}
-          >
-            <Trash2 className="w-4 h-4" />
-          </Button>
-        )}
-      </div>
-
-      <div className="gap-4 grid grid-cols-1 sm:grid-cols-3">
-        {/* Size */}
-        <FormField
-          control={form.control}
-          name={`productItems.${index}.sizeId`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Размер <span className="text-red-500">*</span>
-              </FormLabel>
-              <Select
-                value={field.value ?? 'none'}
-                onValueChange={(val) =>
-                  field.onChange(val === 'none' ? null : val)
-                }
-                disabled={disabled}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите размер" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem
-                    value="none"
-                    disabled
-                    className="text-muted-foreground"
-                  >
-                    Выберите размер
-                  </SelectItem>
-                  {pizzaSizes.map((size) => (
-                    <SelectItem key={size.id} value={size.id}>
-                      {size.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
+    <motion.div
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+    >
+      <Card className='p-4 space-y-4 bg-white border rounded-lg shadow-sm'>
+        <div className='flex items-center justify-between'>
+          <h4 className='text-base font-medium'>Вариант #{index + 1}</h4>
+          {canRemove && (
+            <Button
+              type='button'
+              variant='destructive'
+              size='sm'
+              onClick={() => onRemove(index)}
+              disabled={disabled}
+            >
+              <Trash2 className='w-4 h-4' />
+            </Button>
           )}
-        />
+        </div>
 
-        {/* Type */}
-        <FormField
-          control={form.control}
-          name={`productItems.${index}.typeId`}
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>
-                Тип теста <span className="text-red-500">*</span>
-              </FormLabel>
-              <Select
-                value={field.value ?? 'none'}
-                onValueChange={(val) =>
-                  field.onChange(val === 'none' ? null : val)
-                }
-                disabled={disabled}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Выберите тип теста" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem
-                    value="none"
-                    disabled
-                    className="text-muted-foreground"
-                  >
-                    Выберите тип теста
-                  </SelectItem>
-                  {pizzaTypes.map((type) => (
-                    <SelectItem key={type.id} value={type.id}>
-                      {type.type}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Price */}
-        <FormField
-          control={form.control}
-          name={`productItems.${index}.price`}
-          render={({ field }) => {
-            return (
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
+          {/* Size */}
+          <FormField
+            control={form.control}
+            name={`productItems.${index}.sizeId`}
+            render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Цена (₽) <span className="text-red-500">*</span>
+                  Размер <span className='text-red-500'>*</span>
                 </FormLabel>
-                <FormControl>
-                  <DecimalInput {...field} className="max-w-xs" />
-                </FormControl>
+                <Select
+                  value={field.value ?? 'none'}
+                  onValueChange={(val) =>
+                    field.onChange(val === 'none' ? null : val)
+                  }
+                  disabled={disabled}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Выберите размер' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem
+                      value='none'
+                      disabled
+                      className='text-muted-foreground'
+                    >
+                      Выберите размер
+                    </SelectItem>
+                    {pizzaSizes.map((size) => (
+                      <SelectItem key={size.id} value={size.id}>
+                        {size.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
-            );
-          }}
-        />
-      </div>
-    </Card>
+            )}
+          />
+
+          {/* Type */}
+          <FormField
+            control={form.control}
+            name={`productItems.${index}.typeId`}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Тип теста <span className='text-red-500'>*</span>
+                </FormLabel>
+                <Select
+                  value={field.value ?? 'none'}
+                  onValueChange={(val) =>
+                    field.onChange(val === 'none' ? null : val)
+                  }
+                  disabled={disabled}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder='Выберите тип теста' />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem
+                      value='none'
+                      disabled
+                      className='text-muted-foreground'
+                    >
+                      Выберите тип теста
+                    </SelectItem>
+                    {pizzaTypes.map((type) => (
+                      <SelectItem key={type.id} value={type.id}>
+                        {type.type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Price */}
+          <FormField
+            control={form.control}
+            name={`productItems.${index}.price`}
+            render={({ field }) => {
+              return (
+                <FormItem>
+                  <FormLabel>
+                    Цена (₽) <span className='text-red-500'>*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <DecimalInput {...field} className='max-w-xs' />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              );
+            }}
+          />
+        </div>
+      </Card>
+    </motion.div>
   );
 }

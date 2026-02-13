@@ -17,7 +17,7 @@ export async function createCategory(
     };
   }
 
-  const { name, slug } = validationResult.data;
+  const { name, slug, isPizza } = validationResult.data;
 
   try {
     const existingCategory = await prisma.category.findFirst({
@@ -37,7 +37,7 @@ export async function createCategory(
     }
 
     const category = await prisma.category.create({
-      data: { name, slug },
+      data: { name, slug, isPizza },
     });
 
     revalidatePath('/admin/categories');
@@ -68,7 +68,7 @@ export async function updateCategory(
     };
   }
 
-  const { name, slug } = validationResult.data;
+  const { name, slug, isPizza } = validationResult.data;
 
   try {
     const existingCategory = await prisma.category.findFirst({
@@ -90,7 +90,7 @@ export async function updateCategory(
 
     const category = await prisma.category.update({
       where: { id },
-      data: { name, slug },
+      data: { name, slug, isPizza },
     });
 
     revalidatePath('/admin/categories');

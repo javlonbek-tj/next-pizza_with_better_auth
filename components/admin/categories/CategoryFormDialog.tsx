@@ -15,7 +15,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from '@/components/ui/form';
+import { Checkbox } from '@/components/ui/checkbox';
 import { useCategoryForm } from '@/hooks';
 import { FormActions } from '@/components/shared/FormActions';
 
@@ -85,6 +87,32 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
                     </FormControl>
                   </div>
                   <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Is Pizza Toggle */}
+            <FormField
+              control={form.control}
+              name='isPizza'
+              render={({ field }) => (
+                <FormItem className='flex flex-row items-center p-4 space-x-3 space-y-0 border rounded-md bg-gray-50/50'>
+                  <FormControl>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <div className='space-y-1 leading-none'>
+                    <FormLabel className='text-base font-semibold cursor-pointer'>
+                      Категория пиццы
+                    </FormLabel>
+                    <FormDescription>
+                      Включите, если эта категория предназначена для пицц (будут
+                      доступны специальные настройки)
+                    </FormDescription>
+                  </div>
                 </FormItem>
               )}
             />

@@ -20,6 +20,7 @@ export const categorySchema = z.object({
       /^[a-z0-9-]+$/,
       'Slug может содержать только латинские буквы в нижнем регистре, цифры и дефисы',
     ),
+  isPizza: z.boolean(),
 });
 
 export type CategoryFormValues = z.infer<typeof categorySchema>;

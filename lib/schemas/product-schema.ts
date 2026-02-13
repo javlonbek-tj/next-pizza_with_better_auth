@@ -50,7 +50,6 @@ export const createProductSchema = (isPizza: boolean) => {
     categoryId: z.string().trim().min(1, 'Выберите категорию'),
     ingredientIds: z.array(z.string()).min(0),
     productItems: productItemsValidation,
-    isPizza: z.boolean(),
   });
 };
 

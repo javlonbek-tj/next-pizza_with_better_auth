@@ -6,7 +6,6 @@ export type Product = {
   id: string;
   name: string;
   imageUrl: string;
-  isPizza: boolean;
   categoryId: string;
   createdAt: Date;
   updatedAt: Date;
