@@ -137,7 +137,7 @@ export function ProductFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-thin'>
+      <DialogContent className='sm:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin'>
         <DialogHeader>
           <DialogTitle className='text-2xl font-bold'>
             {isEditing ? 'Редактировать продукт' : 'Создать новый продукт'}
@@ -193,7 +193,7 @@ export function ProductFormDialog({
                         {...field}
                         disabled={isPending}
                         autoComplete='off'
-                        className='text-base'
+                        className='h-10 text-base'
                       />
                     </FormControl>
                     <FormMessage />
@@ -215,7 +215,7 @@ export function ProductFormDialog({
                       disabled={isPending || !categories?.length}
                     >
                       <FormControl>
-                        <SelectTrigger className='text-base'>
+                        <SelectTrigger className='text-base h-10! w-full'>
                           <SelectValue placeholder='Выберите категорию' />
                         </SelectTrigger>
                       </FormControl>
@@ -252,6 +252,7 @@ export function ProductFormDialog({
                         onChange={field.onChange}
                         placeholder='Выберите ингредиенты'
                         disabled={isPending || !ingredients?.length}
+                        className='h-10! w-full'
                       />
                     </FormControl>
                     <FormDescription>

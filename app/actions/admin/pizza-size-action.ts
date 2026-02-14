@@ -104,8 +104,9 @@ export async function updatePizzaSize(
 
 export async function deletePizzaSize(id: string): Promise<ActionResult<null>> {
   try {
-    await prisma.pizzaSize.delete({
+    await prisma.pizzaSize.update({
       where: { id },
+      data: { isActive: false },
     });
 
     revalidatePath('/admin/pizza-sizes');

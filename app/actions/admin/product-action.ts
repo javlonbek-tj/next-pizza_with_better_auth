@@ -85,8 +85,9 @@ export async function deleteProduct(id: string): Promise<ActionResult<null>> {
       };
     }
 
-    await prisma.product.delete({
+    await prisma.product.update({
       where: { id },
+      data: { isActive: false },
     });
 
     revalidatePath('/admin/products');
@@ -153,51 +154,9 @@ export async function updateProduct(
       };
     }
 
-    // Check if any productItems are in orders
-    const hasOrderReferences = existingProduct.productItems.some(
-      (item) => item.orderItems.length > 0,
-    );
-
-    if (hasOrderReferences && !isPizza) {
-      return {
-        success: false,
-        message:
-          'Невозможно изменить продукт: он содержит варианты, которые используются в заказах',
-      };
-    }
-
-    // Prepare productItems data
-    let productItemsData = {};
-
-    if (isPizza) {
-      // For pizza products, update productItems
-      if (hasOrderReferences) {
-        // If there are order references, we can't use deleteMany
-        // Instead, we need to handle it more carefully
-        return {
-          success: false,
-          message:
-            'Невозможно изменить варианты продукта: они используются в заказах. Пожалуйста, создайте новый продукт.',
-        };
-      } else {
-        // Safe to delete and recreate
-        productItemsData = {
-          deleteMany: {},
-          create: productItems.map((item: ProductItemFormValues) => ({
-            price: item.price,
-            sizeId: item.sizeId,
-            typeId: item.typeId,
-          })),
-        };
-      }
-    } else {
-      // For non-pizza products, only delete if no order references
-      if (!hasOrderReferences) {
-        productItemsData = {
-          deleteMany: {},
-        };
-      }
-    }
+    // Simplified productItems update logic: soft delete all existing items and create new ones
+    // Or we could intelligently upsert, but given the user's request, soft delete is safer.
+    // However, to keep it simple and clean as per previous logic, we'll mark old items as inactive.
 
     const updatedProduct = await prisma.product.update({
       where: { id },
@@ -208,9 +167,17 @@ export async function updateProduct(
         ingredients: {
           set: ingredientIds.map((id: string) => ({ id })),
         },
-        ...(Object.keys(productItemsData).length > 0 && {
-          productItems: productItemsData,
-        }),
+        productItems: {
+          updateMany: {
+            where: { productId: id },
+            data: { isActive: false },
+          },
+          create: productItems.map((item: ProductItemFormValues) => ({
+            price: item.price,
+            sizeId: item.sizeId,
+            typeId: item.typeId,
+          })),
+        },
       },
       include: {
         category: true,

@@ -104,8 +104,9 @@ export async function updatePizzaType(
 
 export async function deletePizzaType(id: string): Promise<ActionResult<null>> {
   try {
-    await prisma.pizzaType.delete({
+    await prisma.pizzaType.update({
       where: { id },
+      data: { isActive: false },
     });
 
     revalidatePath('/admin/pizza-types');

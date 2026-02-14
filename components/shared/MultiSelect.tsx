@@ -46,13 +46,13 @@ export function MultiSelect({
   const selectedOptions = options.filter((opt) => value.includes(opt.value));
 
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className='space-y-2'>
       <Select
         value='none'
         onValueChange={handleSelect}
         disabled={disabled || availableOptions.length === 0}
       >
-        <SelectTrigger>
+        <SelectTrigger className={className}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
@@ -82,7 +82,7 @@ export function MultiSelect({
                 disabled={disabled}
                 className='ml-1 hover:text-destructive'
               >
-                <X className='h-3 w-3' />
+                <X className='w-3 h-3' />
               </button>
             </Badge>
           ))}

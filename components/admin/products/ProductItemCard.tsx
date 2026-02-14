@@ -62,7 +62,7 @@ export function ProductItemCard({
                   Цена (₽) <span className='text-red-500'>*</span>
                 </FormLabel>
                 <FormControl>
-                  <DecimalInput {...field} className='max-w-xs' />
+                  <DecimalInput {...field} className='h-10 max-w-xs' />
                 </FormControl>
                 <FormMessage />
               </FormItem>

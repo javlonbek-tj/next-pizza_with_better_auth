@@ -24,17 +24,20 @@ export const getFilteredProducts = async (params: GetSearchParams) => {
   const priceTo = Number(params.priceTo) || DEFAULT_PRICE_TO;
 
   const categories = await prisma.category.findMany({
+    where: { isActive: true },
     include: {
       products: {
         where: {
+          isActive: true,
           ...(ingredients &&
             ingredients.length > 0 && {
               ingredients: {
-                some: { id: { in: ingredients } },
+                some: { id: { in: ingredients }, isActive: true },
               },
             }),
           productItems: {
             some: {
+              isActive: true,
               price: { gte: priceFrom, lte: priceTo },
               ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }),
               ...(pizzaTypes &&
@@ -43,9 +46,12 @@ export const getFilteredProducts = async (params: GetSearchParams) => {
           },
         },
         include: {
-          ingredients: true,
+          ingredients: {
+            where: { isActive: true },
+          },
           productItems: {
             where: {
+              isActive: true,
               price: { gte: priceFrom, lte: priceTo },
               ...(sizes && sizes.length > 0 && { sizeId: { in: sizes } }),
               ...(pizzaTypes &&
@@ -93,11 +99,14 @@ export const getFilteredProducts = async (params: GetSearchParams) => {
 
 export const getProductById = async (id: string) => {
   return await prisma.product.findUnique({
-    where: { id },
+    where: { id, isActive: true },
     include: {
-      ingredients: true,
+      ingredients: {
+        where: { isActive: true },
+      },
       category: true,
       productItems: {
+        where: { isActive: true },
         orderBy: { createdAt: 'asc' },
         include: {
           size: true,
@@ -110,10 +119,14 @@ export const getProductById = async (id: string) => {
 
 export const getAllProducts = async () => {
   return await prisma.product.findMany({
+    where: { isActive: true },
     include: {
       category: true,
-      ingredients: true,
+      ingredients: {
+        where: { isActive: true },
+      },
       productItems: {
+        where: { isActive: true },
         include: {
           size: true,
           type: true,

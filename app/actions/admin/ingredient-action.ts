@@ -105,8 +105,9 @@ export async function deleteIngredient(
   id: string,
 ): Promise<ActionResult<null>> {
   try {
-    const ingredient = await prisma.ingredient.delete({
+    const ingredient = await prisma.ingredient.update({
       where: { id },
+      data: { isActive: false },
     });
 
     await deleteImageFile(ingredient.imageUrl);

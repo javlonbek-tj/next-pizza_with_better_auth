@@ -110,19 +110,9 @@ export async function updateCategory(
 
 export async function deleteCategory(id: string): Promise<ActionResult<null>> {
   try {
-    const productsCount = await prisma.product.count({
-      where: { categoryId: id },
-    });
-
-    if (productsCount > 0) {
-      return {
-        success: false,
-        message: 'Can not delete category with products',
-      };
-    }
-
-    await prisma.category.delete({
+    await prisma.category.update({
       where: { id },
+      data: { isActive: false },
     });
 
     revalidatePath('/admin/categories');
