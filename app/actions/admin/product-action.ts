@@ -1,10 +1,6 @@
 'use server';
 
-import {
-  createProductSchema,
-  ProductFormValues,
-  ProductItemFormValues,
-} from '@/lib';
+import { createProductSchema, ProductFormValues } from '@/lib';
 import { prisma } from '@/server';
 import { ActionResult, Product } from '@/types';
 import { revalidatePath } from 'next/cache';
@@ -85,11 +81,16 @@ export async function deleteProduct(id: string): Promise<ActionResult<null>> {
       };
     }
 
-    await prisma.product.update({
-      where: { id },
-      data: { isActive: false },
-    });
-
+    await prisma.$transaction([
+      prisma.product.update({
+        where: { id },
+        data: { isActive: false },
+      }),
+      prisma.productItem.updateMany({
+        where: { productId: id },
+        data: { isActive: false },
+      }),
+    ]);
     revalidatePath('/admin/products');
 
     return {
@@ -139,11 +140,7 @@ export async function updateProduct(
       where: { id },
       select: {
         imageUrl: true,
-        productItems: {
-          include: {
-            orderItems: true, // Check if productItems are in orders
-          },
-        },
+        categoryId: true,
       },
     });
 
@@ -154,41 +151,76 @@ export async function updateProduct(
       };
     }
 
-    // Simplified productItems update logic: soft delete all existing items and create new ones
-    // Or we could intelligently upsert, but given the user's request, soft delete is safer.
-    // However, to keep it simple and clean as per previous logic, we'll mark old items as inactive.
+    if (existingProduct.categoryId !== categoryId) {
+      return {
+        success: false,
+        message: 'Категорию нельзя изменить при редактировании',
+      };
+    }
 
-    const updatedProduct = await prisma.product.update({
-      where: { id },
-      data: {
-        name,
-        imageUrl,
-        categoryId,
-        ingredients: {
-          set: ingredientIds.map((id: string) => ({ id })),
+    const itemsWithId = productItems.filter((item) => item.id);
+    const itemsWithoutId = productItems.filter((item) => !item.id);
+    const itemIdsToKeep = itemsWithId.map((item) => item.id as string);
+
+    const updatedProduct = await prisma.$transaction(async (tx) => {
+      // 1. Deactivate items not in the list
+      await tx.productItem.updateMany({
+        where: {
+          productId: id,
+          id: { notIn: itemIdsToKeep },
+          isActive: true,
         },
-        productItems: {
-          updateMany: {
-            where: { productId: id },
-            data: { isActive: false },
+        data: { isActive: false },
+      });
+
+      // 2. Update existing items
+      for (const item of itemsWithId) {
+        await tx.productItem.update({
+          where: { id: item.id },
+          data: {
+            price: item.price,
+            sizeId: item.sizeId,
+            typeId: item.typeId,
+            isActive: true,
           },
-          create: productItems.map((item: ProductItemFormValues) => ({
+        });
+      }
+
+      // 3. Create new items
+      if (itemsWithoutId.length > 0) {
+        await tx.productItem.createMany({
+          data: itemsWithoutId.map((item) => ({
+            productId: id,
             price: item.price,
             sizeId: item.sizeId,
             typeId: item.typeId,
           })),
-        },
-      },
-      include: {
-        category: true,
-        ingredients: true,
-        productItems: {
-          include: {
-            size: true,
-            type: true,
+        });
+      }
+
+      // 4. Update product main fields and return with relations
+      return await tx.product.update({
+        where: { id },
+        data: {
+          name,
+          imageUrl,
+          ingredients: {
+            set: ingredientIds.map((id: string) => ({ id })),
           },
         },
-      },
+        include: {
+          category: true,
+          ingredients: true,
+          productItems: {
+            where: { isActive: true },
+            include: {
+              size: true,
+              type: true,
+            },
+            orderBy: { createdAt: 'asc' },
+          },
+        },
+      });
     });
 
     // Delete old image if it changed

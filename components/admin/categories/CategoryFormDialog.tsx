@@ -39,7 +39,7 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-lg'>
+      <DialogContent className="sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать категорию' : 'Создать категорию'}
@@ -47,20 +47,20 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             {/* Name Field */}
             <FormField
               control={form.control}
-              name='name'
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Название</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder='Введите название категории на кириллице'
+                      placeholder="Введите название категории на кириллице"
                       {...field}
                       onChange={(e) => handleNameChange(e.target.value)}
-                      autoComplete='off'
+                      autoComplete="off"
                     />
                   </FormControl>
                   <FormMessage />
@@ -71,18 +71,18 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
             {/* Slug Field */}
             <FormField
               control={form.control}
-              name='slug'
+              name="slug"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Slug (URL)</FormLabel>
-                  <div className='flex gap-2'>
+                  <div className="flex gap-2">
                     <FormControl>
                       <Input
-                        placeholder='автоматически генерируется'
+                        placeholder="автоматически генерируется"
                         {...field}
                         onChange={(e) => handleSlugChange(e.target.value)}
-                        className='font-mono text-sm'
-                        autoComplete='off'
+                        className="font-mono text-sm"
+                        autoComplete="off"
                       />
                     </FormControl>
                   </div>
@@ -94,9 +94,9 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
             {/* Is Pizza Toggle */}
             <FormField
               control={form.control}
-              name='isPizza'
+              name="isPizza"
               render={({ field }) => (
-                <FormItem className='flex flex-row items-center p-4 space-x-3 space-y-0 border rounded-md bg-gray-50/50'>
+                <FormItem className="flex flex-row items-center space-x-3 space-y-0 bg-gray-50/50 p-4 border rounded-md">
                   <FormControl>
                     <Checkbox
                       checked={field.value}
@@ -104,8 +104,8 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
                       disabled={isPending}
                     />
                   </FormControl>
-                  <div className='space-y-1 leading-none'>
-                    <FormLabel className='text-base font-semibold cursor-pointer'>
+                  <div className="space-y-1 leading-none">
+                    <FormLabel className="font-semibold text-base cursor-pointer">
                       Категория пиццы
                     </FormLabel>
                     <FormDescription>
@@ -119,18 +119,18 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
 
             {/* Preview */}
             {form.watch('slug') && (
-              <div className='p-3 border border-gray-200 rounded-lg bg-gray-50'>
-                <p className='mb-1 text-xs font-medium text-gray-600'>
+              <div className="bg-gray-50 p-3 border border-gray-200 rounded-lg">
+                <p className="mb-1 font-medium text-gray-600 text-xs">
                   Предпросмотр URL:
                 </p>
-                <code className='font-mono text-sm text-violet-600'>
+                <code className="font-mono text-violet-600 text-sm">
                   /categories/{form.watch('slug')}
                 </code>
               </div>
             )}
 
             {/* Actions */}
-            <div className='flex justify-end gap-2 pt-4'>
+            <div className="flex justify-end gap-2 pt-4">
               <FormActions
                 onCancel={onClose}
                 isEditing={isEditing}

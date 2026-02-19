@@ -3,7 +3,7 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createProductSchema, ProductFormValues } from '@/lib';
 import toast from 'react-hot-toast';
-import { ActionResult, Product, ProductWithRelations } from '@/types';
+import { ActionResult, Product, ProductWithRelations, Category } from '@/types';
 import { createProduct, updateProduct } from '@/app/actions';
 
 interface Props {
@@ -11,7 +11,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   markAsSubmitted: () => void;
-  isPizza: boolean;
+  categories: Category[];
 }
 
 export function useProductForm({
@@ -19,9 +19,10 @@ export function useProductForm({
   open,
   onClose,
   markAsSubmitted,
-  isPizza,
+  categories,
 }: Props) {
   const [isPending, setIsPending] = useState(false);
+  const [isPizza, setIsPizza] = useState(false);
   const isEditing = !!product;
 
   const form = useForm<ProductFormValues>({
@@ -46,6 +47,15 @@ export function useProductForm({
       ],
     },
   });
+
+  // Initialize isPizza state when dialog opens
+  useEffect(() => {
+    if (open && product) {
+      setIsPizza(product.category?.isPizza || false);
+    } else if (open && !product) {
+      setIsPizza(false);
+    }
+  }, [open, product]);
 
   useEffect(() => {
     if (!open) return;
@@ -81,6 +91,23 @@ export function useProductForm({
     }
   }, [product, form, open]);
 
+  const handleCategoryChange = (value: string) => {
+    const newCategoryId = value === 'none' ? '' : value;
+    const category = categories.find((c) => c.id === newCategoryId);
+    const newIsPizza = category?.isPizza || false;
+
+    setIsPizza(newIsPizza);
+    form.setValue('categoryId', newCategoryId, { shouldValidate: true });
+    form.setValue('ingredientIds', []);
+    form.setValue('productItems', [
+      {
+        price: 0,
+        sizeId: null,
+        typeId: null,
+      },
+    ]);
+  };
+
   const onSubmit = async (data: ProductFormValues) => {
     setIsPending(true);
     try {
@@ -114,6 +141,8 @@ export function useProductForm({
     form,
     isEditing,
     isPending,
+    isPizza,
+    handleCategoryChange,
     onSubmit,
   };
 }

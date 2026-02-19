@@ -9,6 +9,7 @@ import {
   FolderTree,
   Settings,
   ShoppingCart,
+  Home,
 } from 'lucide-react';
 
 const navItems = [
@@ -25,11 +26,11 @@ export function AdminSidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className='w-64 bg-white border-r'>
-      <div className='p-6'>
-        <h1 className='text-2xl font-bold text-gray-800'>Админ-панель</h1>
+    <aside className="bg-white border-r w-64">
+      <div className="p-6">
+        <h1 className="font-bold text-gray-800 text-2xl">Админ-панель</h1>
       </div>
-      <nav className='px-4 space-y-2'>
+      <nav className="space-y-2 px-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -47,12 +48,21 @@ export function AdminSidebar() {
                   : 'hover:bg-gray-100',
               )}
             >
-              <Icon className='w-5 h-5' />
-              <span className='font-medium'>{item.label}</span>
+              <Icon className="w-5 h-5" />
+              <span className="font-medium">{item.label}</span>
             </Link>
           );
         })}
       </nav>
+      <div className="mt-auto p-4 border-t">
+        <Link
+          href="/"
+          className="flex items-center gap-3 hover:bg-gray-100 px-4 py-3 rounded-lg text-gray-600 transition-colors"
+        >
+          <Home className="w-5 h-5" />
+          <span className="font-medium">На главную</span>
+        </Link>
+      </div>
     </aside>
   );
 }

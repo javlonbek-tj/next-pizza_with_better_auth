@@ -1,4 +1,3 @@
-
 'use client';
 
 import {
@@ -16,9 +15,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { OrderStatusBadge } from './OrderStatusBadge';
-import { useUpdateOrderStatus } from '@/hooks/admin/use-orders';
+import { useUpdateOrderStatus } from '@/hooks';
 import { useState } from 'react';
 import { Loader2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 interface Props {
   open: boolean;
@@ -28,59 +28,64 @@ interface Props {
 
 export function OrderDetailsDialog({ open, onClose, order }: Props) {
   const [status, setStatus] = useState(order?.status || 'pending');
-  const { mutate: updateStatus, isPending } = useUpdateOrderStatus();
+  const { mutateAsync: updateStatus, isPending: isUpdating } =
+    useUpdateOrderStatus();
 
   if (!order) return null;
 
-  const handleUpdateStatus = () => {
-    updateStatus(
-      { id: order.id, status },
-      {
-        onSuccess: () => onClose(),
-      }
-    );
+  const onStatusChange = async (newStatus: string) => {
+    setStatus(newStatus); // Optimistically update UI
+    try {
+      await updateStatus({ id: order.id, status: newStatus });
+      toast.success('Статус заказа обновлен');
+      onClose(); // Close dialog on successful update
+    } catch (error) {
+      console.error(error);
+      toast.error('Не удалось обновить статус');
+      setStatus(order.status); // Revert UI on error
+    }
   };
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='max-w-2xl'>
+      <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>Order Details #{order.id.slice(0, 8)}</DialogTitle>
         </DialogHeader>
 
-        <div className='space-y-6'>
+        <div className="space-y-6">
           {/* Customer Info */}
           <div>
-            <h3 className='font-semibold mb-2'>Customer Information</h3>
-            <div className='space-y-1 text-sm'>
+            <h3 className="mb-2 font-semibold">Customer Information</h3>
+            <div className="space-y-1 text-sm">
               <p>
-                <span className='text-gray-500'>Name:</span> {order.fullName}
+                <span className="text-gray-500">Name:</span> {order.fullName}
               </p>
               <p>
-                <span className='text-gray-500'>Email:</span> {order.email}
+                <span className="text-gray-500">Email:</span> {order.email}
               </p>
               <p>
-                <span className='text-gray-500'>Phone:</span> {order.phone}
+                <span className="text-gray-500">Phone:</span> {order.phone}
               </p>
               <p>
-                <span className='text-gray-500'>Address:</span> {order.address}
+                <span className="text-gray-500">Address:</span> {order.address}
               </p>
             </div>
           </div>
 
           {/* Order Items */}
           <div>
-            <h3 className='font-semibold mb-2'>Order Items</h3>
-            <div className='border rounded-lg divide-y'>
+            <h3 className="mb-2 font-semibold">Order Items</h3>
+            <div className="border rounded-lg divide-y">
               {order.items?.map((item: any) => (
-                <div key={item.id} className='p-3 flex justify-between'>
+                <div key={item.id} className="flex justify-between p-3">
                   <div>
-                    <p className='font-medium'>{item.productName}</p>
-                    <p className='text-sm text-gray-500'>
+                    <p className="font-medium">{item.productName}</p>
+                    <p className="text-gray-500 text-sm">
                       Quantity: {item.quantity}
                     </p>
                   </div>
-                  <p className='font-semibold'>${item.price}</p>
+                  <p className="font-semibold">${item.price}</p>
                 </div>
               ))}
             </div>
@@ -88,33 +93,35 @@ export function OrderDetailsDialog({ open, onClose, order }: Props) {
 
           {/* Status */}
           <div>
-            <h3 className='font-semibold mb-2'>Order Status</h3>
-            <div className='flex items-center gap-4'>
+            <h3 className="mb-2 font-semibold">Order Status</h3>
+            <div className="flex items-center gap-4">
               <OrderStatusBadge status={order.status} />
               <Select value={status} onValueChange={setStatus}>
-                <SelectTrigger className='w-[200px]'>
+                <SelectTrigger className="w-[200px]">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value='pending'>Pending</SelectItem>
-                  <SelectItem value='processing'>Processing</SelectItem>
-                  <SelectItem value='completed'>Completed</SelectItem>
-                  <SelectItem value='cancelled'>Cancelled</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="processing">Processing</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
                 </SelectContent>
               </Select>
               <Button
-                onClick={handleUpdateStatus}
-                disabled={isPending || status === order.status}
+                onClick={() => onStatusChange(status)}
+                disabled={isUpdating || status === order.status}
               >
-                {isPending && <Loader2 className='w-4 h-4 mr-2 animate-spin' />}
+                {isUpdating && (
+                  <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                )}
                 Update Status
               </Button>
             </div>
           </div>
 
           {/* Total */}
-          <div className='border-t pt-4'>
-            <div className='flex justify-between text-lg font-bold'>
+          <div className="pt-4 border-t">
+            <div className="flex justify-between font-bold text-lg">
               <span>Total:</span>
               <span>${order.totalAmount}</span>
             </div>

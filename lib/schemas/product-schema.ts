@@ -14,6 +14,7 @@ export const productItemSchema = z.object({
     ),
   sizeId: z.string().nullable().optional(),
   typeId: z.string().nullable().optional(),
+  id: z.string().optional(),
 });
 
 export const pizzaProductItemSchema = productItemSchema.extend({

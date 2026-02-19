@@ -1,13 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { useOrders } from '@/hooks/admin/use-orders';
+import { useOrders } from '@/hooks';
 import {
   Table,
   TableBody,
   TableCell,
   TableHead,
-  TableHeader,  
+  TableHeader,
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
@@ -24,45 +24,50 @@ import {
 } from '@/components/ui/select';
 
 export function OrdersTable() {
-  const [page, setPage] = useState(1);
+  const page = 1;
   const [status, setStatus] = useState<string>('all');
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
 
-  const { data, isPending } = useOrders({
-    page,
-    limit: 10,
-    status: status === 'all' ? undefined : status,
-  });
+  const { data, isPending } = useOrders(
+    {
+      page,
+      limit: 10,
+      status: status === 'all' ? undefined : status,
+    },
+    {
+      refetchInterval: 10000,
+    },
+  );
 
-  const orders = (data as any[]) || [];
+  const orders = data || [];
 
   if (isPending) {
     return (
-      <div className='space-y-4'>
+      <div className="space-y-4">
         {[...Array(5)].map((_, i) => (
-          <Skeleton key={i} className='h-16 w-full' />
+          <Skeleton key={i} className="w-full h-16" />
         ))}
       </div>
     );
   }
 
   return (
-    <div className='space-y-4'>
-      <div className='flex items-center gap-4'>
+    <div className="space-y-4">
+      <div className="flex items-center gap-4">
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className='w-[200px]'>
+          <SelectTrigger className="w-[200px]">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value='all'>Все заказы</SelectItem>
-            <SelectItem value='PENDING'>В ожидании</SelectItem>
-            <SelectItem value='SUCCEEDED'>Оплачен</SelectItem>
-            <SelectItem value='CANCELLED'>Отменен</SelectItem>
+            <SelectItem value="all">Все заказы</SelectItem>
+            <SelectItem value="PENDING">В ожидании</SelectItem>
+            <SelectItem value="SUCCEEDED">Оплачен</SelectItem>
+            <SelectItem value="CANCELLED">Отменен</SelectItem>
           </SelectContent>
         </Select>
       </div>
 
-      <div className='bg-white rounded-lg border'>
+      <div className="bg-white border rounded-lg">
         <Table>
           <TableHeader>
             <TableRow>
@@ -71,22 +76,24 @@ export function OrdersTable() {
               <TableHead>Сумма</TableHead>
               <TableHead>Статус</TableHead>
               <TableHead>Дата</TableHead>
-              <TableHead className='text-right'>Действия</TableHead>
+              <TableHead className="text-right">Действия</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {orders.map((order) => (
               <TableRow key={order.id}>
-                <TableCell className='font-mono text-sm'>
+                <TableCell className="font-mono text-sm">
                   #{order.id.slice(0, 8)}
                 </TableCell>
                 <TableCell>
                   <div>
-                    <p className='font-medium'>{order.firstName} {order.lastName}</p>
-                    <p className='text-sm text-gray-500'>{order.email}</p>
+                    <p className="font-medium">
+                      {order.firstName} {order.lastName}
+                    </p>
+                    <p className="text-gray-500 text-sm">{order.email}</p>
                   </div>
                 </TableCell>
-                <TableCell className='font-semibold'>
+                <TableCell className="font-semibold">
                   {order.totalAmount} ₽
                 </TableCell>
                 <TableCell>
@@ -95,13 +102,13 @@ export function OrdersTable() {
                 <TableCell>
                   {new Date(order.createdAt).toLocaleDateString()}
                 </TableCell>
-                <TableCell className='text-right'>
+                <TableCell className="text-right">
                   <Button
-                    variant='outline'
-                    size='sm'
+                    variant="outline"
+                    size="sm"
                     onClick={() => setSelectedOrder(order)}
                   >
-                    <Eye className='w-4 h-4 mr-2' />
+                    <Eye className="mr-2 w-4 h-4" />
                     View
                   </Button>
                 </TableCell>

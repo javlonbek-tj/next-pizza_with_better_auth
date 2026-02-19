@@ -1,8 +1,7 @@
-export * from './use-category-form';
+export { useCategoryForm } from './use-category-form';
 export { useDelete } from './use-delete';
 export { useImageUpload } from './use-image-upload';
 export * from './use-ingredient-form';
-export { useOrders } from './use-orders';
 export * from './use-pizzaSize-form';
 export * from './use-pizzaType-form';
 export * from './use-products';
