@@ -1,8 +1,9 @@
 'use client';
+import { UseFormReturn } from 'react-hook-form';
 import { Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { Button } from '@/components/ui/button';
 
+import { Button } from '@/components/ui/button';
 import {
   Select,
   SelectContent,
@@ -19,7 +20,6 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { PizzaSize, PizzaType } from '@/types';
-import { UseFormReturn } from 'react-hook-form';
 import { ProductFormValues } from '@/lib';
 import { DecimalInput } from '@/components/shared';
 
@@ -57,12 +57,12 @@ export function ProductItemCard({
           name={`productItems.${index}.price`}
           render={({ field }) => {
             return (
-              <FormItem className='flex-1'>
-                <FormLabel className='font-medium text-md'>
-                  Цена (₽) <span className='text-red-500'>*</span>
+              <FormItem className="flex-1">
+                <FormLabel className="font-medium text-md">
+                  Цена (₽) <span className="text-red-500">*</span>
                 </FormLabel>
                 <FormControl>
-                  <DecimalInput {...field} className='h-10 max-w-xs' />
+                  <DecimalInput {...field} className="max-w-xs h-10" />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -80,23 +80,23 @@ export function ProductItemCard({
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
     >
-      <Card className='p-4 space-y-4 bg-white border rounded-lg shadow-sm'>
-        <div className='flex items-center justify-between'>
-          <h4 className='text-base font-medium'>Вариант #{index + 1}</h4>
+      <Card className="space-y-4 bg-white shadow-sm p-4 border rounded-lg">
+        <div className="flex justify-between items-center">
+          <h4 className="font-medium text-base">Вариант #{index + 1}</h4>
           {canRemove && (
             <Button
-              type='button'
-              variant='destructive'
-              size='sm'
+              type="button"
+              variant="destructive"
+              size="sm"
               onClick={() => onRemove(index)}
               disabled={disabled}
             >
-              <Trash2 className='w-4 h-4' />
+              <Trash2 className="w-4 h-4" />
             </Button>
           )}
         </div>
 
-        <div className='grid grid-cols-1 gap-4 sm:grid-cols-3'>
+        <div className="gap-4 grid grid-cols-1 sm:grid-cols-3">
           {/* Size */}
           <FormField
             control={form.control}
@@ -104,7 +104,7 @@ export function ProductItemCard({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Размер <span className='text-red-500'>*</span>
+                  Размер <span className="text-red-500">*</span>
                 </FormLabel>
                 <Select
                   value={field.value ?? 'none'}
@@ -115,14 +115,14 @@ export function ProductItemCard({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder='Выберите размер' />
+                      <SelectValue placeholder="Выберите размер" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem
-                      value='none'
+                      value="none"
                       disabled
-                      className='text-muted-foreground'
+                      className="text-muted-foreground"
                     >
                       Выберите размер
                     </SelectItem>
@@ -145,7 +145,7 @@ export function ProductItemCard({
             render={({ field }) => (
               <FormItem>
                 <FormLabel>
-                  Тип теста <span className='text-red-500'>*</span>
+                  Тип теста <span className="text-red-500">*</span>
                 </FormLabel>
                 <Select
                   value={field.value ?? 'none'}
@@ -156,14 +156,14 @@ export function ProductItemCard({
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder='Выберите тип теста' />
+                      <SelectValue placeholder="Выберите тип теста" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem
-                      value='none'
+                      value="none"
                       disabled
-                      className='text-muted-foreground'
+                      className="text-muted-foreground"
                     >
                       Выберите тип теста
                     </SelectItem>
@@ -187,10 +187,10 @@ export function ProductItemCard({
               return (
                 <FormItem>
                   <FormLabel>
-                    Цена (₽) <span className='text-red-500'>*</span>
+                    Цена (₽) <span className="text-red-500">*</span>
                   </FormLabel>
                   <FormControl>
-                    <DecimalInput {...field} className='max-w-xs' />
+                    <DecimalInput {...field} className="max-w-xs" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

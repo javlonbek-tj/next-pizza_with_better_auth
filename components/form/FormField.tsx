@@ -1,6 +1,7 @@
 'use client';
 
 import { Controller, useFormContext } from 'react-hook-form';
+
 import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { RequiredSymbol } from './RequiredSymbol';
@@ -77,7 +78,7 @@ export function FormField({
         // Textarea
         <Textarea
           {...register(name)}
-          className={cn('min-h-[100px] text-md resize-none', className)}
+          className={cn('min-h-25 text-md resize-none', className)}
         />
       ) : (
         // Regular Input
@@ -102,7 +103,7 @@ export function FormField({
             <div
               className={cn(
                 'top-1/2 right-2 absolute -translate-y-1/2',
-                'pointer-events-auto'
+                'pointer-events-auto',
               )}
             >
               {suffix}

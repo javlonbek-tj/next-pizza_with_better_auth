@@ -1,0 +1,1 @@
+export { FiltersContent } from './FiltersContent';

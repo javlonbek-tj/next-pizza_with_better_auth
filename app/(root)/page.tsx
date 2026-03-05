@@ -1,20 +1,11 @@
 import { Suspense } from 'react';
 
 import { GetSearchParams } from '@/server/data/products';
-import { Container, TopBarContent } from '@/components/shared';
-import {
-  CategoriesSkeleton,
-  FiltersSkeleton,
-  ProductsSkeleton,
-} from '@/components/skeletons';
-import { Filters } from '@/components/filters';
-import { ProductsContent } from '@/components/product';
-import {
-  getCategories,
-  getIngredients,
-  getPizzaSizes,
-  getPizzaTypes,
-} from '@/server';
+import { Container } from '@/components/shared';
+import { TopBarContent } from '@/components/shared/server';
+import { FiltersContent } from '@/components/filters/server';
+import { FiltersSkeleton, ProductsSkeleton } from '@/components/skeletons';
+import { ProductsContent } from '@/components/product/server';
 
 export default async function Home({
   searchParams,
@@ -22,27 +13,17 @@ export default async function Home({
   searchParams: Promise<GetSearchParams>;
 }) {
   const resolvedSearchParams = await searchParams;
-  const ingredients = await getIngredients();
-  const pizzaSizes = await getPizzaSizes();
-  const pizzaTypes = await getPizzaTypes();
-  const categories = await getCategories();
 
   return (
     <>
-      <Suspense fallback={<CategoriesSkeleton />}>
-        <TopBarContent categories={categories} />
-      </Suspense>
-      <Container className='flex gap-16 mt-10 pb-14'>
-        <aside className='w-3xs'>
+      <TopBarContent />
+      <Container className="flex gap-16 mt-10 pb-14">
+        <aside className="w-3xs">
           <Suspense fallback={<FiltersSkeleton />}>
-            <Filters
-              ingredients={ingredients}
-              pizzaSizes={pizzaSizes}
-              pizzaTypes={pizzaTypes}
-            />
+            <FiltersContent />
           </Suspense>
         </aside>
-        <main className='flex-1 min-w-0 space-y-12'>
+        <main className="flex-1 space-y-12 min-w-0">
           <Suspense
             key={JSON.stringify(resolvedSearchParams)}
             fallback={<ProductsSkeleton />}

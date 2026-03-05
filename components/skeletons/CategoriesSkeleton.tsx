@@ -1,14 +1,23 @@
-'use client';
+import { cn } from '@/lib';
 
-export function CategoriesSkeleton() {
+interface Props {
+  className?: string;
+}
+
+export function CategoriesSkeleton({ className }: Props) {
   return (
-    <>
+    <div
+      className={cn(
+        'flex items-center gap-1 bg-gray-50 p-1 rounded-xl',
+        className,
+      )}
+    >
       {Array.from({ length: 5 }).map((_, i) => (
         <div
           key={i}
-          className="w-20 h-8 bg-gray-200 rounded-xl animate-pulse"
+          className="bg-gray-200 rounded-xl w-24 h-8 animate-pulse"
         />
       ))}
-    </>
+    </div>
   );
 }

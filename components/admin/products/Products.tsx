@@ -3,6 +3,8 @@
 import { useState, useTransition, Fragment } from 'react';
 import { Package, Pizza, ChevronDown, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
+import toast from 'react-hot-toast';
+
 import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -17,7 +19,6 @@ import {
 } from '@/types';
 import { useTableActions } from '@/hooks';
 import { deleteProduct } from '@/app/actions';
-import toast from 'react-hot-toast';
 import { ProductFormDialog } from './ProductFormDialog';
 
 interface Props {
@@ -81,20 +82,20 @@ export function Products({
 
   if (products?.length === 0) {
     return (
-      <div className='space-y-6'>
-        <div className='flex justify-end'>
-          <AddButton onClick={handleCreate} text='продукт' />
+      <div className="space-y-6">
+        <div className="flex justify-end">
+          <AddButton onClick={handleCreate} text="продукт" />
         </div>
-        <Card className='border-2 border-dashed'>
-          <CardContent className='flex flex-col items-center justify-center py-16'>
-            <Package className='w-16 h-16 mb-4 text-gray-300' />
-            <h3 className='mb-2 text-xl font-semibold text-gray-900'>
+        <Card className="border-2 border-dashed">
+          <CardContent className="flex flex-col justify-center items-center py-16">
+            <Package className="mb-4 w-16 h-16 text-gray-300" />
+            <h3 className="mb-2 font-semibold text-gray-900 text-xl">
               Нет продуктов
             </h3>
-            <p className='max-w-sm mb-6 text-center text-gray-500'>
+            <p className="mb-6 max-w-sm text-gray-500 text-center">
               Начните с создания вашего первого продукта
             </p>
-            <AddButton onClick={handleCreate} text='первый продукт' />
+            <AddButton onClick={handleCreate} text="первый продукт" />
           </CardContent>
         </Card>
 
@@ -112,40 +113,40 @@ export function Products({
   }
 
   return (
-    <div className='space-y-6'>
-      <div className='flex justify-end'>
-        <AddButton onClick={handleCreate} text='продукт' />
+    <div className="space-y-6">
+      <div className="flex justify-end">
+        <AddButton onClick={handleCreate} text="продукт" />
       </div>
 
-      <div className='overflow-hidden border rounded-lg'>
-        <table className='w-full'>
-          <thead className='border-b bg-gray-50'>
+      <div className="border rounded-lg overflow-hidden">
+        <table className="w-full">
+          <thead className="bg-gray-50 border-b">
             <tr>
-              <th className='w-12 px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'></th>
-              <th className='w-20 px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
+              <th className="px-4 py-3 w-12 font-medium text-gray-500 text-xs text-left uppercase"></th>
+              <th className="px-4 py-3 w-20 font-medium text-gray-500 text-xs text-left uppercase">
                 Фото
               </th>
-              <th className='px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
+              <th className="px-4 py-3 font-medium text-gray-500 text-xs text-left uppercase">
                 Название
               </th>
-              <th className='px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
+              <th className="px-4 py-3 font-medium text-gray-500 text-xs text-left uppercase">
                 Категория
               </th>
-              <th className='px-4 py-3 text-xs font-medium text-center text-gray-500 uppercase'>
+              <th className="px-4 py-3 font-medium text-gray-500 text-xs text-center uppercase">
                 Варианты
               </th>
-              <th className='px-4 py-3 text-xs font-medium text-center text-gray-500 uppercase'>
+              <th className="px-4 py-3 font-medium text-gray-500 text-xs text-center uppercase">
                 Ингредиенты
               </th>
-              <th className='px-4 py-3 text-xs font-medium text-left text-gray-500 uppercase'>
+              <th className="px-4 py-3 font-medium text-gray-500 text-xs text-left uppercase">
                 Дата
               </th>
-              <th className='px-4 py-3 text-xs font-medium text-right text-gray-500 uppercase'>
+              <th className="px-4 py-3 font-medium text-gray-500 text-xs text-right uppercase">
                 Действия
               </th>
             </tr>
           </thead>
-          <tbody className='bg-white divide-y divide-gray-200'>
+          <tbody className="bg-white divide-y divide-gray-200">
             {products.map((product: ProductWithRelations) => {
               const isExpanded = expandedRows.has(product.id);
               const hasVariants =
@@ -156,72 +157,72 @@ export function Products({
               return (
                 <Fragment key={product.id}>
                   {/* Main Row */}
-                  <tr className='transition-colors hover:bg-gray-50'>
-                    <td className='px-4 py-4'>
+                  <tr className="hover:bg-gray-50 transition-colors">
+                    <td className="px-4 py-4">
                       <Button
-                        variant='ghost'
-                        size='sm'
+                        variant="ghost"
+                        size="sm"
                         onClick={() => toggleRow(product.id)}
-                        className='w-8 h-8 p-0'
+                        className="p-0 w-8 h-8"
                       >
                         {isExpanded ? (
-                          <ChevronDown className='w-4 h-4' />
+                          <ChevronDown className="w-4 h-4" />
                         ) : (
-                          <ChevronRight className='w-4 h-4' />
+                          <ChevronRight className="w-4 h-4" />
                         )}
                       </Button>
                     </td>
-                    <td className='px-4 py-4'>
-                      <div className='flex items-center justify-center w-16 h-16 overflow-hidden bg-gray-100 rounded-lg'>
+                    <td className="px-4 py-4">
+                      <div className="flex justify-center items-center bg-gray-100 rounded-lg w-16 h-16 overflow-hidden">
                         <Image
                           src={product.imageUrl}
                           alt={product.name}
                           width={64}
                           height={64}
-                          className='object-contain'
+                          className="object-contain"
                         />
                       </div>
                     </td>
-                    <td className='px-4 py-4 font-semibold text-gray-900'>
+                    <td className="px-4 py-4 font-semibold text-gray-900">
                       {product.name}
                     </td>
-                    <td className='px-4 py-4'>
+                    <td className="px-4 py-4">
                       {product.category ? (
                         <Badge
-                          variant='secondary'
-                          className='text-blue-700 border-blue-200 bg-blue-50'
+                          variant="secondary"
+                          className="bg-blue-50 border-blue-200 text-blue-700"
                         >
                           {product.category.name}
                         </Badge>
                       ) : (
-                        <span className='text-sm text-gray-400'>—</span>
+                        <span className="text-gray-400 text-sm">—</span>
                       )}
                     </td>
-                    <td className='px-4 py-4 text-center'>
+                    <td className="px-4 py-4 text-center">
                       <Badge
-                        variant='secondary'
-                        className='text-purple-700 border-purple-200 bg-purple-50'
+                        variant="secondary"
+                        className="bg-purple-50 border-purple-200 text-purple-700"
                       >
                         {product.productItems?.length || 0}
                       </Badge>
                     </td>
-                    <td className='px-4 py-4 text-center'>
+                    <td className="px-4 py-4 text-center">
                       <Badge
-                        variant='secondary'
-                        className='text-green-700 border-green-200 bg-green-50'
+                        variant="secondary"
+                        className="bg-green-50 border-green-200 text-green-700"
                       >
                         {product.ingredients?.length || 0}
                       </Badge>
                     </td>
-                    <td className='px-4 py-4 text-sm text-gray-500'>
+                    <td className="px-4 py-4 text-gray-500 text-sm">
                       {new Date(product.createdAt).toLocaleDateString('ru-RU', {
                         day: 'numeric',
                         month: 'short',
                         year: 'numeric',
                       })}
                     </td>
-                    <td className='px-4 py-4'>
-                      <div className='flex justify-end gap-2'>
+                    <td className="px-4 py-4">
+                      <div className="flex justify-end gap-2">
                         <TableActions
                           edit={() => handleEdit(product)}
                           deleteAction={() => handleOpenDelete(product.id)}
@@ -233,46 +234,46 @@ export function Products({
                   {/* Expanded Content */}
                   {isExpanded && (
                     <tr>
-                      <td colSpan={8} className='px-4 py-6 bg-gray-50'>
-                        <div className='grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2'>
+                      <td colSpan={8} className="bg-gray-50 px-4 py-6">
+                        <div className="gap-6 grid grid-cols-1 md:grid-cols-2 max-w-6xl">
                           {/* Variants Section */}
                           <div>
-                            <h4 className='flex items-center gap-2 mb-3 text-sm font-semibold text-gray-900'>
-                              <Package className='w-4 h-4 text-purple-600' />
+                            <h4 className="flex items-center gap-2 mb-3 font-semibold text-gray-900 text-sm">
+                              <Package className="w-4 h-4 text-purple-600" />
                               Варианты продукта
                             </h4>
                             {hasVariants ? (
-                              <div className='space-y-2'>
+                              <div className="space-y-2">
                                 {product.productItems.map((item, idx) => (
                                   <div
                                     key={idx}
-                                    className='flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg'
+                                    className="flex justify-between items-center bg-white p-3 border border-gray-200 rounded-lg"
                                   >
-                                    <div className='flex items-center gap-2'>
+                                    <div className="flex items-center gap-2">
                                       {item.size && item.type ? (
                                         <>
-                                          <Pizza className='w-4 h-4 text-orange-500' />
-                                          <span className='text-sm text-gray-700'>
+                                          <Pizza className="w-4 h-4 text-orange-500" />
+                                          <span className="text-gray-700 text-sm">
                                             {item.size.label} • {item.type.type}
                                           </span>
                                         </>
                                       ) : (
                                         <>
-                                          <Package className='w-4 h-4 text-gray-500' />
-                                          <span className='text-sm text-gray-700'>
+                                          <Package className="w-4 h-4 text-gray-500" />
+                                          <span className="text-gray-700 text-sm">
                                             Стандартный
                                           </span>
                                         </>
                                       )}
                                     </div>
-                                    <span className='font-semibold text-gray-900'>
+                                    <span className="font-semibold text-gray-900">
                                       {item.price.toLocaleString('ru-RU')} ₽
                                     </span>
                                   </div>
                                 ))}
                               </div>
                             ) : (
-                              <p className='text-sm italic text-gray-400'>
+                              <p className="text-gray-400 text-sm italic">
                                 Нет вариантов
                               </p>
                             )}
@@ -280,31 +281,31 @@ export function Products({
 
                           {/* Ingredients Section */}
                           <div>
-                            <h4 className='flex items-center gap-2 mb-3 text-sm font-semibold text-gray-900'>
-                              <Package className='w-4 h-4 text-green-600' />
+                            <h4 className="flex items-center gap-2 mb-3 font-semibold text-gray-900 text-sm">
+                              <Package className="w-4 h-4 text-green-600" />
                               Ингредиенты
                             </h4>
                             {hasIngredients ? (
-                              <div className='grid grid-cols-2 gap-2'>
+                              <div className="gap-2 grid grid-cols-2">
                                 {product.ingredients.map((ingredient, idx) => (
                                   <div
                                     key={idx}
-                                    className='flex items-center gap-2 p-2 bg-white border border-gray-200 rounded-lg'
+                                    className="flex items-center gap-2 bg-white p-2 border border-gray-200 rounded-lg"
                                   >
-                                    <div className='flex items-center justify-center w-10 h-10 overflow-hidden bg-gray-100 rounded-lg shrink-0'>
+                                    <div className="flex justify-center items-center bg-gray-100 rounded-lg w-10 h-10 overflow-hidden shrink-0">
                                       <Image
                                         src={ingredient.imageUrl}
                                         alt={ingredient.name}
                                         width={40}
                                         height={40}
-                                        className='object-contain'
+                                        className="object-contain"
                                       />
                                     </div>
-                                    <div className='flex-1 min-w-0'>
-                                      <p className='text-sm font-medium text-gray-900 truncate'>
+                                    <div className="flex-1 min-w-0">
+                                      <p className="font-medium text-gray-900 text-sm truncate">
                                         {ingredient.name}
                                       </p>
-                                      <p className='text-xs text-gray-500'>
+                                      <p className="text-gray-500 text-xs">
                                         {ingredient.price.toLocaleString(
                                           'ru-RU',
                                         )}{' '}
@@ -315,7 +316,7 @@ export function Products({
                                 ))}
                               </div>
                             ) : (
-                              <p className='text-sm italic text-gray-400'>
+                              <p className="text-gray-400 text-sm italic">
                                 Без ингредиентов
                               </p>
                             )}
@@ -346,8 +347,8 @@ export function Products({
         onClose={handleCloseDelete}
         isDeleting={isDeleting}
         onConfirm={handleDelete}
-        title='Удалить продукт?'
-        description='Вы уверены, что хотите удалить продукт? Это действие нельзя отменить.'
+        title="Удалить продукт?"
+        description="Вы уверены, что хотите удалить продукт? Это действие нельзя отменить."
       />
     </div>
   );

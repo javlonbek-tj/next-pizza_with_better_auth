@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 
-import { HomeHeader } from '@/components/header';
+import { HomeHeader } from '@/components/header/server';
 
 export const metadata: Metadata = {
   title: 'Главная',
@@ -12,9 +12,9 @@ export default function HomeLayout({
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
-    <div className='min-h-screen'>
+    <div className="flex flex-col flex-1">
       <HomeHeader />
-      {children}
+      <main className="flex-1">{children}</main>
       {modal}
     </div>
   );

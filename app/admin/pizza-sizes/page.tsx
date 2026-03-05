@@ -1,7 +1,5 @@
-import LoadingPage from '@/app/loading';
 import { PizzaSizeTable } from '@/components/admin';
 import { getPizzaSizes } from '@/server';
-import { Suspense } from 'react';
 
 export default async function CategoriesPage() {
   /*  const session = await auth();
@@ -14,9 +12,7 @@ export default async function CategoriesPage() {
   return (
     <div className="space-y-6">
       <h1 className="font-bold text-3xl">Размеры</h1>
-      <Suspense fallback={<LoadingPage />}>
-        <PizzaSizeTable data={data} />
-      </Suspense>
+      <PizzaSizeTable data={data} />
     </div>
   );
 }

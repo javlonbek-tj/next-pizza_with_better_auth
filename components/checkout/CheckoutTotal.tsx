@@ -1,12 +1,12 @@
-import { Package, Truck } from 'lucide-react';
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { Package, Truck } from 'lucide-react';
+
 import { CheckoutCard } from './CheckoutCard';
 import { CheckoutPriceInfo } from './CheckoutPriceInfo';
 import { Button } from '../ui/button';
-import { calculateTotalAmount, DELIVERY_PRICE } from '@/lib';
+import { calculateTotalAmount, DELIVERY_PRICE, cn } from '@/lib';
 import { CartItemModel } from '@/types';
-import { cn } from '@/lib';
-import { useEffect } from 'react';
 
 interface Props {
   cartItems: CartItemModel[];
@@ -34,7 +34,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
           <span
             className={cn(
               'font-extrabold text-2xl transition-opacity',
-              isProcessing && 'opacity-90'
+              isProcessing && 'opacity-90',
             )}
           >
             {totalPriceWithDelivery} ₽
@@ -44,7 +44,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
         <div
           className={cn(
             'flex flex-col gap-5 my-5 transition-opacity duration-200',
-            isProcessing && 'opacity-50'
+            isProcessing && 'opacity-50',
           )}
         >
           <input type="hidden" {...register('totalAmount')} />

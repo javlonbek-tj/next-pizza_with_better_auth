@@ -21,9 +21,9 @@ export function IngredientItem({
   return (
     <div
       className={cn(
-        'relative flex flex-col items-center gap-2 bg-white p-1 border border-transparent rounded-2xl h-[130px] cursor-pointer',
+        'relative flex flex-col items-center gap-2 bg-white p-1 border border-transparent rounded-2xl h-32 cursor-pointer',
         { 'border border-primary': active },
-        className
+        className,
       )}
       onClick={onClick}
     >

@@ -17,10 +17,6 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@heroui/number-input": "^2.0.18",
-    "@heroui/react": "^2.8.5",
-    "@heroui/system": "^2.4.23",
-    "@heroui/theme": "^2.4.23",
     "@hookform/resolvers": "^5.2.2",
     "@prisma/adapter-pg": "^7.1.0",
     "@prisma/client": "^7.1.0",

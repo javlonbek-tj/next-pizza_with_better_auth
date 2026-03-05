@@ -3,6 +3,7 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowUpDown, Check } from 'lucide-react';
 import qs from 'qs';
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -39,18 +40,18 @@ export function SortPopup({ className }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          'inline-flex cursor-pointer items-center justify-center gap-2 bg-gray-50 px-5 py-2.5 rounded-2xl hover:bg-gray-100 transition-colors duration-200 text-sm font-medium outline-none',
-          className
+          'inline-flex justify-center items-center gap-2 bg-gray-50 hover:bg-gray-100 px-5 py-2.5 rounded-2xl outline-none font-medium text-sm transition-colors duration-200 cursor-pointer',
+          className,
         )}
       >
-        <ArrowUpDown size={16} className='text-gray-600' />
-        <span className='text-gray-600'>Сортировка:</span>
-        <span className='text-primary font-semibold'>{currentLabel}</span>
+        <ArrowUpDown size={16} className="text-gray-600" />
+        <span className="text-gray-600">Сортировка:</span>
+        <span className="font-semibold text-primary">{currentLabel}</span>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        align='end'
-        className='w-56 p-2 space-y-1'
+        align="end"
+        className="space-y-1 p-2 w-56"
         sideOffset={8}
       >
         {sortOptions.map((option) => (
@@ -58,15 +59,15 @@ export function SortPopup({ className }: Props) {
             key={option.value}
             onClick={() => handleSortChange(option.value)}
             className={cn(
-              'flex items-center justify-between px-3 py-2.5 cursor-pointer rounded-lg transition-colors',
+              'flex justify-between items-center px-3 py-2.5 rounded-lg transition-colors cursor-pointer',
               currentSort === option.value
                 ? 'bg-primary/10 text-primary font-medium'
-                : 'hover:bg-gray-100'
+                : 'hover:bg-gray-100',
             )}
           >
             <span>{option.label}</span>
             {currentSort === option.value && (
-              <Check size={16} className='text-primary' />
+              <Check size={16} className="text-primary" />
             )}
           </DropdownMenuItem>
         ))}

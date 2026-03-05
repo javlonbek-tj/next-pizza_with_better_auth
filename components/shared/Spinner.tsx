@@ -1,9 +1,10 @@
 'use client';
 
+import { cn } from '@/lib/utils';
+
 interface Props {
   size?: 'sm' | 'md' | 'lg';
   className?: string;
-  showOverlay?: boolean;
 }
 
 const sizeMap = {
@@ -12,25 +13,20 @@ const sizeMap = {
   lg: 48,
 };
 
-export function Spinner({
-  size = 'md',
-  className = '',
-  showOverlay = true,
-}: Props) {
+export function Spinner({ size = 'sm', className = '' }: Props) {
   const spinnerElement = (
     <div
-      className={`border-primary border-b-2 rounded-full animate-spin ${className}`}
-      style={{ width: sizeMap[size], height: sizeMap[size] }}
-    ></div>
-  );
-
-  if (!showOverlay) {
-    return spinnerElement;
-  }
-
-  return (
-    <div className="z-(--z-overlay) absolute inset-0 flex justify-center items-center bg-white/10 dark:bg-gray-800/10 backdrop-blur-[1px]">
-      {spinnerElement}
+      className={cn(
+        'absolute inset-0 flex justify-center items-center',
+        className,
+      )}
+    >
+      <div
+        className="border-primary border-b-2 rounded-full animate-spin"
+        style={{ width: sizeMap[size], height: sizeMap[size] }}
+      ></div>
     </div>
   );
+
+  return spinnerElement;
 }

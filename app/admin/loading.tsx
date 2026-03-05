@@ -3,6 +3,6 @@
 import { Spinner } from '@/components/shared';
 
 const LoadingPage = () => {
-  return <Spinner className="items-center h-[calc(100vh-20rem)]" />;
+  return <Spinner />;
 };
 export default LoadingPage;

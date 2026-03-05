@@ -1,15 +1,19 @@
 'use client';
 import { Loader } from 'lucide-react';
+
 import { cn } from '@/lib';
 import { PizzaImage } from './PizzaImage';
 import { Title } from '../shared';
-import { usePizzaOptions, useCart, useUpdateCartQuantity } from '@/hooks';
+import { usePizzaOptions, useCart } from '@/hooks';
 import { GroupVariants, Variant } from './GroupVariants';
 import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
-import { PizzaSize, PizzaType, ProductItem, ProductWithRelations } from '@/types';
-
-
+import {
+  PizzaSize,
+  PizzaType,
+  ProductItem,
+  ProductWithRelations,
+} from '@/types';
 import { CartUpdateButtons } from '../cart/CartUpdateButtons';
 
 interface Props {
@@ -34,7 +38,6 @@ export function ChoosePizzaForm({
   pizzaTypes = [],
 }: Props) {
   const { data: cartItems } = useCart();
-  const { mutate: updateCartQuantity } = useUpdateCartQuantity();
 
   const {
     typeId,
@@ -52,7 +55,9 @@ export function ChoosePizzaForm({
     (item) =>
       item.productItemId === selectedPizzaItemId &&
       item.ingredients.length === selectedIngredients.size &&
-      item.ingredients.every((ingredient) => selectedIngredients.has(ingredient.id))
+      item.ingredients.every((ingredient) =>
+        selectedIngredients.has(ingredient.id),
+      ),
   )?.id;
 
   const allPizzaSizes = pizzaSizes.map((pizzaSize): Variant => {
@@ -68,7 +73,7 @@ export function ChoosePizzaForm({
       name: pizzaType.type,
       value: pizzaType.id,
       disabled: !product.productItems.some(
-        (item: ProductItem) => item.typeId === pizzaType.id
+        (item: ProductItem) => item.typeId === pizzaType.id,
       ),
     };
   });
@@ -84,7 +89,7 @@ export function ChoosePizzaForm({
       className={cn(
         'flex h-full overflow-hidden',
         !isModal && ' max-w-5xl mx-auto ',
-        className
+        className,
       )}
     >
       <PizzaImage
@@ -96,14 +101,14 @@ export function ChoosePizzaForm({
       <div
         className={cn(
           'flex flex-col flex-1 overflow-hidden',
-          isModal ? 'bg-[#f7f6f5]' : 'bg-white'
+          isModal ? 'bg-[#f7f6f5]' : 'bg-white',
         )}
       >
         {/* Scrollable content */}
         <div
           className={cn(
             'flex-1 px-7 overflow-y-auto scrollbar-thin',
-            isModal && 'py-4'
+            isModal && 'py-4',
           )}
         >
           <Title text={product.name} size="md" />
@@ -143,19 +148,21 @@ export function ChoosePizzaForm({
         <div
           className={cn(
             'px-7',
-            isModal ? 'py-4 bg-[#f7f6f5]' : 'bg-white pt-4'
+            isModal ? 'py-4 bg-[#f7f6f5]' : 'bg-white pt-4',
           )}
         >
           {currentItemId ? (
-            <div
-              className="flex justify-between items-center w-full bg-secondary px-5 h-[55px] rounded-[18px] text-base font-bold"
-            >
+            <div className="flex justify-between items-center bg-secondary px-5 rounded-[18px] w-full h-14 font-bold text-base">
               <span className="text-gray-500">
-                В корзине: {cartItems?.find((item) => item.id === currentItemId)?.quantity}
+                В корзине:{' '}
+                {cartItems?.find((item) => item.id === currentItemId)?.quantity}
               </span>
               <CartUpdateButtons
                 id={currentItemId}
-                quantity={cartItems?.find((item) => item.id === currentItemId)?.quantity || 0}
+                quantity={
+                  cartItems?.find((item) => item.id === currentItemId)
+                    ?.quantity || 0
+                }
               />
             </div>
           ) : (

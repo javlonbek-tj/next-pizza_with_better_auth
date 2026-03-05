@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 interface FormActionsProps {
   isEditing?: boolean;
@@ -32,8 +33,8 @@ export function FormActions({
   return (
     <div className={`flex justify-end gap-2 pt-4 ${className}`}>
       <Button
-        type='button'
-        variant='secondary'
+        type="button"
+        variant="secondary"
         onClick={onCancel}
         disabled={disabled}
         className={`cursor-pointer min-w-25 transition-colors ${
@@ -44,12 +45,12 @@ export function FormActions({
       </Button>
 
       <Button
-        type='submit'
+        type="submit"
         disabled={disabled}
-        className='cursor-pointer min-w-25'
+        className="min-w-25 cursor-pointer"
       >
         {isPending && showLoader ? (
-          <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+          <Loader2 className="mr-2 w-4 h-4 animate-spin" />
         ) : (
           <>{buttonText}</>
         )}

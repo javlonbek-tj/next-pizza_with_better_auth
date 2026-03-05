@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { Eye } from 'lucide-react';
+
 import { useOrders } from '@/hooks';
 import {
   Table,
@@ -11,7 +13,6 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Eye } from 'lucide-react';
 import { OrderStatusBadge } from './OrderStatusBadge';
 import { OrderDetailsDialog } from './OrderDetailsDialog';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,10 +24,20 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
+interface Order {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  totalAmount: number;
+  status: string;
+  createdAt: Date;
+}
+
 export function OrdersTable() {
   const page = 1;
   const [status, setStatus] = useState<string>('all');
-  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
 
   const { data, isPending } = useOrders(
     {
@@ -55,7 +66,7 @@ export function OrdersTable() {
     <div className="space-y-4">
       <div className="flex items-center gap-4">
         <Select value={status} onValueChange={setStatus}>
-          <SelectTrigger className="w-[200px]">
+          <SelectTrigger className="w-50">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

@@ -1,5 +1,5 @@
-import { Suspense } from 'react';
 import { Products } from '@/components/admin';
+import { Spinner } from '@/components/shared';
 import {
   getAllProducts,
   getCategories,
@@ -7,15 +7,27 @@ import {
   getPizzaSizes,
   getPizzaTypes,
 } from '@/server';
-import LoadingPage from '@/app/loading';
+import { Suspense } from 'react';
 
-export default async function ProductsPage() {
+async function ProductsList() {
   const products = await getAllProducts();
   const categories = await getCategories();
   const ingredients = await getIngredients();
   const sizes = await getPizzaSizes();
   const types = await getPizzaTypes();
 
+  return (
+    <Products
+      products={products}
+      categories={categories}
+      ingredients={ingredients}
+      sizes={sizes}
+      types={types}
+    />
+  );
+}
+
+export default async function ProductsPage() {
   return (
     <div className="space-y-6">
       <div>
@@ -24,14 +36,8 @@ export default async function ProductsPage() {
           Управление продуктами и их вариантами
         </p>
       </div>
-      <Suspense fallback={<LoadingPage />}>
-        <Products
-          products={products}
-          categories={categories}
-          ingredients={ingredients}
-          sizes={sizes}
-          types={types}
-        />
+      <Suspense fallback={<Spinner />}>
+        <ProductsList />
       </Suspense>
     </div>
   );

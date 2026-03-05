@@ -1,11 +1,10 @@
 import Image from 'next/image';
 import { Loader } from 'lucide-react';
-import { Button } from '../ui/button';
-import { cn } from '@/lib/utils';
 
+import { Button } from '../ui/button';
 import { Title } from '../shared';
 import { IngredientItem } from './Ingredient';
-import { totalProductPrice } from '@/lib';
+import { totalProductPrice, cn } from '@/lib';
 import { Ingredient } from '@/types';
 
 interface Props {
@@ -42,7 +41,7 @@ export function ChooseProductForm({
       <div
         className={cn(
           'flex flex-1 justify-center items-center',
-          !isModal && 'rounded-2xl overflow-hidden bg-[#FFF7EE]'
+          !isModal && 'rounded-2xl overflow-hidden bg-[#FFF7EE]',
         )}
       >
         <Image
@@ -58,7 +57,7 @@ export function ChooseProductForm({
       <div
         className={cn(
           'flex flex-col flex-1',
-          isModal ? 'bg-[#f7f6f5]' : 'bg-white'
+          isModal ? 'bg-[#f7f6f5]' : 'bg-white',
         )}
       >
         {/* Scrollable Area */}

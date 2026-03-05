@@ -3,6 +3,7 @@ import { Nunito } from 'next/font/google';
 import { APP_DESCRIPTION, APP_NAME } from '@/lib/constants';
 import './globals.css';
 import { Providers } from './providers';
+import { cn } from '@/lib/utils';
 
 const nunito = Nunito({
   subsets: ['cyrillic'],
@@ -28,7 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${nunito.className} antialiased`}>
+      <body
+        className={cn(
+          nunito.className,
+          'antialiased min-h-screen flex flex-col',
+        )}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

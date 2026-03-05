@@ -4,6 +4,7 @@ import {
   SortValue,
 } from '@/lib/constants';
 import { prisma } from '../prisma';
+import { sleep } from '@/lib';
 
 export interface GetSearchParams {
   query?: string;
@@ -89,7 +90,7 @@ export const getFilteredProducts = async (params: GetSearchParams) => {
       }
     }),
   }));
-
+  await sleep(5000);
   return sortedCategories.sort((a, b) => {
     if (a.isPizza && !b.isPizza) return -1;
     if (!a.isPizza && b.isPizza) return 1;
