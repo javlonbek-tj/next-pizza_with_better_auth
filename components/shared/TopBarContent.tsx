@@ -3,18 +3,18 @@ import { Container } from './Container';
 import { SortPopup } from '../filters/SortPopup';
 
 import { Categories } from '../categories/Categories';
-import { getCategories } from '@/server';
+import { getCategoryList } from '@/server';
 import { CategoriesSkeleton } from '../skeletons';
 
 async function CategoriesList() {
-  const categories = await getCategories();
+  const categories = await getCategoryList();
   return <Categories categories={categories} />;
 }
 
 export function TopBarContent() {
   return (
-    <div className="top-0 z-20 sticky bg-white shadow-black/5 shadow-lg">
-      <Container className="flex justify-between items-center gap-5 py-5">
+    <div className="sticky top-0 z-20 bg-white shadow-lg shadow-black/5">
+      <Container className="flex items-center justify-between gap-5 py-3">
         <Suspense fallback={<CategoriesSkeleton />}>
           <CategoriesList />
         </Suspense>

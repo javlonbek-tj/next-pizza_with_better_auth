@@ -1,26 +1,22 @@
 export type PizzaSize = {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    label: string;
-    size: number;
-}
+  id: string;
+  label: string;
+  size: number;
+};
 
 export type PizzaSizeWithProductCount = PizzaSize & {
-    _count: {
-        productItems: number;
-    };
-}
+  _count: {
+    productItems: number;
+  };
+};
 
 export type PizzaType = {
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    type: string;
-}
+  id: string;
+  type: string;
+};
 
 export type PizzaTypeWithProductCount = PizzaType & {
-    _count: {
-        productItems: number;
-    };
-}
+  _count: {
+    productItems: number;
+  };
+};

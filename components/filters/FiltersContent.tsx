@@ -1,4 +1,8 @@
-import { getIngredients, getPizzaSizes, getPizzaTypes } from '@/server';
+import {
+  getIngredientList,
+  getPizzaSizesList,
+  getPizzaTypesList,
+} from '@/server';
 import { Filters } from './Filters';
 
 interface Props {
@@ -7,9 +11,9 @@ interface Props {
 
 export async function FiltersContent({ className }: Props) {
   const [ingredients, pizzaSizes, pizzaTypes] = await Promise.all([
-    getIngredients(),
-    getPizzaSizes(),
-    getPizzaTypes(),
+    getIngredientList(),
+    getPizzaSizesList(),
+    getPizzaTypesList(),
   ]);
 
   return (

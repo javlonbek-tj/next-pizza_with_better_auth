@@ -12,41 +12,41 @@ interface Props {
 export function CheckoutCartItem({ cartItem, className }: Props) {
   return (
     <div
-      className={cn('flex justify-between items-center gap-3 py-3', className)}
+      className={cn('flex justify-between items-center gap-3 py-2', className)}
     >
       {/* Left: image + details */}
-      <div className='flex flex-1 items-center gap-3 min-w-0'>
+      <div className="flex flex-1 items-center gap-3 min-w-0">
         <Image
           src={cartItem.imageUrl}
           alt={cartItem.name}
           width={60}
           height={60}
-          className='shrink-0 rounded-full'
+          className="rounded-full shrink-0"
         />
         <div>
-          <p className='font-bold'>{cartItem.name}</p>
-          <p className='text-gray-400 text-sm'>
+          <p className="font-bold">{cartItem.name}</p>
+          <p className="text-gray-400 text-sm">
             {cartItem.ingredients.map((ing) => ing.name).join(', ')}
           </p>
         </div>
       </div>
 
       {/* Center: price */}
-      <p className='w-20 font-bold text-gray-900 text-base text-center'>
+      <p className="w-20 font-bold text-gray-900 text-base text-center">
         {cartItem.totalCartItemPrice} ₽
       </p>
 
       {/* Right: quantity controls */}
-      <div className='flex items-center gap-5 ml-20'>
+      <div className="flex items-center gap-5 ml-20">
         <CartUpdateButtons
           id={cartItem.id}
           quantity={cartItem.quantity}
-          cartBtnSize='md'
+          cartBtnSize="sm"
         />
 
         <RemoveCartItem
           id={cartItem.id}
-          className='text-gray-400 cursor-pointer hover:text-red-500'
+          className="text-gray-400 hover:text-red-500 cursor-pointer"
         />
       </div>
     </div>

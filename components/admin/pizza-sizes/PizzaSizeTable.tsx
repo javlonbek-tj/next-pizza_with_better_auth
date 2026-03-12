@@ -1,134 +1,87 @@
 'use client';
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
-import { Card, CardContent } from '@/components/ui/card';
+import { TableActions } from '@/components/admin/table/TableActions';
 import { PizzaSize, PizzaSizeWithProductCount } from '@/types';
-import { PizzaSizeFormDialog } from './PizzaSizeFormDialog';
-import { useTableActions } from '@/hooks';
-import { useDelete } from '@/hooks/admin/use-delete';
-import { deletePizzaSize } from '@/app/actions';
 
-interface PizzaSizeTableProps {
+interface Props {
   data: PizzaSizeWithProductCount[];
+  startIndex: number;
+  onEdit: (size: PizzaSize) => void;
+  onDelete: (id: string) => void;
+  isLoading?: boolean;
 }
 
-export function PizzaSizeTable({ data }: PizzaSizeTableProps) {
-  const {
-    editingItem: editingPizzaSize,
-    deleteId,
-    isFormOpen,
-    handleEdit,
-    handleCreate,
-    handleCloseForm,
-    handleOpenDelete,
-    handleCloseDelete,
-  } = useTableActions<PizzaSize>();
-  const { isDeleting, handleDelete } = useDelete(deletePizzaSize, {
-    onSuccess: handleCloseDelete,
-    successMessage: 'Размер успешно удален',
-    errorMessage: 'Ошибка при удалении размера',
-  });
-
+export function PizzaSizeTable({
+  data,
+  startIndex,
+  onEdit,
+  onDelete,
+  isLoading,
+}: Props) {
   return (
-    <div className='space-y-4'>
-      <div className='flex justify-end'>
-        <AddButton onClick={handleCreate} text='размер' />
+    <div
+      className={`bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden transition-opacity duration-200 ${
+        isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'
+      }`}
+    >
+      <div className="overflow-x-auto">
+        <table className="relative w-full border-collapse">
+          <thead className="top-0 z-10 sticky bg-gray-100/80 backdrop-blur-md border-gray-200 border-b">
+            <tr>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                T/R
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                Название
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-center uppercase leading-none tracking-widest">
+                Диаметр (см)
+              </th>
+              <th className="px-6 py-4 pr-8 2xl:pr-10 font-bold text-[10px] text-gray-900 3xl:text-xs text-right uppercase leading-none tracking-widest">
+                Действия
+              </th>
+            </tr>
+          </thead>
+
+          <tbody className="divide-y divide-gray-100">
+            {data.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={4}
+                  className="px-6 py-12 font-medium text-gray-800 text-sm text-center"
+                >
+                  Размеры не найдены
+                </td>
+              </tr>
+            ) : (
+              data.map((size: PizzaSizeWithProductCount, index: number) => (
+                <tr
+                  key={size.id}
+                  className="group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white transition-all duration-200"
+                >
+                  <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+                    {startIndex + index + 1}
+                  </td>
+                  <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+                    {size.label}
+                  </td>
+                  <td className="px-6 py-2 text-center whitespace-nowrap">
+                    <span className="inline-flex items-center bg-amber-50/50 px-2 py-0.5 border border-amber-100 rounded font-medium text-[11px] text-amber-600">
+                      {size.size} см
+                    </span>
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap">
+                    <TableActions
+                      onEdit={() => onEdit(size)}
+                      onDelete={() => onDelete(size.id)}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
-
-      {data.length === 0 ? (
-        <div className='mt-10 text-2xl text-center text-muted-foreground'>
-          Размеры не найдены
-        </div>
-      ) : (
-        <Card className='overflow-x-auto border border-gray-200 shadow-md rounded-xl'>
-          <CardContent className='p-6'>
-            <Table>
-              <TableHeader>
-                <TableRow className='bg-gray-50 hover:bg-gray-50'>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
-                    №
-                  </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-gray-700 uppercase'>
-                    Название
-                  </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
-                    Диаметр (см)
-                  </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-center text-gray-700 uppercase'>
-                    Дата создания
-                  </TableHead>
-                  <TableHead className='py-3 font-extrabold tracking-wide text-right text-gray-700 uppercase'>
-                    Действия
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {data.map((size: PizzaSizeWithProductCount, index: number) => (
-                  <TableRow
-                    key={size.id}
-                    className='transition-colors hover:bg-gray-50'
-                  >
-                    <TableCell className='py-4'>
-                      <div className='flex items-center justify-center w-8 h-8 font-bold text-white rounded-lg shadow-md bg-linear-to-br from-primary to-primary/80'>
-                        {index + 1}
-                      </div>
-                    </TableCell>
-                    <TableCell className='py-4'>
-                      <span className='font-semibold text-gray-900'>
-                        {size.label}
-                      </span>
-                    </TableCell>
-                    <TableCell className='py-4 text-center text-gray-700'>
-                      {size.size}
-                    </TableCell>
-                    <TableCell className='py-4 text-center text-gray-600'>
-                      {new Date(size.createdAt).toLocaleDateString('ru-RU', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric',
-                      })}
-                    </TableCell>
-                    <TableCell className='space-x-2 text-right'>
-                      <TableActions
-                        edit={() => handleEdit(size)}
-                        deleteAction={() => handleOpenDelete(size.id)}
-                        disabled={size._count?.productItems > 0}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
-
-      <PizzaSizeFormDialog
-        open={isFormOpen}
-        onClose={handleCloseForm}
-        pizzaSize={editingPizzaSize}
-      />
-
-      <DeleteDialog
-        open={!!deleteId}
-        onClose={handleCloseDelete}
-        onConfirm={() => handleDelete(deleteId!)}
-        title='Удалить размер'
-        description='Вы уверены, что хотите удалить этот размер? Это действие нельзя отменить.'
-        showAlert={true}
-        alertDescription='Все связанные элементы продукта, использующие этот размер,
-              будут установлены как «Стандартный» после удаления.'
-        isDeleting={isDeleting}
-      />
     </div>
   );
 }

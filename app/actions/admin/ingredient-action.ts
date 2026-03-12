@@ -1,7 +1,7 @@
 'use server';
 
 import { prisma } from '@/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 import { ActionResult, Ingredient } from '@/types';
 import { deleteImageFile } from '../delete-image-file';
 import { IngredientFormValues, ingredientSchema } from '@/lib';
@@ -37,6 +37,7 @@ export async function createIngredient(
     });
 
     revalidatePath('/admin/ingredients');
+    updateTag('ingredients');
 
     return {
       success: true,
@@ -87,6 +88,7 @@ export async function updateIngredient(
     });
 
     revalidatePath('/admin/ingredients');
+    updateTag('ingredients');
 
     return {
       success: true,
@@ -113,6 +115,7 @@ export async function deleteIngredient(
     await deleteImageFile(ingredient.imageUrl);
 
     revalidatePath('/admin/ingredients');
+    updateTag('ingredients');
 
     return {
       success: true,

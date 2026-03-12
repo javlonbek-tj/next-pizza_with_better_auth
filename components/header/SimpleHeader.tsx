@@ -6,10 +6,11 @@ export async function SimpleHeader() {
   const session = await auth.api.getSession({ headers: await headers() });
   return (
     <Header
-      key='simple-header'
+      key="simple-header"
       hasSearch={false}
       hasCartBtn={false}
       session={session}
+      className="top-0 z-50 sticky bg-[#F4F1EE]"
     />
   );
 }

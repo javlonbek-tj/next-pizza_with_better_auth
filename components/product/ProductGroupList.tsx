@@ -33,7 +33,10 @@ export function ProductGroupList({
   const intersectionRef = useRef<HTMLDivElement>(null);
   const intersection = useIntersection(
     intersectionRef as React.RefObject<HTMLElement>,
-    { threshold: 0.5, rootMargin: '-100px 0px -60% 0px' },
+    {
+      threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
+      rootMargin: '-80px 0px -95% 0px',
+    },
   );
 
   useEffect(() => {
@@ -43,10 +46,12 @@ export function ProductGroupList({
   }, [intersection, categorySlug, setActiveCategoryName]);
 
   return (
-    <div className={cn('scroll-mt-20', className)} id={categorySlug}>
-      <div ref={intersectionRef}>
-        <Title text={categoryTitle} size="lg" className="mb-5 font-extrabold" />
-      </div>
+    <div
+      className={cn('scroll-mt-20', className)}
+      id={categorySlug}
+      ref={intersectionRef}
+    >
+      <Title text={categoryTitle} className="mb-4 font-extrabold" size="md" />
 
       <div className={cn('gap-8 grid grid-cols-3', listClassName)}>
         {products.map((product) => (

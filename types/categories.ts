@@ -3,8 +3,6 @@ export type Category = {
   name: string;
   slug: string;
   isPizza: boolean;
-  createdAt: Date;
-  updatedAt: Date;
 };
 
 export type CategoryWithProductCount = Category & {

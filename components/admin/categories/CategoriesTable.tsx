@@ -1,157 +1,103 @@
 'use client';
 
-import { CategoryFormDialog } from './CategoryFormDialog';
-import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
-import { Card, CardContent } from '@/components/ui/card';
+import { TableActions } from '@/components/admin/table/TableActions';
 import { Badge } from '@/components/ui/badge';
-import { useDelete, useTableActions } from '@/hooks/admin';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
 import { Category, CategoryWithProductCount } from '@/types';
-import { deleteCategory } from '@/app/actions';
 
 interface Props {
   data: CategoryWithProductCount[];
+  startIndex: number;
+  onEdit: (category: Category) => void;
+  onDelete: (id: string) => void;
+  isLoading?: boolean;
 }
 
-export function CategoriesTable({ data }: Props) {
-  const {
-    editingItem: editingCategory,
-    deleteId,
-    isFormOpen,
-    handleEdit,
-    handleCreate,
-    handleCloseForm,
-    handleOpenDelete,
-    handleCloseDelete,
-  } = useTableActions<Category>();
-
-  const { isDeleting, handleDelete } = useDelete(deleteCategory, {
-    onSuccess: handleCloseDelete,
-    successMessage: 'Категория успешно удалена',
-    errorMessage: 'Ошибка удаления категории',
-  });
-
+export function CategoriesTable({
+  data,
+  startIndex,
+  onEdit,
+  onDelete,
+  isLoading,
+}: Props) {
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <AddButton onClick={handleCreate} text="категория" />
-      </div>
+    <div
+      className={`bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden transition-opacity duration-200 ${
+        isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'
+      }`}
+    >
+      <div className="overflow-x-auto">
+        <table className="relative w-full border-collapse">
+          <thead className="top-0 z-10 sticky bg-gray-100/80 backdrop-blur-md border-gray-200 border-b">
+            <tr>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                T/R
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                Название
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                Слаг
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-center uppercase leading-none tracking-widest">
+                Кол-во продуктов
+              </th>
+              <th className="px-6 py-4 pr-8 2xl:pr-10 font-bold text-[10px] text-gray-900 3xl:text-xs text-right uppercase leading-none tracking-widest">
+                Действия
+              </th>
+            </tr>
+          </thead>
 
-      {data?.length === 0 ? (
-        <div className="mt-10 text-muted-foreground text-2xl text-center">
-          Категории не найдены
-        </div>
-      ) : (
-        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
-          <CardContent className="p-6">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50 hover:bg-gray-50">
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
-                    №
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
-                    Название
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
-                    Слаг
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
-                    Количество продуктов
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
-                    Дата создания
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
-                    Действия
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data?.map(
-                  (category: CategoryWithProductCount, index: number) => (
-                    <TableRow
-                      key={category.id}
-                      className="hover:bg-gray-50 transition-colors"
+          <tbody className="divide-y divide-gray-100">
+            {data?.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="px-6 py-12 font-medium text-gray-800 text-sm text-center"
+                >
+                  Категории не найдены
+                </td>
+              </tr>
+            ) : (
+              data?.map((category: CategoryWithProductCount, index: number) => (
+                <tr
+                  key={category.id}
+                  className="group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white transition-all duration-200"
+                >
+                  <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+                    {startIndex + index + 1}
+                  </td>
+                  <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+                    {category.name}
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap">
+                    <code className="bg-gray-100 px-2 py-0.5 rounded font-mono text-gray-600 text-xs">
+                      {category.slug}
+                    </code>
+                  </td>
+                  <td className="px-6 py-2 text-center whitespace-nowrap">
+                    <Badge
+                      variant="secondary"
+                      className={`px-2 py-0.5 rounded font-medium text-[11px] ${
+                        category._count?.products > 0
+                          ? 'bg-violet-50/50 border-violet-100 text-violet-600'
+                          : 'bg-gray-50 border-gray-100 text-gray-500'
+                      }`}
                     >
-                      <TableCell className="py-4">
-                        <div className="flex justify-center items-center bg-linear-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
-                          {index + 1}
-                        </div>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <span className="font-semibold text-gray-900">
-                          {category.name}
-                        </span>
-                      </TableCell>
-                      <TableCell className="py-4">
-                        <code className="bg-gray-100 px-2 py-1 rounded font-mono text-gray-700 text-sm">
-                          {category.slug}
-                        </code>
-                      </TableCell>
-                      <TableCell className="py-4 text-center">
-                        <Badge
-                          variant={
-                            category._count?.products > 0
-                              ? 'default'
-                              : 'secondary'
-                          }
-                          className={`px-3 py-1 text-sm font-semibold ${
-                            category._count?.products > 0
-                              ? 'bg-violet-100 text-violet-700 hover:bg-violet-200'
-                              : 'bg-gray-100 text-gray-600'
-                          }`}
-                        >
-                          {category._count?.products || 0}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="py-4 text-gray-600 text-center">
-                        {new Date(category.createdAt).toLocaleDateString(
-                          'ru-RU',
-                          {
-                            day: '2-digit',
-                            month: 'short',
-                            year: 'numeric',
-                          },
-                        )}
-                      </TableCell>
-                      <TableCell className="space-x-2 text-right">
-                        <TableActions
-                          edit={() => handleEdit(category)}
-                          deleteAction={() => handleOpenDelete(category.id)}
-                          disabled={category._count?.products > 0}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ),
-                )}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
-
-      <CategoryFormDialog
-        open={isFormOpen}
-        onClose={handleCloseForm}
-        category={editingCategory}
-      />
-
-      <DeleteDialog
-        open={!!deleteId}
-        onClose={handleCloseDelete}
-        onConfirm={() => handleDelete(deleteId!)}
-        isDeleting={isDeleting}
-        title="Удалить категорию"
-        description="Вы уверены, что хотите удалить эту категорию? Это действие нельзя отменить."
-      />
+                      {category._count?.products || 0}
+                    </Badge>
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap">
+                    <TableActions
+                      onEdit={() => onEdit(category)}
+                      onDelete={() => onDelete(category.id)}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

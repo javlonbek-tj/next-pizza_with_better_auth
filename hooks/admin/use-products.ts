@@ -3,11 +3,11 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { createProductSchema, ProductFormValues } from '@/lib';
 import toast from 'react-hot-toast';
-import { ActionResult, Product, ProductWithRelations, Category } from '@/types';
+import { ActionResult, Product, Category } from '@/types';
 import { createProduct, updateProduct } from '@/app/actions';
 
 interface Props {
-  product: ProductWithRelations | null;
+  product: Product | null;
   open: boolean;
   onClose: () => void;
   markAsSubmitted: () => void;

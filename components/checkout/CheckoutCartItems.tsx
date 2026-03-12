@@ -7,7 +7,6 @@ import { useClearCart } from '@/hooks';
 import { cn } from '@/lib';
 import { CartItemModel } from '@/types';
 
-
 interface Props {
   cartItems: CartItemModel[];
   isProcessing?: boolean;
@@ -25,17 +24,17 @@ export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
         cartItems.length > 0 && (
           <button
             className={cn(
-              'flex items-center gap-2 text-gray-500 hover:text-red-500 transition-colors cursor-pointer',
-              'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-gray-500'
+              'flex items-center gap-2 text-gray-500 hover:text-red-500 text-sm transition-colors cursor-pointer',
+              'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-gray-500',
             )}
             onClick={() => clearCart()}
             disabled={isDisabled}
             type="button"
           >
             {isClearing ? (
-              <Loader2 className="w-4 h-4 text-gray-500 animate-spin" />
+              <Loader2 className="w-3.5 h-3.5 text-gray-500 animate-spin" />
             ) : (
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-3.5 h-3.5" />
             )}
             <span>Удалить корзину</span>
           </button>
@@ -49,7 +48,7 @@ export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
             cartItem={cartItem}
             className={cn(
               'transition-opacity duration-200',
-              isDisabled && 'pointer-events-none opacity-50'
+              isDisabled && 'pointer-events-none opacity-50',
             )}
           />
         ))}

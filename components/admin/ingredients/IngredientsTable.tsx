@@ -1,161 +1,101 @@
 'use client';
 
 import Image from 'next/image';
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import { IngredientFormDialog } from './IngredientFormDialog';
-import { AddButton, DeleteDialog, TableActions } from '@/components/shared';
+import { TableActions } from '@/components/admin/table/TableActions';
 import { Ingredient } from '@/types';
-import { Card, CardContent } from '@/components/ui/card';
-import { useTableActions, useDelete } from '@/hooks';
-import { deleteIngredient } from '@/app/actions';
 
 interface Props {
-  data: Ingredient[];
+  ingredients: Ingredient[];
+  startIndex: number;
+  onEdit: (ingredient: Ingredient) => void;
+  onDelete: (id: string) => void;
+  isLoading?: boolean;
 }
 
-export function IngredientsTable({ data }: Props) {
-  const {
-    editingItem: editingIngredient,
-    deleteId,
-    isFormOpen,
-    handleEdit,
-    handleCreate,
-    handleCloseForm,
-    handleOpenDelete,
-    handleCloseDelete,
-  } = useTableActions<Ingredient>();
-  const { isDeleting, handleDelete } = useDelete(deleteIngredient, {
-    onSuccess: handleCloseDelete,
-    successMessage: 'Ингредиент успешно удален',
-    errorMessage: 'Ошибка при удалении ингредиента',
-  });
-
+export function IngredientsTable({
+  ingredients,
+  startIndex,
+  onEdit,
+  onDelete,
+  isLoading,
+}: Props) {
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <AddButton onClick={handleCreate} text="ингредиент" />
-      </div>
-      {data.length === 0 ? (
-        <div className="mt-10 text-muted-foreground text-2xl text-center">
-          Ингредиенты не найдены
-        </div>
-      ) : (
-        <Card className="shadow-md border border-gray-200 rounded-xl overflow-x-auto">
-          <CardContent className="p-6">
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50 hover:bg-gray-50">
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
-                    №
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
-                    Изображение
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 uppercase tracking-wide">
-                    Название
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
-                    Цена
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-center uppercase tracking-wide">
-                    Дата создания
-                  </TableHead>
-                  <TableHead className="py-3 font-extrabold text-gray-700 text-right uppercase tracking-wide">
-                    Действия
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data?.map((ingredient: Ingredient, index: number) => (
-                  <TableRow
-                    key={ingredient.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
-                    {/* Number */}
-                    <TableCell className="py-2">
-                      <div className="flex justify-center items-center bg-linear-to-br from-primary to-primary/80 shadow-md rounded-lg w-8 h-8 font-bold text-white">
-                        {index + 1}
-                      </div>
-                    </TableCell>
-
-                    {/* Image */}
-                    <TableCell className="py-2">
-                      <div className="relative border border-gray-200 rounded-lg w-12 h-12 overflow-hidden">
-                        <Image
-                          src={ingredient.imageUrl}
-                          alt={ingredient.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    </TableCell>
-
-                    {/* Name */}
-                    <TableCell className="py-2">
-                      <span className="font-semibold text-gray-900">
-                        {ingredient.name}
-                      </span>
-                    </TableCell>
-
-                    {/* Price */}
-                    <TableCell className="py-2 text-center">
-                      <div className="inline-flex items-center gap-1 bg-green-50 px-3 py-1 rounded-full">
-                        <span className="font-semibold text-green-700">
-                          {ingredient.price.toLocaleString('ru-RU')}
-                        </span>
-                        <span className="text-green-600 text-sm">₽</span>
-                      </div>
-                    </TableCell>
-
-                    {/* Created Date */}
-                    <TableCell className="py-2 text-gray-600 text-center">
-                      {new Date(ingredient.createdAt).toLocaleDateString(
-                        'ru-RU',
-                        {
-                          day: '2-digit',
-                          month: 'short',
-                          year: 'numeric',
-                        },
-                      )}
-                    </TableCell>
-
-                    {/* Actions */}
-                    <TableCell className="space-x-2 text-right">
-                      <TableActions
-                        edit={() => handleEdit(ingredient)}
-                        deleteAction={() => handleOpenDelete(ingredient.id)}
+    <div
+      className={`bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden transition-opacity duration-200 ${
+        isLoading ? 'opacity-50 pointer-events-none' : 'opacity-100'
+      }`}
+    >
+      <div className="overflow-x-auto">
+        <table className="relative w-full border-collapse">
+          <thead className="top-0 z-10 sticky bg-gray-100/80 backdrop-blur-md border-gray-200 border-b">
+            <tr>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                T/R
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                Фото
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest">
+                Название
+              </th>
+              <th className="px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-center uppercase leading-none tracking-widest">
+                Цена
+              </th>
+              <th className="px-6 py-4 pr-8 2xl:pr-10 font-bold text-[10px] text-gray-900 3xl:text-xs text-right uppercase leading-none tracking-widest">
+                Действия
+              </th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-gray-100">
+            {ingredients.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={5}
+                  className="px-6 py-12 font-medium text-gray-800 text-sm text-center"
+                >
+                  Ингредиенты не найдены
+                </td>
+              </tr>
+            ) : (
+              ingredients.map((ingredient: Ingredient, index: number) => (
+                <tr
+                  key={ingredient.id}
+                  className="group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white transition-all duration-200"
+                >
+                  <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+                    {startIndex + index + 1}
+                  </td>
+                  <td className="px-6 py-2">
+                    <div className="flex justify-center items-center bg-gray-50 border border-gray-100 group-hover:border-gray-200 rounded-md w-10 h-10 overflow-hidden transition-colors">
+                      <Image
+                        src={ingredient.imageUrl}
+                        alt={ingredient.name}
+                        width={36}
+                        height={36}
+                        className="object-contain"
                       />
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
-
-      <IngredientFormDialog
-        open={isFormOpen}
-        onClose={handleCloseForm}
-        ingredient={editingIngredient}
-      />
-
-      <DeleteDialog
-        open={!!deleteId}
-        onClose={handleCloseDelete}
-        onConfirm={() => handleDelete(deleteId!)}
-        isDeleting={isDeleting}
-        title="Удалить ингредиент"
-        description="Вы уверены, что хотите удалить этот ингредиент? Это действие нельзя отменить."
-      />
+                    </div>
+                  </td>
+                  <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+                    {ingredient.name}
+                  </td>
+                  <td className="px-6 py-2 text-center whitespace-nowrap">
+                    <span className="inline-flex items-center gap-1 bg-green-50/50 px-2 py-0.5 border border-green-100 rounded font-medium text-[11px] text-green-600">
+                      {ingredient.price.toLocaleString('ru-RU')} ₽
+                    </span>
+                  </td>
+                  <td className="px-6 py-2 whitespace-nowrap">
+                    <TableActions
+                      onEdit={() => onEdit(ingredient)}
+                      onDelete={() => onDelete(ingredient.id)}
+                    />
+                  </td>
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

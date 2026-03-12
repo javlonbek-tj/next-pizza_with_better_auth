@@ -6,7 +6,7 @@ import { Category } from '@/types';
 
 interface Props {
   className?: string;
-  categories: Omit<Category, 'createdAt' | 'updatedAt'>[]
+  categories: Category[];
 }
 
 export function Categories({ className, categories }: Props) {
@@ -22,23 +22,23 @@ export function Categories({ className, categories }: Props) {
   return (
     <div
       className={cn(
-        'flex items-center gap-1 bg-gray-50 p-1 rounded-xl font-medium text-base',
+        'flex items-center gap-1 bg-gray-100 p-1 rounded-md font-medium text-base',
         className
       )}
     >
-        {categories.map((category) => (
-          <a
-            key={category.id}
-            href={`/#${category.slug}`}
-            onClick={() => handleClick(category.slug)}
-            className={cn(
-              'hover:bg-white px-4 py-1 rounded-xl font-medium hover:text-primary transition duration-300',
-              activeCategoryName === category.slug && 'bg-white text-primary'
-            )}
-          >
-            {category.name}
-          </a>
-        ))}
+      {categories.map((category) => (
+        <a
+          key={category.id}
+          href={`/#${category.slug}`}
+          onClick={() => handleClick(category.slug)}
+          className={cn(
+            'hover:bg-white px-4 py-1 rounded-md font-medium hover:text-primary text-sm transition duration-300',
+            activeCategoryName === category.slug && 'bg-white text-primary'
+          )}
+        >
+          {category.name}
+        </a>
+      ))}
     </div>
   );
 }

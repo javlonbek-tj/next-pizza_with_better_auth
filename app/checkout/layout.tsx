@@ -11,9 +11,9 @@ export default function CheckoutLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <main className="bg-[#F4F1EE] min-h-screen">
+    <div className="bg-[#F4F1EE] min-h-screen">
       <SimpleHeader />
       {children}
-    </main>
+    </div>
   );
 }

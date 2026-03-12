@@ -12,7 +12,6 @@ import { cn } from '@/lib';
 import { Api } from '@/services/api-client';
 import { Product } from '@/types';
 
-
 interface Props {
   className?: string;
 }
@@ -36,14 +35,12 @@ export function SearchInput({ className }: Props) {
 
   return (
     <>
-      {focused && (
-        <div className="inset-0 z-40 fixed bg-black/50" />
-      )}
+      {focused && <div className="z-40 fixed inset-0 bg-black/50" />}
       <div
         ref={ref}
         className={cn(
           'z-40 relative flex flex-1 items-center bg-gray-100 mx-10 px-5 py-2.5 rounded-2xl transition duration-300',
-          className
+          className,
         )}
       >
         <Search className="h-5 text-gray-400" />
@@ -58,16 +55,17 @@ export function SearchInput({ className }: Props) {
         {searchedProducts && searchedProducts.length > 0 && (
           <div
             className={cn(
-              'top-14 right-0 left-0 z-[100] absolute bg-white shadow-md rounded-xl max-h-96 overflow-y-auto origin-top transition-all duration-200',
+              'top-14 right-0 left-0 z-100 absolute bg-white shadow-md rounded-xl max-h-96 overflow-y-auto origin-top transition-all duration-200',
               focused
                 ? 'opacity-100 scale-100'
-                : 'opacity-0 scale-95 pointer-events-none'
+                : 'opacity-0 scale-95 pointer-events-none',
             )}
           >
             {searchedProducts.map((product) => (
               <Link
                 key={product.id}
                 href={`/product/${product.id}`}
+                scroll={false}
                 className="flex items-center gap-3 hover:bg-orange-50 px-3 py-2 w-full transition duration-200"
               >
                 <Image

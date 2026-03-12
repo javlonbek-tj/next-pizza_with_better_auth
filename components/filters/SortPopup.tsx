@@ -40,7 +40,7 @@ export function SortPopup({ className }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
-          'inline-flex justify-center items-center gap-2 bg-gray-50 hover:bg-gray-100 px-5 py-2.5 rounded-2xl outline-none font-medium text-sm transition-colors duration-200 cursor-pointer',
+          'inline-flex justify-center items-center gap-2 bg-gray-100 px-5 py-2.5 rounded-md outline-none font-medium text-sm transition-colors duration-200 cursor-pointer',
           className,
         )}
       >

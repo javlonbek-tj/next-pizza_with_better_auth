@@ -21,16 +21,16 @@ export function Title({ text, size = 'sm', className }: Props) {
 
   const mapClassNameBySize = {
     xs: 'text-[16px]',
-    sm: 'text-[22px]',
-    md: 'text-[26px]',
-    lg: 'text-[32px]',
-    xl: 'text-[40px]',
-    '2xl': 'text-[48px]',
+    sm: 'text-[18px]',
+    md: 'text-[22px]',
+    lg: 'text-[26px]',
+    xl: 'text-[32px]',
+    '2xl': 'text-[40px]',
   } as const;
 
   return React.createElement(
     mapTagBySize[size],
     { className: clsx(mapClassNameBySize[size], className) },
-    text
+    text,
   );
 }

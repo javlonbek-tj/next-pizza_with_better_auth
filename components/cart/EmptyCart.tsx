@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 import { BackButton, Title } from '../shared';
 import { SheetClose } from '../ui/sheet';
@@ -9,8 +8,6 @@ interface Props {
 }
 
 export function EmptyCart({ useSheetClose = false }: Props) {
-  const router = useRouter();
-
   return (
     <div className="flex flex-col justify-center items-center mx-auto w-72">
       <Image
@@ -33,7 +30,7 @@ export function EmptyCart({ useSheetClose = false }: Props) {
           <BackButton />
         </SheetClose>
       ) : (
-        <BackButton onClick={() => router.back()} />
+        <BackButton />
       )}
     </div>
   );

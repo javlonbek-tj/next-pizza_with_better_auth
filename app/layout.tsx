@@ -6,7 +6,7 @@ import { Providers } from './providers';
 import { cn } from '@/lib/utils';
 
 const nunito = Nunito({
-  subsets: ['cyrillic'],
+  subsets: ['latin', 'cyrillic'],
   variable: '--font-nunito',
   weight: ['400', '500', '600', '700', '800', '900'],
 });

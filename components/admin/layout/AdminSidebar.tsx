@@ -14,7 +14,7 @@ import {
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/admin', label: 'Панель управления', icon: LayoutDashboard },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/products', label: 'Товары', icon: Package },
   { href: '/admin/categories', label: 'Категории', icon: FolderTree },
   { href: '/admin/ingredients', label: 'Ингредиенты', icon: FolderTree },
@@ -29,9 +29,11 @@ export function AdminSidebar() {
   return (
     <aside className="bg-white border-r w-64">
       <div className="p-6">
-        <h1 className="font-bold text-gray-800 text-2xl">Админ-панель</h1>
+        <h1 className="font-bold text-gray-800 text-xl text-center">
+          Админ-панель
+        </h1>
       </div>
-      <nav className="space-y-2 px-4">
+      <nav className="space-y-1 px-4">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -43,10 +45,8 @@ export function AdminSidebar() {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors',
-                isActive
-                  ? 'bg-primary text-primary-foreground'
-                  : 'hover:bg-gray-100',
+                'flex items-center gap-3 px-3 py-3 rounded-md transition-colors',
+                isActive ? 'bg-gray-100 text-gray-800' : 'hover:bg-gray-100',
               )}
             >
               <Icon className="w-5 h-5" />
@@ -55,10 +55,10 @@ export function AdminSidebar() {
           );
         })}
       </nav>
-      <div className="mt-auto p-4 border-t">
+      <div className="mt-2 p-3 border-t">
         <Link
           href="/"
-          className="flex items-center gap-3 hover:bg-gray-100 px-4 py-3 rounded-lg text-gray-600 transition-colors"
+          className="flex items-center gap-3 hover:bg-gray-100 px-3 py-3 rounded-md text-gray-600 transition-colors"
         >
           <Home className="w-5 h-5" />
           <span className="font-medium">На главную</span>

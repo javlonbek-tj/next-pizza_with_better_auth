@@ -5,12 +5,12 @@ interface Props {
 
 export function CheckoutPriceInfo({ title, value }: Props) {
   return (
-    <div className='flex justify-between text-lg items-center'>
-      <div className='flex flex-1'>
+    <div className="flex justify-between items-center text-md">
+      <div className="flex flex-1">
         {title}
-        <div className='border-b border-dashed border-b-neutral-200  flex-1 relative -top-1 mx-2' />
+        <div className="-top-1 relative flex-1 mx-2 border-b border-b-neutral-200 border-dashed" />
       </div>
-      <div className='font-bold'>{value}</div>
+      <div className="font-bold">{value}</div>
     </div>
   );
 }

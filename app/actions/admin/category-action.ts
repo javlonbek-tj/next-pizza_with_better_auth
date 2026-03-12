@@ -3,7 +3,7 @@
 import { ActionResult, Category } from '@/types';
 import { categorySchema, CategoryFormValues } from '@/lib';
 import { prisma } from '@/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 
 export async function createCategory(
   data: CategoryFormValues,
@@ -41,6 +41,7 @@ export async function createCategory(
     });
 
     revalidatePath('/admin/categories');
+    updateTag('categories');
 
     return {
       success: true,
@@ -94,6 +95,7 @@ export async function updateCategory(
     });
 
     revalidatePath('/admin/categories');
+    updateTag('categories');
 
     return {
       success: true,
@@ -116,6 +118,7 @@ export async function deleteCategory(id: string): Promise<ActionResult<null>> {
     });
 
     revalidatePath('/admin/categories');
+    updateTag('categories');
 
     return {
       success: true,

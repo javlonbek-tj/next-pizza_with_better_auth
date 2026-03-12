@@ -17,15 +17,15 @@ export function CheckoutCard({
   children,
 }: Props) {
   return (
-    <div className={cn('bg-white rounded-3xl', className)}>
+    <div className={cn('bg-white rounded-2xl', className)}>
       {title && (
-        <div className="flex justify-between items-center gap-4 px-7 py-5 border-gray-100 border-b">
-          <Title text={title} size="sm" className="font-bold" />
+        <div className="flex justify-between items-center gap-4 px-7 py-3 border-gray-100 border-b">
+          <Title text={title} size="xs" className="font-bold" />
           {endAdornment}
         </div>
       )}
 
-      <div className={cn('px-7 py-5', contentClassName)}>{children}</div>
+      <div className={cn('px-7 py-3', contentClassName)}>{children}</div>
     </div>
   );
 }

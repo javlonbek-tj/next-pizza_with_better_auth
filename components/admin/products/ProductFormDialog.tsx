@@ -30,13 +30,7 @@ import {
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
 import { FormActions } from '@/components/shared/FormActions';
 
-import {
-  ProductWithRelations,
-  Category,
-  Ingredient,
-  PizzaSize,
-  PizzaType,
-} from '@/types';
+import { Product, Category, Ingredient, PizzaSize, PizzaType } from '@/types';
 import { MultiSelect } from '@/components/shared/MultiSelect';
 import { useProductForm, useProductItems, useImageUpload } from '@/hooks';
 import { ProductItemCard } from './ProductItemCard';
@@ -44,7 +38,7 @@ import { ProductItemCard } from './ProductItemCard';
 interface Props {
   open: boolean;
   onClose: () => void;
-  product: ProductWithRelations | null;
+  product: Product | null;
   categories: Category[];
   ingredients: Ingredient[];
   sizes: PizzaSize[];

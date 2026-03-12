@@ -51,37 +51,39 @@ export default function CheckoutPage() {
   const isProcessing = isSubmitting || isMutating;
 
   return (
-    <Container className="mt-10 pb-10">
-      <Title text="Оформление заказа" size="md" className="mb-2 font-bold" />
+    <Container className="mt-6 pb-10">
+      <main>
+        <Title text="Оформление заказа" className="font-bold" size="md" />
 
-      {isCartPending ? (
-        <Spinner className="mt-20" />
-      ) : (
-        <>
-          {cartItems.length === 0 ? (
-            <EmptyCart />
-          ) : (
-            <FormProvider {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className={cn(
-                  'flex gap-6 mt-6 transition-opacity duration-200',
-                  isProcessing && 'opacity-90 pointer-events-none',
-                )}
-              >
-                <CheckoutDetails
-                  cartItems={cartItems}
-                  isProcessing={isProcessing}
-                />
-                <CheckoutTotal
-                  cartItems={cartItems}
-                  isProcessing={isProcessing}
-                />
-              </form>
-            </FormProvider>
-          )}
-        </>
-      )}
+        {isCartPending ? (
+          <Spinner className="mt-20" />
+        ) : (
+          <>
+            {cartItems.length === 0 ? (
+              <EmptyCart />
+            ) : (
+              <FormProvider {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className={cn(
+                    'flex gap-6 mt-4 transition-opacity duration-200',
+                    isProcessing && 'opacity-90 pointer-events-none',
+                  )}
+                >
+                  <CheckoutDetails
+                    cartItems={cartItems}
+                    isProcessing={isProcessing}
+                  />
+                  <CheckoutTotal
+                    cartItems={cartItems}
+                    isProcessing={isProcessing}
+                  />
+                </form>
+              </FormProvider>
+            )}
+          </>
+        )}
+      </main>
     </Container>
   );
 }

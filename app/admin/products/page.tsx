@@ -1,44 +1,48 @@
-import { Products } from '@/components/admin';
-import { Spinner } from '@/components/shared';
+import { connection } from 'next/server';
 import {
-  getAllProducts,
-  getCategories,
-  getIngredients,
-  getPizzaSizes,
-  getPizzaTypes,
+  getProductTableData,
+  getCategoryList,
+  getIngredientList,
+  getPizzaSizesList,
+  getPizzaTypesList,
 } from '@/server';
-import { Suspense } from 'react';
+import { Products } from '@/components/admin';
 
-async function ProductsList() {
-  const products = await getAllProducts();
-  const categories = await getCategories();
-  const ingredients = await getIngredients();
-  const sizes = await getPizzaSizes();
-  const types = await getPizzaTypes();
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{
+    search?: string;
+    categoryId?: string;
+    page?: string;
+    limit?: string;
+  }>;
+}) {
+  await connection();
+  const {
+    search = '',
+    categoryId = 'all',
+    page = '1',
+    limit = '10',
+  } = await searchParams;
+
+  const [productsData, categoriesData, ingredientsData, sizesData, typesData] =
+    await Promise.all([
+      getProductTableData(search, categoryId, Number(page), Number(limit)),
+      getCategoryList(),
+      getIngredientList(),
+      getPizzaSizesList(),
+      getPizzaTypesList(),
+    ]);
 
   return (
     <Products
-      products={products}
-      categories={categories}
-      ingredients={ingredients}
-      sizes={sizes}
-      types={types}
+      products={productsData.data}
+      totalCount={productsData.total}
+      categories={categoriesData}
+      ingredients={ingredientsData}
+      sizes={sizesData}
+      types={typesData}
     />
-  );
-}
-
-export default async function ProductsPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="font-bold text-3xl">Продукты</h1>
-        <p className="mt-2 text-muted-foreground">
-          Управление продуктами и их вариантами
-        </p>
-      </div>
-      <Suspense fallback={<Spinner />}>
-        <ProductsList />
-      </Suspense>
-    </div>
   );
 }

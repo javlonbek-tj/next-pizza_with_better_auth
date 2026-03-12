@@ -1,28 +1,33 @@
 import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
-interface Props {
+interface Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   className?: string;
-  onClick?: VoidFunction;
+  href?: string;
   text?: string;
   size?: 'sm' | 'lg' | 'default';
 }
 
 export function BackButton({
   className,
-  onClick,
-  text = 'Вернуться назад',
+  href = '/',
+  text = 'На главную',
   size = 'lg',
+  ...props
 }: Props) {
   return (
     <Button
-      className={cn('w-56 h-12 text-base cursor-pointer', className)}
+      className={cn('cursor-pointer', className)}
       size={size}
-      onClick={onClick}
+      asChild
+      {...props}
     >
-      <ArrowLeft className='mr-2 w-5' />
-      {text}
+      <Link href={href} className="flex items-center gap-2">
+        <ArrowLeft className="w-5" />
+        {text}
+      </Link>
     </Button>
   );
 }

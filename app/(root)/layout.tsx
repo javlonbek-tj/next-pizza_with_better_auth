@@ -14,7 +14,7 @@ export default function HomeLayout({
   return (
     <div className="flex flex-col flex-1">
       <HomeHeader />
-      <main className="flex-1">{children}</main>
+      {children}
       {modal}
     </div>
   );

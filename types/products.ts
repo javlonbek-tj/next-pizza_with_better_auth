@@ -1,14 +1,18 @@
-import { Category } from './categories';
-import { Ingredient } from './ingredients';
-import { PizzaSize, PizzaType } from './pizza';
+import type { Category } from './categories';
+import type { Ingredient } from './ingredients';
+import type { PizzaSize, PizzaType } from './pizza';
 
 export type Product = {
   id: string;
   name: string;
   imageUrl: string;
-  categoryId: string;
-  createdAt: Date;
-  updatedAt: Date;
+  category: {
+    name: string;
+  };
+  _count: {
+    productItems: number;
+    ingredients: number;
+  };
 };
 
 export type ProductItem = {

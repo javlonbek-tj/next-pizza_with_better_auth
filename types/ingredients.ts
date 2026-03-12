@@ -1,8 +1,6 @@
 export type Ingredient = {
-    name: string;
-    id: string;
-    createdAt: Date;
-    updatedAt: Date;
-    price: number;
-    imageUrl: string;
-}
+  id: string;
+  name: string;
+  price: number;
+  imageUrl: string;
+};

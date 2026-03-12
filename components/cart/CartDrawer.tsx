@@ -1,8 +1,8 @@
 import { ArrowRight, Loader2 } from 'lucide-react';
-import { PropsWithChildren, useState } from 'react';
 import { useIsMutating } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { PropsWithChildren, useEffect, useState } from 'react';
 import {
   Sheet,
   SheetContent,
@@ -20,10 +20,16 @@ import { AuthModal } from '../modals/AuthModal';
 import { authClient } from '@/lib/auth-client';
 
 export function CartDrawer({ children }: PropsWithChildren) {
+  const [open, setOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
   const { data } = useCart();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
 
   const isDeleting =
     useIsMutating({
@@ -39,6 +45,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
       if (!isAuthenticated) {
         setAuthOpen(true);
       } else {
+        setOpen(false);
         router.push('/checkout');
         router.refresh();
       }
@@ -53,7 +60,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
   const totalAmount = data ? calculateTotalAmount(data) : 0;
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent
         className={cn(
@@ -78,7 +85,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
             <>
               <div
                 className={cn(
-                  'flex flex-col gap-4 overflow-auto scrollbar-thin transition-opacity duration-200',
+                  'flex flex-col gap-4 overflow-auto transition-opacity duration-200 scrollbar-thin',
                   {
                     'opacity-60 pointer-events-none': isDeleting,
                   },
@@ -102,20 +109,20 @@ export function CartDrawer({ children }: PropsWithChildren) {
                   'opacity-60 pointer-events-none': isDeleting,
                 })}
               >
-                <div className='flex items-center justify-between gap-4 mb-4'>
+                <div className="flex justify-between items-center gap-4 mb-4">
                   <span>Итого</span>
-                  <span className='relative flex-1 border-b border-dashed top-1 border-b-neutral-200'></span>
-                  <span className='font-bold'>{totalAmount} ₽</span>
+                  <span className="top-1 relative flex-1 border-b border-b-neutral-200 border-dashed"></span>
+                  <span className="font-bold">{totalAmount} ₽</span>
                 </div>
 
                 <Button
-                  className='h-12 cursor-pointer'
+                  className="h-12 cursor-pointer"
                   onClick={handleClick}
                   disabled={isLoading || isDeleting}
                 >
-                  <span className='flex items-center gap-2'>
+                  <span className="flex items-center gap-2">
                     {isLoading ? (
-                      <Loader2 className='w-5 h-5 animate-spin' />
+                      <Loader2 className="w-5 h-5 animate-spin" />
                     ) : (
                       <>
                         <span>Оформить заказ</span> <ArrowRight />
@@ -128,7 +135,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
               <AuthModal
                 open={authOpen}
                 onClose={() => setAuthOpen(false)}
-                callbackUrl='/checkout'
+                callbackUrl="/checkout"
               />
             </>
           )}

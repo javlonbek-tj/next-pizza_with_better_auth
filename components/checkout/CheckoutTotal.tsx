@@ -33,7 +33,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
         endAdornment={
           <span
             className={cn(
-              'font-extrabold text-2xl transition-opacity',
+              'font-extrabold text-xl transition-opacity',
               isProcessing && 'opacity-90',
             )}
           >
@@ -54,7 +54,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
           <CheckoutPriceInfo
             title={
               <div className="flex items-center gap-2">
-                <Package size={18} className="text-gray-400" />
+                <Package size={16} className="text-gray-400" />
                 Стоимость корзины:
               </div>
             }
@@ -64,7 +64,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
           <CheckoutPriceInfo
             title={
               <div className="flex items-center gap-2">
-                <Truck size={18} className="text-gray-400" />
+                <Truck size={16} className="text-gray-400" />
                 Доставка:
               </div>
             }
@@ -75,7 +75,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
 
           <Button
             type="submit"
-            className="mt-6 rounded-2xl h-12 font-bold text-base cursor-pointer"
+            className="mt-6 rounded-xl h-12 font-bold text-sm cursor-pointer"
             disabled={isDisabled}
           >
             Оформить заказ

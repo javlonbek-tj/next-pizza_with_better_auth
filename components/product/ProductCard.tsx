@@ -27,6 +27,7 @@ export function ProductCard({
     <div className={cn('flex flex-col', className)}>
       <Link
         href={`/product/${product.id}${queryString ? `?${queryString}` : ''}`}
+        scroll={false}
       >
         <div className="flex justify-center bg-secondary p-6 rounded-lg h-64">
           <Image
@@ -36,33 +37,38 @@ export function ProductCard({
             height={215}
           />
         </div>
-
-        <div className="mt-4">
-          <Title
-            text={product.name}
-            size="sm"
-            className="mb-2 font-bold line-clamp-1 leading-tight"
-          />
-
-          {ingredients.length > 0 && (
-            <p className="text-gray-400 text-sm line-clamp-2">
-              {ingredients.map((ingredient) => ingredient.name).join(', ')}
-            </p>
-          )}
-        </div>
       </Link>
+
+      <div className="mt-4">
+        <Title
+          text={product.name}
+          size="xs"
+          className="mb-2 font-bold line-clamp-1 leading-tight"
+        />
+
+        {ingredients.length > 0 && (
+          <p className="text-gray-400 text-sm line-clamp-2">
+            {ingredients.map((ingredient) => ingredient.name).join(', ')}
+          </p>
+        )}
+      </div>
 
       <div className="flex justify-between items-center mt-auto pt-4">
         <span className="text-[20px]">
           от <b>{product.productItems[0].price} ₽</b>
         </span>
 
-        <Button
-          variant="secondary"
-          className="font-bold text-base cursor-pointer"
+        <Link
+          href={`/product/${product.id}${queryString ? `?${queryString}` : ''}`}
+          scroll={false}
         >
-          <Plus size={20} className="mr-1" /> Добавить
-        </Button>
+          <Button
+            variant="secondary"
+            className="font-bold text-base cursor-pointer"
+          >
+            <Plus size={20} className="mr-1" /> Добавить
+          </Button>
+        </Link>
       </div>
     </div>
   );

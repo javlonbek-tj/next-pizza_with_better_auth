@@ -3,7 +3,7 @@
 import { PizzaSizeFormValues, pizzaSizeSchema } from '@/lib';
 import { prisma } from '@/server';
 import { ActionResult, PizzaSize } from '@/types';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, updateTag } from 'next/cache';
 
 export async function createPizzaSize(
   data: PizzaSizeFormValues,
@@ -38,6 +38,7 @@ export async function createPizzaSize(
     });
 
     revalidatePath('/admin/pizza-sizes');
+    updateTag('pizza-options');
 
     return {
       success: true,
@@ -88,6 +89,7 @@ export async function updatePizzaSize(
     });
 
     revalidatePath('/admin/pizza-sizes');
+    updateTag('pizza-options');
 
     return {
       success: true,
@@ -110,6 +112,7 @@ export async function deletePizzaSize(id: string): Promise<ActionResult<null>> {
     });
 
     revalidatePath('/admin/pizza-sizes');
+    updateTag('pizza-options');
 
     return {
       success: true,

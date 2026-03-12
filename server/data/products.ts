@@ -4,7 +4,7 @@ import {
   SortValue,
 } from '@/lib/constants';
 import { prisma } from '../prisma';
-import { sleep } from '@/lib';
+import type { ProductWhereInput } from '@/lib/generated/prisma/models';
 
 export interface GetSearchParams {
   query?: string;
@@ -90,7 +90,6 @@ export const getFilteredProducts = async (params: GetSearchParams) => {
       }
     }),
   }));
-  await sleep(5000);
   return sortedCategories.sort((a, b) => {
     if (a.isPizza && !b.isPizza) return -1;
     if (!a.isPizza && b.isPizza) return 1;
@@ -118,22 +117,50 @@ export const getProductById = async (id: string) => {
   });
 };
 
-export const getAllProducts = async () => {
-  return await prisma.product.findMany({
-    where: { isActive: true },
-    include: {
-      category: true,
-      ingredients: {
-        where: { isActive: true },
+export const getProductTableData = async (
+  search: string = '',
+  categoryId: string = 'all',
+  page: number = 1,
+  limit: number = 10,
+) => {
+  const skip = (page - 1) * limit;
+
+  const where: ProductWhereInput = {
+    isActive: true,
+    ...(search && {
+      name: {
+        contains: search,
+        mode: 'insensitive',
       },
-      productItems: {
-        where: { isActive: true },
-        include: {
-          size: true,
-          type: true,
+    }),
+    ...(categoryId && categoryId !== 'all' && { categoryId }),
+  };
+
+  const [data, total] = await Promise.all([
+    prisma.product.findMany({
+      where,
+      select: {
+        id: true,
+        name: true,
+        imageUrl: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+        _count: {
+          select: {
+            productItems: true,
+            ingredients: true,
+          },
         },
       },
-    },
-    orderBy: { createdAt: 'asc' },
-  });
+      orderBy: { createdAt: 'desc' },
+      skip,
+      take: limit,
+    }),
+    prisma.product.count({ where }),
+  ]);
+
+  return { data, total };
 };
