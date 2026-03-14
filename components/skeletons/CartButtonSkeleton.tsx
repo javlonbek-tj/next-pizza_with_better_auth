@@ -3,13 +3,13 @@ import { Button } from '../ui/button';
 export function CartButtonSkeleton() {
   return (
     <Button
-      className='flex items-center min-w-[120px] cursor-not-allowed bg-gray-400'
+      className='flex items-center bg-gray-400 cursor-not-allowed min-w-30'
       disabled
     >
       <div className='flex items-center gap-2'>
         <div className='flex items-center gap-1'>
-          <div className='h-5 w-5 bg-gray-300 rounded animate-pulse'></div>
-          <div className='h-4 w-3 bg-gray-300 rounded animate-pulse'></div>
+          <div className='w-5 h-5 bg-gray-300 rounded animate-pulse'></div>
+          <div className='w-3 h-4 bg-gray-300 rounded animate-pulse'></div>
         </div>
       </div>
     </Button>

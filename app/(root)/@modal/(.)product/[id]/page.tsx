@@ -1,6 +1,6 @@
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
-import { getPizzaSizes, getPizzaTypes } from '@/server';
+import { getPizzaSizesList, getPizzaTypesList } from '@/server';
 import { ChooseProductModal } from '@/components/modals';
 
 export default async function ProductModalPage({
@@ -10,8 +10,8 @@ export default async function ProductModalPage({
 }) {
   const { id } = await params;
   const product = await getProductById(id);
-  const pizzaSizes = await getPizzaSizes();
-  const pizzaTypes = await getPizzaTypes();
+  const pizzaSizes = await getPizzaSizesList();
+  const pizzaTypes = await getPizzaTypesList();
 
   return (
     <ChooseProductModal>

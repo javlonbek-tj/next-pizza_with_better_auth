@@ -14,16 +14,7 @@ export default async function IngredientsPage({
   await connection();
   const { search = '', page = '1', limit = '10' } = await searchParams;
 
-  const { data, total } = await getIngredients(
-    search,
-    Number(page),
-    Number(limit),
-  );
+  const dataPromise = getIngredients(search, Number(page), Number(limit));
 
-  return (
-    <div className="space-y-6">
-      <h1 className="font-bold text-3xl">Ингредиенты</h1>
-      <Ingredients ingredients={data} totalCount={total} />
-    </div>
-  );
+  return <Ingredients dataPromise={dataPromise} />;
 }

@@ -111,26 +111,26 @@ export function ChoosePizzaForm({
             isModal && 'py-4',
           )}
         >
-          <Title text={product.name} size="md" />
-          <p className="text-gray-400">{description}</p>
+          <Title text={product.name} size='md' />
+          <p className='text-gray-400'>{description}</p>
 
           <GroupVariants
             variants={allPizzaSizes}
             value={sizeId}
             onSelect={(value) => setSizeId(value)}
-            className="mt-4"
+            className='mt-4'
           />
 
           <GroupVariants
             variants={allPizzaTypes}
             value={typeId}
             onSelect={(value) => setTypeId(value)}
-            className="mt-3"
+            className='mt-3'
           />
 
-          <Title text="Ингредиенты" size="xs" className="mt-4" />
+          <Title text='Ингредиенты' size='xs' className='mt-4' />
 
-          <div className="gap-2 grid grid-cols-3 mt-4 pb-4">
+          <div className='grid grid-cols-3 gap-2 pb-4 mt-4'>
             {product.ingredients.map((ingredient) => (
               <IngredientItem
                 ingredient={ingredient}
@@ -152,8 +152,8 @@ export function ChoosePizzaForm({
           )}
         >
           {currentItemId ? (
-            <div className="flex justify-between items-center bg-secondary px-5 rounded-[18px] w-full h-14 font-bold text-base">
-              <span className="text-gray-500">
+            <div className='flex justify-between items-center bg-secondary px-5 rounded-[18px] w-full h-14 font-bold text-base'>
+              <span className='text-gray-500'>
                 В корзине:{' '}
                 {cartItems?.find((item) => item.id === currentItemId)?.quantity}
               </span>
@@ -167,12 +167,12 @@ export function ChoosePizzaForm({
             </div>
           ) : (
             <Button
-              className="py-5 w-full cursor-pointer"
+              className='w-full py-5 cursor-pointer'
               disabled={isSubmitting}
               onClick={onAddToCart}
             >
               {isSubmitting ? (
-                <Loader className="w-5 h-5 animate-spin" />
+                <Loader className='w-5 h-5 animate-spin' />
               ) : (
                 <>Добавить в корзину за {totalPrice} ₽</>
               )}

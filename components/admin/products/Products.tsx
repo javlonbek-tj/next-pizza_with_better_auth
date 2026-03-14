@@ -1,7 +1,8 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { AddButton, DeleteDialog, Spinner } from '@/components/shared';
+import { AddButton, DeleteDialog } from '@/components/shared';
 import type {
   Category,
   Ingredient,
@@ -14,12 +15,13 @@ import { useTableActions, useTableFilters } from '@/hooks/table';
 import { deleteProduct } from '@/app/actions';
 import { ProductFormDialog } from './ProductFormDialog';
 import { ProductTable } from './ProductTable';
+import { ProductTableBody } from './ProductTableBody';
 import { ProductTableFilters } from './ProductTableFilters';
-import { PaginationWrapper } from '@/components/admin/table/PaginationWrapper';
+import { ProductPaginationAsync } from './ProductPaginationAsync';
+import { TableBodySkeleton } from '@/components/skeletons';
 
 interface Props {
-  products: Product[];
-  totalCount: number;
+  productsPromise: Promise<{ data: Product[]; total: number }>;
   ingredients: Ingredient[];
   categories: Category[];
   sizes: PizzaSize[];
@@ -27,8 +29,7 @@ interface Props {
 }
 
 export function Products({
-  products,
-  totalCount,
+  productsPromise,
   ingredients,
   categories,
   sizes,
@@ -41,7 +42,6 @@ export function Products({
   const search = searchParams.get('search') || '';
   const categoryId = searchParams.get('categoryId') || 'all';
 
-  const totalPages = Math.ceil(totalCount / limit);
   const startIndex = (page - 1) * limit;
 
   const {
@@ -69,12 +69,12 @@ export function Products({
   });
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-end">
-        <AddButton onClick={handleCreate} text="продукт" />
+    <div className='space-y-6'>
+      <div className='flex justify-end'>
+        <AddButton onClick={handleCreate} text='продукт' />
       </div>
 
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+      <div className='bg-white rounded-lg shadow-sm dark:bg-gray-800'>
         <ProductTableFilters
           search={search}
           handleSearch={handleSearch}
@@ -83,32 +83,28 @@ export function Products({
           handleFilterChange={handleFilterChange}
         />
 
-        <div className="p-4 overflow-hidden">
-          {isFilterLoading && <Spinner size="sm" />}
-
-          <ProductTable
-            products={products}
-            startIndex={startIndex}
-            isLoading={isFilterLoading}
-            onEdit={handleEdit}
-            onDelete={handleOpenDelete}
-          />
-
-          {totalPages > 1 && (
-            <div
-              className={`transition-opacity duration-200 ${
-                isFilterLoading ? 'opacity-40 pointer-events-none' : ''
-              }`}
-            >
-              <PaginationWrapper
-                currentPage={page}
-                totalPages={totalPages}
-                totalItems={totalCount}
-                itemsPerPage={limit}
-                setIsPending={setIsPending}
+        <div className='p-4 overflow-hidden'>
+          <ProductTable>
+            <Suspense fallback={<TableBodySkeleton colSpan={7} />}>
+              <ProductTableBody
+                productsPromise={productsPromise}
+                startIndex={startIndex}
+                isLoading={isFilterLoading}
+                onEdit={handleEdit}
+                onDelete={handleOpenDelete}
               />
-            </div>
-          )}
+            </Suspense>
+          </ProductTable>
+
+          <Suspense fallback={null}>
+            <ProductPaginationAsync
+              productsPromise={productsPromise}
+              page={page}
+              limit={limit}
+              isLoading={isFilterLoading}
+              setIsPending={setIsPending}
+            />
+          </Suspense>
         </div>
       </div>
 
@@ -127,8 +123,8 @@ export function Products({
         onClose={handleCloseDelete}
         isDeleting={isDeleting}
         onConfirm={() => deleteId && handleDelete(deleteId)}
-        title="Удалить продукт?"
-        description="Вы уверены, что хотите удалить продукт? Это действие нельзя отменить."
+        title='Удалить продукт?'
+        description='Вы уверены, что хотите удалить продукт? Это действие нельзя отменить.'
       />
     </div>
   );

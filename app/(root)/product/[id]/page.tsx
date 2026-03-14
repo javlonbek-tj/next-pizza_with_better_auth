@@ -1,7 +1,7 @@
 import { Container, BackButton } from '@/components/shared';
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
-import { getPizzaSizes, getPizzaTypes } from '@/server';
+import { getPizzaSizesList, getPizzaTypesList } from '@/server';
 
 export default async function ProductPage({
   params,
@@ -10,8 +10,8 @@ export default async function ProductPage({
 }) {
   const { id } = await params;
   const product = await getProductById(id);
-  const pizzaSizes = await getPizzaSizes();
-  const pizzaTypes = await getPizzaTypes();
+  const pizzaSizes = await getPizzaSizesList();
+  const pizzaTypes = await getPizzaTypesList();
 
   return (
     <Container className="my-10">

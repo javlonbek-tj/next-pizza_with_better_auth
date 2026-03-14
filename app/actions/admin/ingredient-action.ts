@@ -37,7 +37,8 @@ export async function createIngredient(
     });
 
     revalidatePath('/admin/ingredients');
-    updateTag('ingredients');
+    revalidatePath('/admin/products');
+    updateTag('ingredients-table');
 
     return {
       success: true,
@@ -88,7 +89,8 @@ export async function updateIngredient(
     });
 
     revalidatePath('/admin/ingredients');
-    updateTag('ingredients');
+    revalidatePath('/admin/products');
+    updateTag('ingredients-table');
 
     return {
       success: true,
@@ -115,7 +117,8 @@ export async function deleteIngredient(
     await deleteImageFile(ingredient.imageUrl);
 
     revalidatePath('/admin/ingredients');
-    updateTag('ingredients');
+    revalidatePath('/admin/products');
+    updateTag('ingredients-table');
 
     return {
       success: true,

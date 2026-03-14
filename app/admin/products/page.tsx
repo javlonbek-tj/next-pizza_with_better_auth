@@ -26,19 +26,24 @@ export default async function ProductsPage({
     limit = '10',
   } = await searchParams;
 
-  const [productsData, categoriesData, ingredientsData, sizesData, typesData] =
+  const [categoriesData, ingredientsData, sizesData, typesData] =
     await Promise.all([
-      getProductTableData(search, categoryId, Number(page), Number(limit)),
       getCategoryList(),
       getIngredientList(),
       getPizzaSizesList(),
       getPizzaTypesList(),
     ]);
 
+  const productsPromise = getProductTableData(
+    search,
+    categoryId,
+    Number(page),
+    Number(limit),
+  );
+
   return (
     <Products
-      products={productsData.data}
-      totalCount={productsData.total}
+      productsPromise={productsPromise}
       categories={categoriesData}
       ingredients={ingredientsData}
       sizes={sizesData}

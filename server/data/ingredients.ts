@@ -7,6 +7,7 @@ export const getIngredientList = async () => {
   cacheLife('hours');
   cacheTag('ingredients-table');
   return prisma.ingredient.findMany({
+    where: { isActive: true },
     select: {
       id: true,
       name: true,

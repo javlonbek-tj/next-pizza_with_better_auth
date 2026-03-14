@@ -23,7 +23,6 @@ export function SimpleTableFilters({
           className="shadow-xs pl-9 h-9 text-xs 2xl:text-sm"
           defaultValue={search}
           onChange={(e) => handleSearch(e.target.value)}
-          autoFocus
           autoComplete="off"
         />
       </div>

@@ -1,28 +1,31 @@
 'use client';
 
+import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { AddButton, DeleteDialog, Spinner } from '@/components/shared';
+import { AddButton, DeleteDialog } from '@/components/shared';
+import { TableBodySkeleton } from '@/components/skeletons';
 import { Category, CategoryWithProductCount } from '@/types';
 import { deleteCategory } from '@/app/actions';
 import { useDelete } from '@/hooks';
 import { useTableActions, useTableFilters } from '@/hooks/table';
 import { SimpleTableFilters } from '../table/SimpleTableFilters';
+import { TablePaginationAsync } from '../table/TablePaginationAsync';
 import { CategoriesTable } from './CategoriesTable';
+import { CategoriesTableBody } from './CategoriesTableBody';
 import { CategoryFormDialog } from './CategoryFormDialog';
-import { PaginationWrapper } from '../table/PaginationWrapper';
 
 interface Props {
-  categories: CategoryWithProductCount[];
-  totalCount: number;
+  dataPromise: Promise<{ data: CategoryWithProductCount[]; total: number }>;
 }
 
-export function Categories({ categories, totalCount }: Props) {
+export function Categories({ dataPromise }: Props) {
   const searchParams = useSearchParams();
   const { handleSearch, isLoading, setIsPending } = useTableFilters();
 
   const search = searchParams.get('search') || '';
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
+  const startIndex = (page - 1) * limit;
 
   const {
     editingItem: editingCategory,
@@ -41,42 +44,41 @@ export function Categories({ categories, totalCount }: Props) {
     errorMessage: 'Ошибка удаления категории',
   });
 
-  const startIndex = (page - 1) * limit;
-  const totalPages = Math.ceil(totalCount / limit);
-
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end">
-        <AddButton onClick={handleCreate} text="категория" />
+    <div className='space-y-4'>
+      <div className='flex justify-end'>
+        <AddButton onClick={handleCreate} text='категория' />
       </div>
 
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-lg">
+      <div className='bg-white rounded-lg shadow-sm dark:bg-gray-800'>
         <SimpleTableFilters
           search={search}
           handleSearch={handleSearch}
-          placeholder="Поиск категорий..."
+          placeholder='Поиск категорий...'
         />
 
-        <div className="p-4 overflow-hidden">
-          {isLoading && <Spinner size="sm" />}
+        <div className='p-4 overflow-hidden'>
+          <CategoriesTable>
+            <Suspense fallback={<TableBodySkeleton colSpan={5} />}>
+              <CategoriesTableBody
+                dataPromise={dataPromise}
+                startIndex={startIndex}
+                isLoading={isLoading}
+                onEdit={handleEdit}
+                onDelete={handleOpenDelete}
+              />
+            </Suspense>
+          </CategoriesTable>
 
-          <CategoriesTable
-            data={categories}
-            startIndex={startIndex}
-            onEdit={handleEdit}
-            onDelete={handleOpenDelete}
-            isLoading={isLoading}
-          />
-
-          {totalPages > 1 && (
-            <PaginationWrapper
-              currentPage={page}
-              totalPages={totalPages}
-              totalItems={totalCount}
-              itemsPerPage={limit}
+          <Suspense fallback={null}>
+            <TablePaginationAsync
+              dataPromise={dataPromise}
+              page={page}
+              limit={limit}
+              isLoading={isLoading}
               setIsPending={setIsPending}
             />
-          )}
+          </Suspense>
         </div>
       </div>
 
@@ -91,8 +93,8 @@ export function Categories({ categories, totalCount }: Props) {
         onClose={handleCloseDelete}
         onConfirm={() => handleDelete(deleteId!)}
         isDeleting={isDeleting}
-        title="Удалить категорию"
-        description="Вы уверены, что хотите удалить эту категорию? Это действие нельзя отменить."
+        title='Удалить категорию'
+        description='Вы уверены, что хотите удалить эту категорию? Это действие нельзя отменить.'
       />
     </div>
   );

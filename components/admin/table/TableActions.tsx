@@ -19,21 +19,23 @@ export function TableActions({ onEdit, onDelete, onView }: Props) {
   return (
     <TooltipProvider delayDuration={200}>
       <div className="flex justify-end items-center gap-1">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon-xs"
-              onClick={onView}
-              className="hover:bg-blue-50 text-blue-600 active:scale-95 transition-all cursor-pointer"
-            >
-              <Eye />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent className="**:data-[slot=tooltip-arrow]:hidden bg-gray-900 shadow-xl px-2 py-1 border-none text-[10px] text-white">
-            Ko&apos;rish
-          </TooltipContent>
-        </Tooltip>
+        {onView && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                onClick={onView}
+                className="hover:bg-blue-50 text-blue-600 active:scale-95 transition-all cursor-pointer"
+              >
+                <Eye />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent className="**:data-[slot=tooltip-arrow]:hidden bg-gray-900 shadow-xl px-2 py-1 border-none text-[10px] text-white">
+              Ko&apos;rish
+            </TooltipContent>
+          </Tooltip>
+        )}
 
         {onEdit && (
           <Tooltip>
