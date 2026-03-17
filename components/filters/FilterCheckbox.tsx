@@ -22,14 +22,14 @@ export function FilterCheckbox({
     <div className={cn('flex items-center gap-3', className)}>
       <Checkbox
         id={`checkbox-${String(name)}-${String(value)}`}
-        className="rounded-[8px] w-5 h-5"
+        className='w-5 h-5 rounded-[4px]'
         value={value}
         checked={checked}
         onCheckedChange={onChange}
       />
       <label
         htmlFor={`checkbox-${String(name)}-${String(value)}`}
-        className="flex-1 font-medium text-sm cursor-pointer"
+        className='flex-1 text-sm font-medium cursor-pointer'
       >
         {label}
       </label>

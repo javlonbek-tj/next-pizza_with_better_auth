@@ -17,7 +17,7 @@ export function CartIconButton({
   cartItemId,
   size = 'sm',
 }: Props) {
-  const { mutate: updateQuantity} = useUpdateCartQuantity();
+  const { mutate: updateQuantity } = useUpdateCartQuantity();
 
   const handleClick = () => {
     const newQty = type === 'plus' ? quantity + 1 : quantity - 1;
@@ -25,12 +25,12 @@ export function CartIconButton({
     updateQuantity({ id: cartItemId, quantity: newQty });
   };
 
-  const isDisabled = (type === 'minus' && quantity <= 1);
+  const isDisabled = type === 'minus' && quantity <= 1;
 
   const sizeClasses = {
-    sm: 'w-6 h-6 text-[10px]',
-    md: 'w-7 h-7 text-xs',
-    lg: 'w-8 h-8 text-sm',
+    sm: 'w-6 h-6 text-[10px] rounded-[6px]',
+    md: 'w-7 h-7 text-xs rounded-sm',
+    lg: 'w-8 h-8 text-sm rounded-sm',
   }[size];
 
   const iconSize = {
@@ -40,15 +40,15 @@ export function CartIconButton({
   }[size];
 
   const buttonClassName = cn(
-    'relative flex justify-center items-center border-2 border-primary rounded-md transition-none cursor-pointer',
+    'relative flex justify-center items-center border-2 border-primary transition-none cursor-pointer',
     sizeClasses,
-    isDisabled && 'opacity-60 border-primary/50 cursor-not-allowed'
+    isDisabled && 'opacity-60 border-primary/50 cursor-not-allowed',
   );
 
   const iconClassName = cn(
     'text-primary',
     iconSize,
-    isDisabled && 'opacity-60 text-primary/50'
+    isDisabled && 'opacity-60 text-primary/50',
   );
 
   return (
@@ -57,7 +57,7 @@ export function CartIconButton({
       onClick={handleClick}
       disabled={isDisabled}
       aria-label={type === 'plus' ? 'Increase quantity' : 'Decrease quantity'}
-      type="button"
+      type='button'
     >
       {type === 'minus' && <Minus className={iconClassName} />}
       {type === 'plus' && <Plus className={iconClassName} />}

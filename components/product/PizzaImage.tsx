@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { PizzaSize } from '@/types';
 
-
 interface Props {
   className?: string;
   imageUrl: string;
@@ -18,13 +17,19 @@ export function PizzaImage({ className, imageUrl, size = 30 }: Props) {
   const height = Math.round(BASE_IMAGE_PX * scale);
 
   return (
-    <div className={cn('flex flex-1 justify-center items-center', className)}>
+    <div
+      className={cn(
+        'flex w-md shrink-0 justify-center items-center',
+        className,
+      )}
+    >
       <Image
         src={imageUrl}
-        alt="Pizza image"
-        width={width}
-        height={height}
-        className="transition-all duration-300"
+        alt='Pizza image'
+        width={BASE_IMAGE_PX}
+        height={BASE_IMAGE_PX}
+        style={{ width, height }}
+        className='transition-all duration-300'
       />
     </div>
   );

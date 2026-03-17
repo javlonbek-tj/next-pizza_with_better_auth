@@ -9,9 +9,11 @@ export default async function ProductModalPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = await getProductById(id);
-  const pizzaSizes = await getPizzaSizesList();
-  const pizzaTypes = await getPizzaTypesList();
+  const [product, pizzaSizes, pizzaTypes] = await Promise.all([
+    getProductById(id),
+    getPizzaSizesList(),
+    getPizzaTypesList(),
+  ]);
 
   return (
     <ChooseProductModal>

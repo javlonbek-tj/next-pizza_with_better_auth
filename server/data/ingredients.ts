@@ -1,8 +1,9 @@
 import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '../prisma';
 import type { IngredientWhereInput } from '@/lib/generated/prisma/models';
+import type { Ingredient } from '@/types';
 
-export const getIngredientList = async () => {
+export const getIngredientList = async (): Promise<Ingredient[]> => {
   'use cache';
   cacheLife('hours');
   cacheTag('ingredients-table');
@@ -20,8 +21,8 @@ export const getIngredientList = async () => {
 export const getIngredients = async (
   search: string = '',
   page: number = 1,
-  limit: number = 10
-) => {
+  limit: number = 10,
+): Promise<{ data: Ingredient[]; total: number }> => {
   const skip = (page - 1) * limit;
 
   const where: IngredientWhereInput = {

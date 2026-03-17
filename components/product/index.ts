@@ -5,5 +5,7 @@ export { IngredientItem } from './Ingredient';
 export { PizzaImage } from './PizzaImage';
 export { ProductCard } from './ProductCard';
 export { ProductForm } from './ProductForm';
+export { PizzaFormWrapper } from './PizzaFormWrapper';
+export { ProductFormWrapper } from './ProductFormWrapper';
 export { ProductGroupList } from './ProductGroupList';
 export { ProductNotFound } from './ProductNotFound';

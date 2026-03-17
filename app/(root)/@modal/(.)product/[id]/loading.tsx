@@ -1,5 +1,10 @@
-import { ChoosePizzaFormSkeleton } from '@/components/skeletons';
+import { ChooseProductModal } from '@/components/modals';
+import { Spinner } from '@/components/shared';
 
 export default function Loading() {
-  return <ChoosePizzaFormSkeleton isModal={true} />;
+  return (
+    <ChooseProductModal>
+      <Spinner size='md' />
+    </ChooseProductModal>
+  );
 }

@@ -4,8 +4,14 @@ import type {
   PizzaSizeWhereInput,
   PizzaTypeWhereInput,
 } from '@/lib/generated/prisma/models';
+import type {
+  PizzaTypeListItem,
+  PizzaTypeTableRow,
+  PizzaSizeListItem,
+  PizzaSizeTableRow,
+} from '@/types';
 
-export const getPizzaTypesList = async () => {
+export const getPizzaTypesList = async (): Promise<PizzaTypeListItem[]> => {
   'use cache';
   cacheLife('hours');
   cacheTag('pizza-types-table');
@@ -20,7 +26,7 @@ export const getPizzaTypes = async (
   search: string = '',
   page: number = 1,
   limit: number = 10,
-) => {
+): Promise<{ data: PizzaTypeTableRow[]; total: number }> => {
   const skip = (page - 1) * limit;
 
   const where: PizzaTypeWhereInput = {
@@ -57,7 +63,7 @@ export const getPizzaTypes = async (
   return { data, total };
 };
 
-export const getPizzaSizesList = async () => {
+export const getPizzaSizesList = async (): Promise<PizzaSizeListItem[]> => {
   'use cache';
   cacheLife('hours');
   cacheTag('pizza-sizes-table');
@@ -74,7 +80,7 @@ export const getPizzaSizes = async (
   search: string = '',
   page: number = 1,
   limit: number = 10,
-) => {
+): Promise<{ data: PizzaSizeTableRow[]; total: number }> => {
   const skip = (page - 1) * limit;
 
   const where: PizzaSizeWhereInput = {

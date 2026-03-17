@@ -1,8 +1,9 @@
 import { cacheLife, cacheTag } from 'next/cache';
 import { prisma } from '../prisma';
 import type { CategoryWhereInput } from '@/lib/generated/prisma/models';
+import { CategoryListItem, CategoryTableRow } from '@/types';
 
-export const getCategoryList = async () => {
+export const getCategoryList = async (): Promise<CategoryListItem[]> => {
   'use cache';
   cacheLife('hours');
   cacheTag('categories-table');
@@ -20,8 +21,8 @@ export const getCategoryList = async () => {
 export const getCategoriesTableData = async (
   search: string = '',
   page: number = 1,
-  limit: number = 10
-) => {
+  limit: number = 10,
+): Promise<{ data: CategoryTableRow[]; total: number }> => {
   const skip = (page - 1) * limit;
 
   const where: CategoryWhereInput = {

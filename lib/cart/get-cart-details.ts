@@ -1,11 +1,12 @@
-
-
 import { calCartItemTotalPrice } from './cal-cart-item-total-price';
-import { Ingredient } from '@/types';
-import { CartDto } from '@/types/cart';
+import {
+  CartItemDetails,
+  CartItemWithRelations,
+  CartWithRelations,
+} from '@/types';
 
-export const getCartDetails = (data: CartDto) =>
-  data.items.map((item) => ({
+export const getCartDetails = (data: CartWithRelations): CartItemDetails[] =>
+  data.items.map((item: CartItemWithRelations) => ({
     id: item.id,
     quantity: item.quantity,
     name: item.productItem.product.name,
@@ -14,7 +15,7 @@ export const getCartDetails = (data: CartDto) =>
     pizzaSize: item.productItem.size,
     pizzaType: item.productItem.type,
     disabled: false,
-    ingredients: item.ingredients.map((ingredient: Ingredient) => ({
+    ingredients: item.ingredients.map((ingredient) => ({
       name: ingredient.name,
       price: ingredient.price,
       id: ingredient.id,

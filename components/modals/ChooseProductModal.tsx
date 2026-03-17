@@ -21,7 +21,7 @@ export function ChooseProductModal({ className, children, title }: Props) {
     >
       <DialogContent
         size='xl'
-        className={cn('flex flex-col p-0 h-2xl overflow-hidden', className)}
+        className={cn('flex flex-col p-0 h-138 overflow-hidden', className)}
       >
         <DialogTitle className='sr-only'>
           {title || 'Choose Product'}

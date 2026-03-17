@@ -1,4 +1,5 @@
 'use client';
+
 import { Loader } from 'lucide-react';
 
 import { cn } from '@/lib';
@@ -8,13 +9,9 @@ import { usePizzaOptions, useCart } from '@/hooks';
 import { GroupVariants, Variant } from './GroupVariants';
 import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
-import {
-  PizzaSize,
-  PizzaType,
-  ProductItem,
-  ProductWithRelations,
-} from '@/types';
+import type { PizzaSize, PizzaType, ProductWithRelations } from '@/types';
 import { CartUpdateButtons } from '../cart/CartUpdateButtons';
+import type { ProductItem } from '@/lib/generated/prisma/client';
 
 interface Props {
   className?: string;
@@ -37,7 +34,7 @@ export function ChoosePizzaForm({
   pizzaSizes = [],
   pizzaTypes = [],
 }: Props) {
-  const { data: cartItems } = useCart();
+  const { data: cartItems, isPending: isCartPending } = useCart();
 
   const {
     typeId,
@@ -51,14 +48,16 @@ export function ChoosePizzaForm({
     selectedPizzaItemId,
   } = pizzaOptions;
 
-  const currentItemId = cartItems?.find(
-    (item) =>
-      item.productItemId === selectedPizzaItemId &&
-      item.ingredients.length === selectedIngredients.size &&
-      item.ingredients.every((ingredient) =>
-        selectedIngredients.has(ingredient.id),
-      ),
-  )?.id;
+  const currentItemId = !isCartPending
+    ? cartItems?.find(
+        (item) =>
+          item.productItemId === selectedPizzaItemId &&
+          item.ingredients.length === selectedIngredients.size &&
+          item.ingredients.every((ingredient) =>
+            selectedIngredients.has(ingredient.id),
+          ),
+      )?.id
+    : undefined;
 
   const allPizzaSizes = pizzaSizes.map((pizzaSize): Variant => {
     return {
@@ -86,11 +85,7 @@ export function ChoosePizzaForm({
 
   return (
     <div
-      className={cn(
-        'flex h-full overflow-hidden',
-        !isModal && ' max-w-5xl mx-auto ',
-        className,
-      )}
+      className={cn('flex h-full', !isModal && 'max-w-5xl mx-auto', className)}
     >
       <PizzaImage
         imageUrl={product.imageUrl}
@@ -152,7 +147,7 @@ export function ChoosePizzaForm({
           )}
         >
           {currentItemId ? (
-            <div className='flex justify-between items-center bg-secondary px-5 rounded-[18px] w-full h-14 font-bold text-base'>
+            <div className='flex items-center justify-between w-full px-5 py-6 text-base font-bold rounded-sm bg-secondary h-9'>
               <span className='text-gray-500'>
                 В корзине:{' '}
                 {cartItems?.find((item) => item.id === currentItemId)?.quantity}

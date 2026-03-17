@@ -1,11 +1,11 @@
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { ApiResponse } from './api-response';
-import { AddToCartDto, CartDto } from '@/types';
+import { AddToCartDto, CartWithRelations } from '@/types';
 
 export const getCart = async () => {
   const { data } = (
-    await axiosInstance.get<ApiResponse<CartDto>>(ApiRoutes.CART)
+    await axiosInstance.get<ApiResponse<CartWithRelations>>(ApiRoutes.CART)
   ).data;
 
   return data;
@@ -24,7 +24,12 @@ export const removeCartItem = async (id: string) => {
 };
 
 export const addToCart = async (dto: AddToCartDto) => {
-  return (await axiosInstance.post<CartDto>(ApiRoutes.CART, dto)).data;
+  return (
+    await axiosInstance.post<ApiResponse<CartWithRelations>>(
+      ApiRoutes.CART,
+      dto,
+    )
+  ).data;
 };
 
 export const clearCart = async () => {

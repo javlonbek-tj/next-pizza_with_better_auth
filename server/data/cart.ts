@@ -1,7 +1,8 @@
-
+import type { Cart } from '@/lib/generated/prisma/client';
 import { prisma } from '@/server/prisma';
+import type { CartWithRelations } from '@/types';
 
-export const findOrCreateCart = async (token: string) => {
+export const findOrCreateCart = async (token: string): Promise<Cart> => {
   let userCart = await prisma.cart.findFirst({
     where: {
       token,
@@ -19,13 +20,14 @@ export const findOrCreateCart = async (token: string) => {
   return userCart;
 };
 
-export const getUserCart = async (cartToken: string) => {
+export const getUserCart = async (
+  cartToken: string,
+): Promise<CartWithRelations | null> => {
   const userCart = await prisma.cart.findFirst({
     where: {
       token: cartToken,
     },
     include: {
-      user: true,
       items: {
         orderBy: {
           createdAt: 'desc',
@@ -35,6 +37,8 @@ export const getUserCart = async (cartToken: string) => {
           productItem: {
             include: {
               product: true,
+              size: true,
+              type: true,
             },
           },
         },

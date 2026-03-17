@@ -85,9 +85,9 @@ export function CartDrawer({ children }: PropsWithChildren) {
             <>
               <div
                 className={cn(
-                  'flex flex-col gap-4 overflow-auto transition-opacity duration-200 scrollbar-thin',
+                  'flex flex-col gap-4 overflow-auto scrollbar-thin',
                   {
-                    'opacity-60 pointer-events-none': isDeleting,
+                    'pointer-events-none': isDeleting,
                   },
                 )}
               >
@@ -106,23 +106,23 @@ export function CartDrawer({ children }: PropsWithChildren) {
 
               <SheetFooter
                 className={cn('bg-white p-6', {
-                  'opacity-60 pointer-events-none': isDeleting,
+                  'pointer-events-none': isDeleting,
                 })}
               >
-                <div className="flex justify-between items-center gap-4 mb-4">
+                <div className='flex items-center justify-between gap-4 mb-4'>
                   <span>Итого</span>
-                  <span className="top-1 relative flex-1 border-b border-b-neutral-200 border-dashed"></span>
-                  <span className="font-bold">{totalAmount} ₽</span>
+                  <span className='relative flex-1 border-b border-dashed top-1 border-b-neutral-200'></span>
+                  <span className='font-bold'>{totalAmount} ₽</span>
                 </div>
 
                 <Button
-                  className="h-12 cursor-pointer"
+                  className='h-12 cursor-pointer'
                   onClick={handleClick}
                   disabled={isLoading || isDeleting}
                 >
-                  <span className="flex items-center gap-2">
+                  <span className='flex items-center gap-2'>
                     {isLoading ? (
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <Loader2 className='w-5 h-5 animate-spin' />
                     ) : (
                       <>
                         <span>Оформить заказ</span> <ArrowRight />
@@ -135,7 +135,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
               <AuthModal
                 open={authOpen}
                 onClose={() => setAuthOpen(false)}
-                callbackUrl="/checkout"
+                callbackUrl='/checkout'
               />
             </>
           )}

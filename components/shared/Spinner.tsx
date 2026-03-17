@@ -9,8 +9,8 @@ interface Props {
 
 const sizeMap = {
   sm: 16,
-  md: 32,
-  lg: 48,
+  md: 24,
+  lg: 32,
 };
 
 export function Spinner({ size = 'sm', className = '' }: Props) {
@@ -22,7 +22,7 @@ export function Spinner({ size = 'sm', className = '' }: Props) {
       )}
     >
       <div
-        className="border-primary border-b-2 rounded-full animate-spin"
+        className='border-b-2 rounded-full border-primary animate-spin'
         style={{ width: sizeMap[size], height: sizeMap[size] }}
       ></div>
     </div>

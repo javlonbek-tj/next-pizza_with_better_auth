@@ -35,7 +35,7 @@ export function ProductGroupList({
     intersectionRef as React.RefObject<HTMLElement>,
     {
       threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1],
-      rootMargin: '-80px 0px -95% 0px',
+      rootMargin: '-80px 0px -90% 0px',
     },
   );
 
@@ -51,7 +51,7 @@ export function ProductGroupList({
       id={categorySlug}
       ref={intersectionRef}
     >
-      <Title text={categoryTitle} className="mb-4 font-extrabold" size="md" />
+      <Title text={categoryTitle} className='mb-4 font-extrabold' size='md' />
 
       <div className={cn('gap-8 grid grid-cols-3', listClassName)}>
         {products.map((product) => (

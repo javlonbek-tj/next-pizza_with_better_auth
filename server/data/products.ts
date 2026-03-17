@@ -1,10 +1,16 @@
+import { prisma } from '../prisma';
 import {
   DEFAULT_PRICE_FROM,
   DEFAULT_PRICE_TO,
   SortValue,
 } from '@/lib/constants';
-import { prisma } from '../prisma';
 import type { ProductWhereInput } from '@/lib/generated/prisma/models';
+import { sortProductsInCategories } from '@/lib/product';
+import type {
+  CategoryWithRelations,
+  ProductTableRow,
+  ProductWithCategory,
+} from '@/types';
 
 export interface GetSearchParams {
   query?: string;
@@ -17,7 +23,9 @@ export interface GetSearchParams {
   sort?: SortValue;
 }
 
-export const getFilteredProducts = async (params: GetSearchParams) => {
+export const getFilteredProducts = async (
+  params: GetSearchParams,
+): Promise<CategoryWithRelations[]> => {
   const sizes = params.pizzaSize?.split(',').filter(Boolean);
   const pizzaTypes = params.pizzaTypes?.split(',').filter(Boolean);
   const ingredients = params.ingredients?.split(',').filter(Boolean);
@@ -69,36 +77,13 @@ export const getFilteredProducts = async (params: GetSearchParams) => {
     },
   });
 
-  // Sort products within each category
-  const sortedCategories = categories.map((category) => ({
-    ...category,
-    products: [...category.products].sort((a, b) => {
-      const priceA = a.productItems[0]?.price || 0;
-      const priceB = b.productItems[0]?.price || 0;
-
-      switch (params.sort) {
-        case 'price_asc':
-          return priceA - priceB;
-        case 'price_desc':
-          return priceB - priceA;
-        case 'newest':
-          return b.createdAt.getTime() - a.createdAt.getTime();
-        case 'oldest':
-          return a.createdAt.getTime() - b.createdAt.getTime();
-        default:
-          return b.createdAt.getTime() - a.createdAt.getTime();
-      }
-    }),
-  }));
-  return sortedCategories.sort((a, b) => {
-    if (a.isPizza && !b.isPizza) return -1;
-    if (!a.isPizza && b.isPizza) return 1;
-    return 0;
-  });
+  return sortProductsInCategories(categories, params.sort);
 };
 
-export const getProductById = async (id: string) => {
-  return await prisma.product.findUnique({
+export const getProductById = async (
+  id: string,
+): Promise<ProductWithCategory | null> => {
+  const product = await prisma.product.findUnique({
     where: { id, isActive: true },
     include: {
       ingredients: {
@@ -115,6 +100,8 @@ export const getProductById = async (id: string) => {
       },
     },
   });
+
+  return product;
 };
 
 export const getProductTableData = async (
@@ -122,7 +109,7 @@ export const getProductTableData = async (
   categoryId: string = 'all',
   page: number = 1,
   limit: number = 10,
-) => {
+): Promise<{ data: ProductTableRow[]; total: number }> => {
   const skip = (page - 1) * limit;
 
   const where: ProductWhereInput = {
