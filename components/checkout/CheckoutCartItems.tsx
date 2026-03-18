@@ -41,7 +41,7 @@ export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
         )
       }
     >
-      <div className="flex flex-col divide-y divide-gray-100">
+      <div className="flex flex-col divide-y divide-gray-100 max-h-[480px] overflow-y-auto pr-1">
         {cartItems.map((cartItem) => (
           <CheckoutCartItem
             key={cartItem.id}

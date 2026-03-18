@@ -2,39 +2,39 @@ import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/server/prisma';
-import { findOrCreateCart, getUserCart } from '@/server/data/cart';
+import {
+  findOrCreateCart,
+  getUserCart,
+  getUserCartByUserId,
+} from '@/server/data/cart';
+import { auth } from '@/server';
 import { AddToCartDto } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
     const token = req.cookies.get('cartToken')?.value;
+    const session = await auth.api.getSession({ headers: req.headers });
+    const userId = session?.user?.id;
 
-    if (!token) {
-      return NextResponse.json({
-        success: true,
-        message: 'Token not found. New user',
-        data: { items: [] },
-      });
+    // Auth user: userId cart (merge hook has already been done inside better-auth)
+    if (userId) {
+      const cart = await getUserCartByUserId(userId);
+      if (cart) {
+        return Response.json({ success: true, data: cart });
+      }
     }
 
-    const cart = await getUserCart(token);
-
-    if (!cart) {
-      return NextResponse.json({
-        success: false,
-        message: 'Cart not found, returning empty cart',
-        data: { items: [] },
-      });
+    // Guest: search by token, but only unassigned cart
+    if (token) {
+      const cart = await getUserCart(token);
+      if (cart && !cart.userId) {
+        return Response.json({ success: true, data: cart });
+      }
     }
 
-    return NextResponse.json({
-      success: true,
-      data: cart,
-    });
-  } catch (error) {
-    // TODO REMOVE CONSOLE
-    console.error(error);
-    return NextResponse.json(
+    return Response.json({ success: true, data: { items: [] } });
+  } catch {
+    return Response.json(
       { success: false, message: 'Internal server error' },
       { status: 500 },
     );
@@ -43,13 +43,36 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    let token = req.cookies.get('cartToken')?.value;
+    const session = await auth.api.getSession({ headers: req.headers });
+    const userId = session?.user?.id;
+    const cookieToken = req.cookies.get('cartToken')?.value;
 
-    if (!token) {
+    let token: string;
+
+    if (userId) {
+      // Auth user: use userId cart
+      const existingCart = await prisma.cart.findFirst({ where: { userId } });
+      token = existingCart?.token ?? cookieToken ?? randomUUID();
+    } else if (cookieToken) {
+      // Guest + cookie: token should not belong to another user
+      const existingCart = await prisma.cart.findFirst({
+        where: { token: cookieToken },
+      });
+      token = existingCart?.userId ? randomUUID() : cookieToken;
+    } else {
+      // New guest
       token = randomUUID();
     }
 
     const userCart = await findOrCreateCart(token);
+
+    // If the user is authenticated and the cart is not yet linked to a userId → link it
+    if (userId && !userCart.userId) {
+      await prisma.cart.update({
+        where: { id: userCart.id },
+        data: { userId },
+      });
+    }
 
     const data = (await req.json()) as AddToCartDto;
 
@@ -109,10 +132,8 @@ export async function POST(req: NextRequest) {
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
     return resp;
-  } catch (error) {
-    // TODO REMOVE CONSOLE
-    console.error('Error adding to cart:', error);
-    return NextResponse.json(
+  } catch {
+    return Response.json(
       { success: false, message: 'Internal server error' },
       { status: 500 },
     );
@@ -149,11 +170,9 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      message: 'Cart deleted.',
+      message: 'Cart deleted',
     });
-  } catch (error) {
-    // TODO REMOVE CONSOLE
-    console.error('Error deleting cart:', error);
+  } catch {
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 },

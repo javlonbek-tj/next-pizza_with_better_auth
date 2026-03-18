@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
-import {prisma} from '@/server/prisma';
+import { NextRequest } from 'next/server';
+import { prisma } from '@/server/prisma';
 
 export async function GET(req: NextRequest) {
   try {
@@ -8,13 +8,12 @@ export async function GET(req: NextRequest) {
       where: { name: { contains: query, mode: 'insensitive' } },
       take: 5,
     });
-    return NextResponse.json({
+    return Response.json({
       success: true,
       data: products,
     });
-  } catch (error) {
-    console.error('[Error fetching ingredients]:', error);
-    return NextResponse.json(
+  } catch {
+    return Response.json(
       { success: false, error: 'Internal server error' },
       { status: 500 },
     );

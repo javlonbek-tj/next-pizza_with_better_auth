@@ -5,7 +5,7 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { sendOTPEmail } from '@/app/actions/auth/send-email-action';
 import { emailOTP } from 'better-auth/plugins';
 import { prisma } from './';
-
+import { mergeCartsOnLogin } from './data/cart';
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_AUTH_API_URL,
@@ -29,6 +29,18 @@ export const auth = betterAuth({
     github: {
       clientId: process.env.GITHUB_CLIENT_ID as string,
       clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
+    },
+  },
+  databaseHooks: {
+    session: {
+      create: {
+        after: async (session, context) => {
+          const guestToken = context?.getCookie('cartToken');
+          if (guestToken) {
+            await mergeCartsOnLogin(guestToken, session.userId);
+          }
+        },
+      },
     },
   },
   plugins: [

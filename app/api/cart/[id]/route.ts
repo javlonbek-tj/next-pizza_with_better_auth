@@ -1,75 +1,57 @@
-import {prisma} from '@/server/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/server/prisma';
+import { NextRequest } from 'next/server';
+import { auth } from '@/server';
+
+async function findCartItem(cartItemId: string, req: NextRequest) {
+  const token = req.cookies.get('cartToken')?.value;
+  const session = await auth.api.getSession({ headers: req.headers });
+  const userId = session?.user?.id;
+
+  return prisma.cartItem.findFirst({
+    where: {
+      id: cartItemId,
+      cart: {
+        OR: [
+          ...(token ? [{ token }] : []),
+          ...(userId ? [{ userId }] : []),
+        ],
+      },
+    },
+  });
+}
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const token = req.cookies.get('cartToken')?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        { success: false, message: 'Token not found.' },
-        {
-          status: 404,
-        },
-      );
-    }
-
-    const { quantity } = (await req.json()) as {
-      quantity: number;
-    };
+    const { quantity } = (await req.json()) as { quantity: number };
 
     if (!Number.isInteger(quantity) || quantity < 1) {
-      return NextResponse.json(
+      return Response.json(
         { success: false, message: 'Invalid quantity' },
-        {
-          status: 400,
-        },
+        { status: 400 },
       );
     }
 
-    const param = await params;
-
-    const cartItemId = await param.id;
-
-    const cartItem = await prisma.cartItem.findFirst({
-      where: {
-        id: cartItemId,
-        cart: { token },
-      },
-    });
+    const { id: cartItemId } = await params;
+    const cartItem = await findCartItem(cartItemId, req);
 
     if (!cartItem) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: 'Product not found',
-        },
-        {
-          status: 404,
-        },
+      return Response.json(
+        { success: false, message: 'Product not found' },
+        { status: 404 },
       );
     }
 
     await prisma.cartItem.update({
-      where: {
-        id: cartItemId,
-      },
-      data: {
-        quantity: quantity,
-      },
+      where: { id: cartItemId },
+      data: { quantity },
     });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Quantity updated successfully',
-    });
-  } catch (error) {
-    // TODO REMOVE CONSOLE
-    console.error(error);
-    return NextResponse.json(
+    return Response.json({ success: true, message: 'Quantity updated successfully' });
+  } catch {
+    return Response.json(
       { success: false, message: 'Internal server error' },
       { status: 500 },
     );
@@ -78,50 +60,24 @@ export async function PATCH(
 
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const token = req.cookies.get('cartToken')?.value;
-
-    if (!token) {
-      return NextResponse.json(
-        { success: false, message: 'Cart not found.' },
-        { status: 404 },
-      );
-    }
-
-    const param = await params;
-
-    const cartItemId = await param.id;
-
-    const cartItem = await prisma.cartItem.findFirst({
-      where: {
-        id: cartItemId,
-        cart: { token },
-      },
-    });
+    const { id: cartItemId } = await params;
+    const cartItem = await findCartItem(cartItemId, req);
 
     if (!cartItem) {
-      return NextResponse.json(
+      return Response.json(
         { success: false, message: 'Product not found' },
         { status: 404 },
       );
     }
 
-    await prisma.cartItem.delete({
-      where: {
-        id: cartItemId,
-      },
-    });
+    await prisma.cartItem.delete({ where: { id: cartItemId } });
 
-    return NextResponse.json({
-      success: true,
-      message: 'Product removed from cart',
-    });
-  } catch (error) {
-    // TODO REMOVE CONSOLE
-    console.error(error);
-    return NextResponse.json(
+    return Response.json({ success: true, message: 'Product removed from the cart' });
+  } catch {
+    return Response.json(
       { success: false, message: 'Internal server error' },
       { status: 500 },
     );

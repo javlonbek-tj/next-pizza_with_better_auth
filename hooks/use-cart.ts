@@ -11,6 +11,7 @@ export function useCart() {
     retry: false,
     queryFn: async () => {
       const data = await Api.cart.getCart();
+      if (!data) return [];
       return getCartDetails(data);
     },
   });
@@ -27,6 +28,9 @@ export function useUpdateCartQuantity() {
       Api.cart.updateCartQty(vars.id, vars.quantity),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+    },
+    onError: () => {
+      toast.error('Не удалось обновить количество товара в корзине');
     },
   });
 }
