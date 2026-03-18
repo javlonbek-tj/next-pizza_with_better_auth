@@ -5,7 +5,9 @@ import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { sendOTPEmail } from '@/app/actions/auth/send-email-action';
 import { emailOTP } from 'better-auth/plugins';
 import { prisma } from './';
+import { mergeCartsOnLogin } from './data/cart';
 
+const SIGN_IN_PATHS = ['/sign-in/email', '/sign-in/social', '/email-otp/verify-otp'];
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_AUTH_API_URL,
@@ -42,6 +44,24 @@ export const auth = betterAuth({
       expiresIn: 60,
     }),
   ],
+  hooks: {
+    after: [
+      {
+        matcher: (context) => SIGN_IN_PATHS.includes(context.path),
+        handler: async (context) => {
+          const session = context.context.session as { userId?: string; session?: { userId?: string } } | null;
+          const userId = session?.userId ?? session?.session?.userId;
+          const token = context.request?.headers
+            .get('cookie')
+            ?.match(/cartToken=([^;]+)/)?.[1];
+
+          if (userId && token) {
+            await mergeCartsOnLogin(token, userId);
+          }
+        },
+      },
+    ],
+  },
 });
 
 export type ErrorCodes = typeof auth.$ERROR_CODES | 'UNKNOWN';

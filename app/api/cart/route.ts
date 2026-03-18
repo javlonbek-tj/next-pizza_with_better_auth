@@ -2,12 +2,21 @@ import { randomUUID } from 'crypto';
 import { NextRequest, NextResponse } from 'next/server';
 
 import { prisma } from '@/server/prisma';
-import { findOrCreateCart, getUserCart } from '@/server/data/cart';
+import { auth } from '@/server/auth';
+import { findOrCreateCart, getUserCart, getUserCartByUserId } from '@/server/data/cart';
 import { AddToCartDto } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
     const token = req.cookies.get('cartToken')?.value;
+    const session = await auth.api.getSession({ headers: req.headers });
+
+    if (session?.user?.id) {
+      const cart = await getUserCartByUserId(session.user.id);
+      if (cart) {
+        return NextResponse.json({ success: true, data: cart });
+      }
+    }
 
     if (!token) {
       return NextResponse.json({
@@ -49,7 +58,10 @@ export async function POST(req: NextRequest) {
       token = randomUUID();
     }
 
-    const userCart = await findOrCreateCart(token);
+    const session = await auth.api.getSession({ headers: req.headers });
+    const userId = session?.user?.id;
+
+    const userCart = await findOrCreateCart(token, userId);
 
     const data = (await req.json()) as AddToCartDto;
 
@@ -106,7 +118,7 @@ export async function POST(req: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 7 days
+      maxAge: 60 * 60 * 24 * 30, // 30 days
     });
     return resp;
   } catch (error) {
