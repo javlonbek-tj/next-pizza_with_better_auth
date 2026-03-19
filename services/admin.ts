@@ -1,8 +1,8 @@
 import { axiosInstance } from './instance';
-import { ApiRoutes } from './constants';
+import { ApiRoutes } from './apiRoutes';
 import { ApiResponse } from './api-response';
-import { ProductFormValues } from '@/components/admin/schemas/product-schema';
 import { ProductWithRelations } from '@/types';
+import { ProductFormValues } from '@/lib';
 
 export const getProducts = async () => {
   const { data } = (

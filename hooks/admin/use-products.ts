@@ -1,13 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { createProductSchema, ProductFormValues } from '@/lib';
 import toast from 'react-hot-toast';
-import { ActionResult, Product, Category } from '@/types';
 import { createProduct, updateProduct } from '@/app/actions';
+import type { Category } from '@/lib/generated/prisma/client';
+import { createProductSchema, ProductFormValues } from '@/lib';
+import type {
+  ActionResult,
+  ProductItemWithRelations,
+  ProductWithCategory,
+} from '@/types';
 
 interface Props {
-  product: Product | null;
+  product: ProductWithCategory | null;
   open: boolean;
   onClose: () => void;
   markAsSubmitted: () => void;
@@ -67,7 +72,7 @@ export function useProductForm({
         categoryId: product.categoryId ?? '',
         ingredientIds: product.ingredients?.map((ing) => ing.id) || [],
         productItems:
-          product.productItems?.map((item) => ({
+          product.productItems?.map((item: ProductItemWithRelations) => ({
             id: item.id,
             price: item.price,
             sizeId: item.size?.id || null,
@@ -111,7 +116,7 @@ export function useProductForm({
   const onSubmit = async (data: ProductFormValues) => {
     setIsPending(true);
     try {
-      let result: ActionResult<Product>;
+      let result: ActionResult<ProductWithCategory>;
       if (isEditing) {
         result = await updateProduct(product.id, data);
       } else {

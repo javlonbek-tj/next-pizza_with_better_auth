@@ -3,8 +3,8 @@ import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CategoryFormValues, categorySchema, generateSlug } from '@/lib';
-import { Category } from '@/types';
 import { createCategory, updateCategory } from '@/app/actions';
+import type { Category } from '@/lib/generated/prisma/client';
 
 interface Props {
   category: Category | null;

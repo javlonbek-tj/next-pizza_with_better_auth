@@ -3,7 +3,8 @@
 import { use } from 'react';
 import { TableActions } from '@/components/admin/table/TableActions';
 import { Badge } from '@/components/ui/badge';
-import { Category, CategoryWithProductCount } from '@/types';
+import type { CategoryWithProductCount } from '@/types';
+import type { Category } from '@/lib/generated/prisma/client';
 
 interface Props {
   dataPromise: Promise<{ data: CategoryWithProductCount[]; total: number }>;
@@ -32,7 +33,7 @@ export function CategoriesTableBody({
         <tr>
           <td
             colSpan={5}
-            className='px-6 py-12 font-medium text-gray-800 text-sm text-center'
+            className='px-6 py-12 text-sm font-medium text-center text-gray-800'
           >
             Категории не найдены
           </td>
@@ -41,12 +42,12 @@ export function CategoriesTableBody({
         data.map((category: CategoryWithProductCount, index: number) => (
           <tr
             key={category.id}
-            className='group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white transition-all duration-200'
+            className='transition-all duration-200 group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white'
           >
-            <td className='px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap'>
+            <td className='px-6 py-2 text-xs font-bold text-gray-600 whitespace-nowrap'>
               {startIndex + index + 1}
             </td>
-            <td className='px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap'>
+            <td className='px-6 py-2 text-xs font-bold text-gray-600 whitespace-nowrap'>
               {category.name}
             </td>
             <td className='px-6 py-2 whitespace-nowrap'>

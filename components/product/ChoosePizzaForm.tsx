@@ -85,7 +85,11 @@ export function ChoosePizzaForm({
 
   return (
     <div
-      className={cn('flex h-full', !isModal && 'max-w-5xl mx-auto', className)}
+      className={cn(
+        'flex h-full',
+        !isModal && 'max-w-5xl w-4xl mx-auto',
+        className,
+      )}
     >
       <PizzaImage
         imageUrl={product.imageUrl}
@@ -96,7 +100,7 @@ export function ChoosePizzaForm({
       <div
         className={cn(
           'flex flex-col flex-1 overflow-hidden',
-          isModal ? 'bg-[#f7f6f5]' : 'bg-white',
+          isModal ? 'bg-[#f7f6f5]' : 'bg-white ',
         )}
       >
         {/* Scrollable content */}
@@ -147,7 +151,7 @@ export function ChoosePizzaForm({
           )}
         >
           {currentItemId ? (
-            <div className='flex items-center justify-between w-full px-5 py-6 text-base font-bold rounded-sm bg-secondary h-9'>
+            <div className='flex items-center justify-between w-full px-5 py-5 text-base font-bold rounded-sm h-9 bg-secondary'>
               <span className='text-gray-500'>
                 В корзине:{' '}
                 {cartItems?.find((item) => item.id === currentItemId)?.quantity}

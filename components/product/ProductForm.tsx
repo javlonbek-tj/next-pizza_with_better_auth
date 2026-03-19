@@ -1,10 +1,10 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { BackButton } from '../shared';
 import { PizzaFormWrapper } from './PizzaFormWrapper';
 import { ProductFormWrapper } from './ProductFormWrapper';
 import type { PizzaSize, PizzaType, ProductWithCategory } from '@/types';
+import { ProductNotFound } from './ProductNotFound';
 
 interface Props {
   product: ProductWithCategory | null;
@@ -13,15 +13,21 @@ interface Props {
   pizzaTypes?: PizzaType[];
 }
 
-export function ProductForm({ product, isModal, pizzaSizes, pizzaTypes }: Props) {
+export function ProductForm({
+  product,
+  isModal,
+  pizzaSizes,
+  pizzaTypes,
+}: Props) {
   const router = useRouter();
 
   if (!product) {
     return (
-      <div className='flex flex-col items-center justify-center gap-4 min-h-lg'>
-        <p className='text-lg text-gray-500'>Продукт не найден</p>
-        <BackButton />
-      </div>
+      <ProductNotFound
+        href='/'
+        text='Назад на главную'
+        message='Продукт не найден'
+      />
     );
   }
 

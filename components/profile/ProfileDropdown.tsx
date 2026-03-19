@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import {
   DropdownMenu,
@@ -11,7 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, Settings, User, Loader2, Shield } from 'lucide-react';
+import { LogOut, User, Loader2, Shield, ShoppingBag } from 'lucide-react';
 import { Button } from '../ui/button';
 import { signoutAction } from '@/app/actions/auth/signout-action';
 import { cn } from '@/lib/utils';
@@ -28,6 +29,7 @@ export function ProfileDropdown({ user }: Props) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const queryClient = useQueryClient();
 
   const getInitial = () => {
     const nameOrEmail = user?.name || user?.email;
@@ -41,6 +43,7 @@ export function ProfileDropdown({ user }: Props) {
     if (result.error) {
       toast.error(result.error);
     } else {
+      queryClient.setQueryData(['cart'], []);
       toast.success('Вы вышли из аккаунта');
       setOpen(false);
       const queryString = window.location.search;
@@ -54,53 +57,63 @@ export function ProfileDropdown({ user }: Props) {
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button
-          id="profile-dropdown-trigger"
+          id='profile-dropdown-trigger'
           suppressHydrationWarning
-          className="flex justify-center items-center gap-2 bg-primary/80 p-0 rounded-full focus-visible:ring-0 w-10 h-10 font-semibold text-lg cursor-pointer"
+          className='flex items-center justify-center w-10 h-10 gap-2 p-0 text-lg font-semibold rounded-full cursor-pointer bg-primary/80 focus-visible:ring-0'
         >
           {getInitial()}
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
-        align="end"
+        align='end'
         className={cn(
           'w-48 transition-opacity duration-200',
           isLoggingOut && 'opacity-60 pointer-events-none',
         )}
       >
         <DropdownMenuLabel>
-          {user?.name ?? user?.email ?? 'Unknown'}
+          {user?.name ?? user?.email ?? 'User'}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
         <DropdownMenuItem
           disabled={isLoggingOut}
-          onClick={() => router.push('/admin')}
+          onClick={() => router.push('/admin/products')}
+          className='cursor-pointer'
         >
-          <Shield className="w-4 h-4" /> Admin
+          <Shield className='w-4 h-4' /> Admin
         </DropdownMenuItem>
-        <DropdownMenuItem disabled={isLoggingOut}>
-          <User className="w-4 h-4" /> Profile
+        <DropdownMenuItem
+          disabled={isLoggingOut}
+          onClick={() => router.push('/profile')}
+          className='cursor-pointer'
+        >
+          <User className='w-4 h-4' /> Профиль
         </DropdownMenuItem>
-        <DropdownMenuItem disabled={isLoggingOut}>
-          <Settings className="w-4 h-4" /> Settings
+        <DropdownMenuItem
+          disabled={isLoggingOut}
+          onClick={() => router.push('/orders')}
+          className='cursor-pointer'
+        >
+          <ShoppingBag className='w-4 h-4' /> Мои заказы
         </DropdownMenuItem>
 
         <DropdownMenuItem
-          className="text-destructive cursor-pointer"
+          className='cursor-pointer text-destructive'
           onSelect={(e) => {
             e.preventDefault(); // prevent auto-close
             handleSignOut();
           }}
+          disabled={isLoggingOut}
         >
           <>
             {isLoggingOut ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className='w-4 h-4 animate-spin' />
             ) : (
-              <LogOut className="w-4 h-4" />
+              <LogOut className='w-4 h-4' />
             )}
-            <span className="ml-2">Выйти</span>
+            <span className='ml-2'>Выйти</span>
           </>
         </DropdownMenuItem>
       </DropdownMenuContent>

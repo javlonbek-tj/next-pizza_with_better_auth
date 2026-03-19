@@ -2,6 +2,35 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/server/prisma';
 import { cookies } from 'next/headers';
 import { getUserCart } from '@/server/data/cart';
+import { auth } from '@/server/auth';
+
+export async function GET(request: NextRequest) {
+  try {
+    const session = await auth.api.getSession({ headers: request.headers });
+
+    if (!session) {
+      return Response.json({ success: false, message: 'Unauthorized' }, { status: 401 });
+    }
+
+    const orders = await prisma.order.findMany({
+      where: { userId: session.user.id },
+      orderBy: { createdAt: 'desc' },
+      include: {
+        items: {
+          include: {
+            productItem: {
+              include: { product: true, size: true, type: true },
+            },
+          },
+        },
+      },
+    });
+
+    return Response.json({ success: true, data: orders });
+  } catch {
+    return Response.json({ success: false, message: 'Internal server error' }, { status: 500 });
+  }
+}
 
 export async function POST(req: NextRequest) {
   try {

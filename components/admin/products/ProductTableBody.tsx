@@ -2,6 +2,7 @@
 
 import { use } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { TableActions } from '@/components/admin/table/TableActions';
 import type { Product } from '@/types';
@@ -22,6 +23,7 @@ export function ProductTableBody({
   onDelete,
 }: Props) {
   const { data: products } = use(productsPromise);
+  const router = useRouter();
 
   return (
     <tbody
@@ -91,6 +93,7 @@ export function ProductTableBody({
             </td>
             <td className="px-6 py-2 whitespace-nowrap">
               <TableActions
+                onView={() => router.push(`/admin/products/${product.id}`)}
                 onEdit={() => onEdit(product)}
                 onDelete={() => onDelete(product.id)}
               />

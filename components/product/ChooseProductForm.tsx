@@ -113,8 +113,8 @@ export function ChooseProductForm({
           )}
         >
           {currentItemId ? (
-            <div className='flex items-center justify-between bg-primary px-5 rounded-[18px] w-full h-14 font-bold text-base'>
-              <span className='text-gray-50'>
+            <div className='flex items-center justify-between w-full px-5 py-6 text-base font-bold rounded-sm bg-secondary h-9'>
+              <span className='text-gray-500'>
                 В корзине:{' '}
                 {cartItems?.find((item) => item.id === currentItemId)?.quantity}
               </span>

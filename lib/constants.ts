@@ -15,16 +15,6 @@ export const APP_DESCRIPTION = 'Best pizza in the universe';
 // 🔑 QUERY KEYS
 // ==============================
 
-export const queryKeys = {
-  cart: ['cart'] as const,
-  ingredients: ['ingredients'] as const,
-  categories: ['categories'] as const,
-  ['pizza-sizes']: ['pizza-sizes'] as const,
-  ['pizza-types']: ['pizza-types'] as const,
-  products: ['products'] as const,
-  product: (id: string) => ['product', id] as const,
-};
-
 // ==============================
 // 🔽 SORT OPTIONS
 // ==============================
@@ -59,3 +49,13 @@ export const ACCEPTED_IMAGE_TYPES = [
 export const DEFAULT_PRICE_FROM = 0;
 export const DEFAULT_PRICE_TO = 1000;
 export const DELIVERY_PRICE = 100;
+
+// ==============================
+// 📦 ORDER STATUS OPTIONS
+// ==============================
+
+export const ORDER_STATUS_OPTIONS = [
+  { value: 'PENDING', label: 'В ожидании' },
+  { value: 'SUCCEEDED', label: 'Оплачен' },
+  { value: 'CANCELLED', label: 'Отменён' },
+];

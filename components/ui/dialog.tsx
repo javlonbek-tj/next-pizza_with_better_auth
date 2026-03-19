@@ -84,7 +84,7 @@ function DialogContent({
               'cursor-pointer opacity-70 hover:opacity-100 transition',
             )}
           >
-            <XIcon />
+            <XIcon className='w-4 h-4' />
             <span className='sr-only'>Close</span>
           </DialogPrimitive.Close>
         )}

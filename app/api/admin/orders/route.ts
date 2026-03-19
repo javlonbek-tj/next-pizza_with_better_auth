@@ -1,9 +1,10 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest } from 'next/server';
 import { prisma } from '@/server/prisma';
+import type { OrderStatus } from '@/lib/generated/prisma/enums';
 
-export async function GET(req: NextRequest) {
+export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
+    const searchParams = request.nextUrl.searchParams;
 
     const page = Math.max(1, Number(searchParams.get('page')) || 1);
     const limit = Math.max(1, Number(searchParams.get('limit')) || 10);
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit;
 
     const where = {
-      ...(status && { status }),
+      ...(status && { status: status as OrderStatus }),
       ...(search && {
         OR: [
           { firstName: { contains: search, mode: 'insensitive' as const } },
@@ -22,7 +23,7 @@ export async function GET(req: NextRequest) {
       }),
     };
 
-    const [data, total] = await Promise.all([
+    const [orders, total] = await Promise.all([
       prisma.order.findMany({
         where,
         orderBy: { createdAt: 'desc' },
@@ -32,7 +33,7 @@ export async function GET(req: NextRequest) {
           items: {
             include: {
               productItem: {
-                include: { product: true },
+                include: { product: true, size: true, type: true },
               },
             },
           },
@@ -41,9 +42,11 @@ export async function GET(req: NextRequest) {
       prisma.order.count({ where }),
     ]);
 
-    return NextResponse.json({ data, total });
-  } catch (error) {
-    console.error('[ADMIN_ORDERS_GET]', error);
-    return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
+    return Response.json({ success: true, data: { orders, total } });
+  } catch {
+    return Response.json(
+      { success: false, message: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }

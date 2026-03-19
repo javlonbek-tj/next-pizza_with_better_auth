@@ -2,41 +2,41 @@
 
 import { prisma } from '@/server/prisma';
 import { CheckoutValues } from '@/components/checkout';
-import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import { DELIVERY_PRICE } from '@/lib';
-import { getUserCart } from '@/server/data/cart';
+import { getUserCartByUserId } from '@/server/data/cart';
+import { auth } from '@/server/auth';
+import type { ActionResult } from '@/types';
+import type { Order } from '@/lib/generated/prisma/client';
 
-export async function createOrder(data: CheckoutValues) {
+export async function createOrder(
+  data: CheckoutValues,
+): Promise<ActionResult<Order>> {
   try {
-    const cookieStore = await cookies();
-    const cartToken = cookieStore.get('cartToken')?.value;
+    const session = await auth.api.getSession({ headers: await headers() });
 
-    if (!cartToken) {
-      throw new Error('Cart token not found');
+    if (!session) {
+      return {
+        success: false,
+        message: 'Вы не авторизованы',
+      };
     }
 
-    const userCart = await getUserCart(cartToken);
+    const userCart = await getUserCartByUserId(session.user.id);
 
     if (!userCart || userCart.items.length === 0) {
-      throw new Error('Cart is empty');
+      return {
+        success: false,
+        message: 'Корзина пуста',
+      };
     }
-
-    const totalAmount =
-      data.totalAmount ??
-      userCart.items.reduce((acc, item) => {
-        const ingredientsPrice = item.ingredients.reduce(
-          (acc, ing) => acc + ing.price,
-          0
-        );
-        return acc + (item.productItem.price + ingredientsPrice) * item.quantity;
-      }, DELIVERY_PRICE);
 
     const deliveryPrice = data.deliveryPrice ?? DELIVERY_PRICE;
 
     const order = await prisma.order.create({
       data: {
-        token: cartToken,
-        totalAmount,
+        token: userCart.token,
+        totalAmount: data.totalAmount ?? 0,
         deliveryPrice,
         status: 'PENDING',
         firstName: data.firstName,
@@ -45,7 +45,7 @@ export async function createOrder(data: CheckoutValues) {
         phone: data.phone,
         address: data.address,
         comment: data.comment,
-        userId: userCart.userId,
+        userId: session.user.id,
         items: {
           create: userCart.items.map((item) => ({
             productItemId: item.productItemId,
@@ -61,16 +61,18 @@ export async function createOrder(data: CheckoutValues) {
       },
     });
 
-    // 4. Clear cart
     await prisma.cartItem.deleteMany({
-      where: {
-        cartId: userCart.id,
-      },
+      where: { cartId: userCart.id },
     });
 
-    return order;
-  } catch (error) {
-    console.error('[CREATE_ORDER] Error:', error);
-    throw error;
+    return {
+      success: true,
+      data: order,
+    };
+  } catch {
+    return {
+      success: false,
+      message: 'Ошибка при создании заказа',
+    };
   }
 }

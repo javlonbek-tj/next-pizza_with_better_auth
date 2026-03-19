@@ -10,7 +10,7 @@ import Image from 'next/image';
 
 import { cn } from '@/lib';
 import { Api } from '@/services/api-client';
-import { Product } from '@/types';
+import type { Product } from '@/lib/generated/prisma/client';
 
 interface Props {
   className?: string;
@@ -35,7 +35,7 @@ export function SearchInput({ className }: Props) {
 
   return (
     <>
-      {focused && <div className="z-40 fixed inset-0 bg-black/50" />}
+      {focused && <div className='fixed inset-0 z-40 bg-black/50' />}
       <div
         ref={ref}
         className={cn(
@@ -43,11 +43,11 @@ export function SearchInput({ className }: Props) {
           className,
         )}
       >
-        <Search className="h-5 text-gray-400" />
+        <Search className='h-5 text-gray-400' />
         <input
-          type="text"
-          className="pl-5 outline-none w-full"
-          placeholder="Найти пиццу..."
+          type='text'
+          className='w-full pl-5 outline-none'
+          placeholder='Найти пиццу...'
           onFocus={() => setFocused(true)}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
@@ -66,12 +66,12 @@ export function SearchInput({ className }: Props) {
                 key={product.id}
                 href={`/product/${product.id}`}
                 scroll={false}
-                className="flex items-center gap-3 hover:bg-orange-50 px-3 py-2 w-full transition duration-200"
+                className='flex items-center w-full gap-3 px-3 py-2 transition duration-200 hover:bg-orange-50'
               >
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
-                  className="rounded-full w-8 h-8"
+                  className='w-8 h-8 rounded-full'
                   width={32}
                   height={32}
                 />

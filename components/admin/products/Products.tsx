@@ -9,10 +9,12 @@ import type {
   PizzaSize,
   PizzaType,
   Product,
+  ProductWithCategory,
 } from '@/types';
 import { useDelete } from '@/hooks';
 import { useTableActions, useTableFilters } from '@/hooks/table';
 import { deleteProduct } from '@/app/actions';
+import { Api } from '@/services/api-client';
 import { ProductFormDialog } from './ProductFormDialog';
 import { ProductTable } from './ProductTable';
 import { ProductTableBody } from './ProductTableBody';
@@ -60,7 +62,12 @@ export function Products({
     handleCloseForm,
     handleOpenDelete,
     handleCloseDelete,
-  } = useTableActions<Product>();
+  } = useTableActions<ProductWithCategory>();
+
+  const handleEditProduct = async (product: Product) => {
+    const full = await Api.products.getProduct(product.id);
+    handleEdit(full as ProductWithCategory);
+  };
 
   const { isDeleting, handleDelete } = useDelete(deleteProduct, {
     successMessage: 'Продукт успешно удален',
@@ -90,7 +97,7 @@ export function Products({
                 productsPromise={productsPromise}
                 startIndex={startIndex}
                 isLoading={isFilterLoading}
-                onEdit={handleEdit}
+                onEdit={handleEditProduct}
                 onDelete={handleOpenDelete}
               />
             </Suspense>

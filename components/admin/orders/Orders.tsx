@@ -12,41 +12,35 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { PaginationWrapper } from '@/components/admin/table/PaginationWrapper';
+import { ORDER_STATUS_OPTIONS } from '@/lib/constants';
 import { useTableFilters } from '@/hooks/table';
 import { useOrders } from '@/hooks/admin/use-orders';
-import type { OrderRow } from '@/hooks/admin/use-orders';
 import { OrdersTable } from './OrdersTable';
 import { OrdersTableBody } from './OrdersTableBody';
 import { OrderDetailsDialog } from './OrderDetailsDialog';
-
-const STATUS_OPTIONS = [
-  { value: 'all', label: 'Все заказы' },
-  { value: 'PENDING', label: 'В ожидании' },
-  { value: 'SUCCEEDED', label: 'Оплачен' },
-  { value: 'CANCELLED', label: 'Отменён' },
-];
+import type { OrderWithItems } from '@/types';
 
 export function Orders() {
   const searchParams = useSearchParams();
-  const { handleSearch, handleFilterChange, isLoading, setIsPending } = useTableFilters();
-  const [selectedOrder, setSelectedOrder] = useState<OrderRow | null>(null);
+  const { handleSearch, handleFilterChange, isLoading, setIsPending } =
+    useTableFilters();
+  const [selectedOrder, setSelectedOrder] = useState<OrderWithItems | null>(
+    null,
+  );
 
   const search = searchParams.get('search') || '';
   const status = searchParams.get('status') || 'all';
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
 
-  const { data, isPending } = useOrders(
-    {
-      page,
-      limit,
-      status: status === 'all' ? undefined : status,
-      search: search || undefined,
-    },
-    { refetchInterval: 10000 },
-  );
+  const { data, isPending } = useOrders({
+    page,
+    limit,
+    status: status === 'all' ? undefined : status.toUpperCase(),
+    search: search || undefined,
+  });
 
-  const orders = data?.data ?? [];
+  const orders = data?.orders ?? [];
   const total = data?.total ?? 0;
   const totalPages = Math.ceil(total / limit);
 
@@ -56,10 +50,10 @@ export function Orders() {
         {/* Filter bar */}
         <div className='relative flex items-center gap-3 p-4 border-b'>
           <div className='relative flex-1 max-w-sm'>
-            <Search className='top-1/2 left-3 absolute w-4 h-4 text-gray-400 -translate-y-1/2' />
+            <Search className='absolute w-4 h-4 text-gray-400 -translate-y-1/2 top-1/2 left-3' />
             <Input
               placeholder='Поиск по имени или email...'
-              className='shadow-xs pl-9 h-9 text-xs 2xl:text-sm'
+              className='text-xs shadow-xs pl-9 h-9 2xl:text-sm'
               defaultValue={search}
               onChange={(e) => handleSearch(e.target.value)}
               autoComplete='off'
@@ -69,12 +63,19 @@ export function Orders() {
             value={status}
             onValueChange={(val) => handleFilterChange('status', val)}
           >
-            <SelectTrigger className='shadow-xs w-44 h-9 text-xs 2xl:text-sm'>
+            <SelectTrigger className='text-xs shadow-xs w-44 h-9 2xl:text-sm'>
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {STATUS_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value} className='text-xs 2xl:text-sm'>
+              {[
+                { value: 'all', label: 'Все заказы' },
+                ...ORDER_STATUS_OPTIONS,
+              ].map((opt) => (
+                <SelectItem
+                  key={opt.value}
+                  value={opt.value.toLowerCase()}
+                  className='text-xs 2xl:text-sm'
+                >
                   {opt.label}
                 </SelectItem>
               ))}

@@ -1,26 +1,24 @@
 import { axiosInstance } from './instance';
-import { OrderModel as Order } from '../lib/generated/prisma/models/Order';
-import { CheckoutValues } from '@/components/checkout';
+import { ApiRoutes } from './apiRoutes';
+import { ApiResponse } from './api-response';
+import type { OrderWithItems } from '@/types';
+
+export const getMyOrders = async (): Promise<OrderWithItems[]> => {
+  const { data } = await axiosInstance.get<ApiResponse<OrderWithItems[]>>(
+    `${ApiRoutes.ORDERS}`,
+  );
+  return data.data;
+};
 
 export const getOrders = async (params?: {
   page?: number;
   limit?: number;
   status?: string;
-}) => {
-  const { data } = await axiosInstance.get<Order[]>('/admin/orders', {
-    params,
-  });
-  return data;
-};
+  search?: string;
+}): Promise<{ orders: OrderWithItems[]; total: number }> => {
+  const { data } = await axiosInstance.get<
+    ApiResponse<{ orders: OrderWithItems[]; total: number }>
+  >(`${ApiRoutes.ADMIN}/orders`, { params });
 
-export const createOrder = async (data: CheckoutValues) => {
-  const { data: result } = await axiosInstance.post<Order>('/orders', data);
-  return result;
-};
-
-export const updateOrderStatus = async (id: string, status: string) => {
-  const { data } = await axiosInstance.patch<Order>(`/admin/orders/${id}`, {
-    status,
-  });
-  return data;
+  return data.data;
 };

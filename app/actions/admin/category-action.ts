@@ -1,9 +1,10 @@
 'use server';
 
-import { ActionResult, Category } from '@/types';
+import { revalidatePath, updateTag } from 'next/cache';
+import type { ActionResult } from '@/types';
 import { categorySchema, CategoryFormValues } from '@/lib';
 import { prisma } from '@/server';
-import { revalidatePath, updateTag } from 'next/cache';
+import type { Category } from '@/lib/generated/prisma/client';
 
 export async function createCategory(
   data: CategoryFormValues,

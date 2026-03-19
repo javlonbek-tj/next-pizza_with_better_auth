@@ -42,14 +42,10 @@ export function CartIconButton({
   const buttonClassName = cn(
     'relative flex justify-center items-center border-2 border-primary transition-none cursor-pointer',
     sizeClasses,
-    isDisabled && 'opacity-60 border-primary/50 cursor-not-allowed',
+    isDisabled && 'opacity-60 border-primary/90 cursor-not-allowed',
   );
 
-  const iconClassName = cn(
-    'text-primary',
-    iconSize,
-    isDisabled && 'opacity-60 text-primary/50',
-  );
+  const iconClassName = cn('text-primary', iconSize);
 
   return (
     <button

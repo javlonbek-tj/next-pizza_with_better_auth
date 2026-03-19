@@ -1,8 +1,7 @@
 import { axiosInstance } from './instance';
-import { ApiRoutes } from './constants';
+import { ApiRoutes } from './apiRoutes';
 import { ApiResponse } from './api-response';
 import { ProductWithRelations } from '@/types';
-
 
 export const search = async (query: string) => {
   const { data } = (
@@ -10,7 +9,7 @@ export const search = async (query: string) => {
       `${ApiRoutes.PRODUCTS}/search`,
       {
         params: { query },
-      }
+      },
     )
   ).data;
 
@@ -20,7 +19,7 @@ export const search = async (query: string) => {
 export const getProduct = async (id: string) => {
   const { data } = (
     await axiosInstance.get<ApiResponse<ProductWithRelations>>(
-      `${ApiRoutes.PRODUCTS}/${id}`
+      `${ApiRoutes.PRODUCTS}/${id}`,
     )
   ).data;
   return data;

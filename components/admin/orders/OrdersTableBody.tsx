@@ -12,9 +12,14 @@ interface Props {
   onView: (order: OrderRow) => void;
 }
 
-export function OrdersTableBody({ orders, isPending, isLoading, onView }: Props) {
+export function OrdersTableBody({
+  orders,
+  isPending,
+  isLoading,
+  onView,
+}: Props) {
   if (isPending) {
-    return <TableBodySkeleton colSpan={5} />;
+    return <TableBodySkeleton colSpan={6} />;
   }
 
   return (
@@ -26,8 +31,8 @@ export function OrdersTableBody({ orders, isPending, isLoading, onView }: Props)
       {orders.length === 0 ? (
         <tr>
           <td
-            colSpan={5}
-            className='px-6 py-12 font-medium text-gray-800 text-sm text-center'
+            colSpan={6}
+            className='px-6 py-12 text-sm font-medium text-center text-gray-800'
           >
             Заказы не найдены
           </td>
@@ -36,9 +41,9 @@ export function OrdersTableBody({ orders, isPending, isLoading, onView }: Props)
         orders.map((order) => (
           <tr
             key={order.id}
-            className='group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white transition-all duration-200'
+            className='transition-all duration-200 group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white'
           >
-            <td className='px-6 py-2 font-mono text-gray-600 text-xs whitespace-nowrap'>
+            <td className='px-6 py-2 font-mono text-xs text-gray-600 whitespace-nowrap'>
               #{order.id.slice(0, 8)}
             </td>
             <td className='px-6 py-2 text-xs whitespace-nowrap'>
@@ -47,13 +52,24 @@ export function OrdersTableBody({ orders, isPending, isLoading, onView }: Props)
               </p>
               <p className='text-[10px] text-gray-500'>{order.email}</p>
             </td>
-            <td className='px-6 py-2 font-bold text-gray-700 text-xs whitespace-nowrap'>
+            <td className='px-6 py-2 text-xs font-bold text-gray-700 whitespace-nowrap'>
               {order.totalAmount.toLocaleString('ru-RU')} ₽
+            </td>
+            <td className='px-6 py-2 text-xs whitespace-nowrap'>
+              <p className='text-gray-700'>
+                {new Date(order.createdAt).toLocaleDateString('ru-RU')}
+              </p>
+              <p className='text-[10px] text-gray-500'>
+                {new Date(order.createdAt).toLocaleTimeString('ru-RU', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </p>
             </td>
             <td className='px-6 py-2 text-center whitespace-nowrap'>
               <OrderStatusBadge status={order.status} />
             </td>
-            <td className='px-6 py-2 whitespace-nowrap'>
+            <td className='px-6 py-2 pr-15 whitespace-nowrap'>
               <TableActions onView={() => onView(order)} />
             </td>
           </tr>

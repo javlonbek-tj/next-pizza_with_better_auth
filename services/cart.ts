@@ -1,5 +1,5 @@
 import { axiosInstance } from './instance';
-import { ApiRoutes } from './constants';
+import { ApiRoutes } from './apiRoutes';
 import { ApiResponse } from './api-response';
 import { AddToCartDto, CartWithRelations } from '@/types';
 

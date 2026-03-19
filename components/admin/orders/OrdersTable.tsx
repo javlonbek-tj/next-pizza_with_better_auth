@@ -8,7 +8,8 @@ interface Props {
 
 export function OrdersTable({ children }: Props) {
   return (
-    <div className='overflow-x-auto'>
+    <div className='bg-white shadow-sm border border-gray-200 rounded-lg overflow-hidden'>
+      <div className='overflow-x-auto'>
       <table className='relative w-full border-collapse'>
         <thead className='top-0 z-10 sticky bg-gray-100/80 backdrop-blur-md border-gray-200 border-b'>
           <tr>
@@ -21,6 +22,9 @@ export function OrdersTable({ children }: Props) {
             <th className='px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest'>
               Сумма
             </th>
+            <th className='px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest'>
+              Дата создания
+            </th>
             <th className='px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-center uppercase leading-none tracking-widest'>
               Статус
             </th>
@@ -31,6 +35,7 @@ export function OrdersTable({ children }: Props) {
         </thead>
         {children}
       </table>
+      </div>
     </div>
   );
 }

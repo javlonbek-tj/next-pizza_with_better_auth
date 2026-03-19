@@ -10,7 +10,7 @@ export async function signoutAction() {
     return { error: null };
   } catch (error) {
     if (error instanceof APIError) {
-      return { error: error.message };
+      return { message: error.message };
     }
     return { error: 'Failed to sign out' };
   }

@@ -2,12 +2,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import { Api } from '@/services/api-client';
 import { getCartDetails } from '@/lib/cart';
-import { queryKeys } from '@/lib/constants';
 import { AddToCartDto } from '@/types/cart';
 
 export function useCart() {
   return useQuery({
-    queryKey: queryKeys.cart,
+    queryKey: ['cart'],
     retry: false,
     queryFn: async () => {
       const data = await Api.cart.getCart();
@@ -27,7 +26,7 @@ export function useUpdateCartQuantity() {
     mutationFn: (vars: UpdateQtyVars) =>
       Api.cart.updateCartQty(vars.id, vars.quantity),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: () => {
       toast.error('Не удалось обновить количество товара в корзине');
@@ -43,7 +42,7 @@ export function useRemoveCartItem() {
     mutationKey: ['cart', 'critical'],
     mutationFn: ({ id }: RemoveCartItemVars) => Api.cart.removeCartItem(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: () => {
       toast.error('Не удалось удалить товар из корзины');
@@ -57,7 +56,7 @@ export function useClearCart() {
     mutationKey: ['cart', 'critical'],
     mutationFn: () => Api.cart.clearCart(),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
     },
     onError: () => {
       toast.error('Не удалось очистить корзину');
@@ -72,7 +71,7 @@ export function useAddToCart() {
     mutationKey: ['cart', 'update'],
     mutationFn: (vars: AddToCartDto) => Api.cart.addToCart(vars),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.cart });
+      queryClient.invalidateQueries({ queryKey: ['cart'] });
       toast.success('Товар добавлен в корзину 🛒');
     },
     onError: () => {
