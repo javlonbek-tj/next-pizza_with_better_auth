@@ -1,8 +1,17 @@
 import { NextRequest } from 'next/server';
 import { prisma } from '@/server/prisma';
 import type { OrderStatus } from '@/lib/generated/prisma/enums';
+import { getServerSession, isAdmin } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
+  const session = await getServerSession();
+  if (!session || !isAdmin(session.user)) {
+    return Response.json(
+      { success: false, error: 'Forbidden' },
+      { status: 403 },
+    );
+  }
+
   try {
     const searchParams = request.nextUrl.searchParams;
 

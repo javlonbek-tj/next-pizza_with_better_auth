@@ -5,10 +5,13 @@ import { prisma } from '@/server';
 import { ActionResult, Product } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { deleteImageFile } from '../delete-image-file';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createProduct(
   data: ProductFormValues,
 ): Promise<ActionResult<Product>> {
+  await requireAdmin();
+
   try {
     const category = await prisma.category.findUnique({
       where: { id: data.categoryId },
@@ -59,8 +62,7 @@ export async function createProduct(
       success: true,
       data: product,
     };
-  } catch (error) {
-    console.error('[ADMIN_PRODUCTS_POST]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -69,6 +71,8 @@ export async function createProduct(
 }
 
 export async function deleteProduct(id: string): Promise<ActionResult<null>> {
+  await requireAdmin();
+
   try {
     const product = await prisma.product.findUnique({
       where: { id },
@@ -97,8 +101,7 @@ export async function deleteProduct(id: string): Promise<ActionResult<null>> {
       success: true,
       data: null,
     };
-  } catch (error) {
-    console.error('[ADMIN_PRODUCTS_DELETE]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -110,6 +113,8 @@ export async function updateProduct(
   id: string,
   data: ProductFormValues,
 ): Promise<ActionResult<Product>> {
+  await requireAdmin();
+
   try {
     const category = await prisma.category.findUnique({
       where: { id: data.categoryId },
@@ -234,8 +239,7 @@ export async function updateProduct(
       success: true,
       data: updatedProduct,
     };
-  } catch (error) {
-    console.error('[ADMIN_PRODUCTS_PUT]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',

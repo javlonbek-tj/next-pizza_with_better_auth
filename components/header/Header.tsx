@@ -10,7 +10,7 @@ import { SearchInput } from '../filters/SearchInput';
 import { CartButton } from '../cart';
 import { ProfileButton } from '../profile/ProfileButton';
 import { AuthModal } from '../modals/AuthModal';
-import type { Session } from '@/server/auth';
+import type { Session } from '@/lib/auth';
 
 interface Props {
   className?: string;

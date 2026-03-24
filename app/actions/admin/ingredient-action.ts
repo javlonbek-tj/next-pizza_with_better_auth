@@ -5,10 +5,13 @@ import { revalidatePath, updateTag } from 'next/cache';
 import { ActionResult, Ingredient } from '@/types';
 import { deleteImageFile } from '../delete-image-file';
 import { IngredientFormValues, ingredientSchema } from '@/lib';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createIngredient(
   data: IngredientFormValues,
 ): Promise<ActionResult<Ingredient>> {
+  await requireAdmin();
+
   const validationResult = ingredientSchema.safeParse(data);
 
   if (!validationResult.success) {
@@ -44,8 +47,7 @@ export async function createIngredient(
       success: true,
       data: ingredient,
     };
-  } catch (error) {
-    console.error('[ADMIN_INGREDIENTS_POST]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -57,6 +59,8 @@ export async function updateIngredient(
   id: string,
   data: IngredientFormValues,
 ): Promise<ActionResult<Ingredient>> {
+  await requireAdmin();
+
   const validationResult = ingredientSchema.safeParse(data);
 
   if (!validationResult.success) {
@@ -96,8 +100,7 @@ export async function updateIngredient(
       success: true,
       data: ingredient,
     };
-  } catch (error) {
-    console.error('[ADMIN_INGREDIENTS_PUT]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -108,6 +111,8 @@ export async function updateIngredient(
 export async function deleteIngredient(
   id: string,
 ): Promise<ActionResult<null>> {
+  await requireAdmin();
+
   try {
     const ingredient = await prisma.ingredient.update({
       where: { id },
@@ -124,8 +129,7 @@ export async function deleteIngredient(
       success: true,
       data: null,
     };
-  } catch (error) {
-    console.error('[ADMIN_INGREDIENTS_DELETE]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',

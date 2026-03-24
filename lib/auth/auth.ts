@@ -2,16 +2,25 @@ import { betterAuth } from 'better-auth';
 import { nextCookies } from 'better-auth/next-js';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 
-import { sendOTPEmail } from '@/app/actions/auth/send-email-action';
+import { sendOTPEmail } from '@/app/actions';
 import { emailOTP } from 'better-auth/plugins';
-import { prisma } from './';
-import { mergeCartsOnLogin } from './data/cart';
+import { prisma } from '@/server/prisma';
+import { mergeCartsOnLogin } from '@/server/data/cart';
+import { USER_ROLES } from '@/lib/constants';
 
 export const auth = betterAuth({
   baseURL: process.env.NEXT_PUBLIC_AUTH_API_URL,
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
+  user: {
+    additionalFields: {
+      role: {
+        type: 'string',
+        defaultValue: USER_ROLES.USER,
+      },
+    },
+  },
   emailAndPassword: {
     enabled: true,
     minPasswordLength: 6,

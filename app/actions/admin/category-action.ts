@@ -5,10 +5,13 @@ import type { ActionResult } from '@/types';
 import { categorySchema, CategoryFormValues } from '@/lib';
 import { prisma } from '@/server';
 import type { Category } from '@/lib/generated/prisma/client';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createCategory(
   data: CategoryFormValues,
 ): Promise<ActionResult<Category>> {
+  await requireAdmin();
+
   const validationResult = categorySchema.safeParse(data);
 
   if (!validationResult.success) {
@@ -48,8 +51,7 @@ export async function createCategory(
       success: true,
       data: category,
     };
-  } catch (error) {
-    console.error('[ADMIN_CATEGORIES_POST]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -61,6 +63,8 @@ export async function updateCategory(
   id: string,
   data: CategoryFormValues,
 ): Promise<ActionResult<Category>> {
+  await requireAdmin();
+
   const validationResult = categorySchema.safeParse(data);
 
   if (!validationResult.success) {
@@ -102,8 +106,7 @@ export async function updateCategory(
       success: true,
       data: category,
     };
-  } catch (error) {
-    console.error('[ADMIN_CATEGORIES_PUT]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -112,6 +115,8 @@ export async function updateCategory(
 }
 
 export async function deleteCategory(id: string): Promise<ActionResult<null>> {
+  await requireAdmin();
+
   try {
     await prisma.category.update({
       where: { id },
@@ -125,8 +130,7 @@ export async function deleteCategory(id: string): Promise<ActionResult<null>> {
       success: true,
       data: null,
     };
-  } catch (error) {
-    console.error('[ADMIN_CATEGORIES_DELETE]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',

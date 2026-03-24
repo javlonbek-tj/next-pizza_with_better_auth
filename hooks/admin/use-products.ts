@@ -134,8 +134,7 @@ export function useProductForm({
       markAsSubmitted();
       toast.success(`Продукт успешно ${isEditing ? 'изменен' : 'создан'}`);
       onClose();
-    } catch (error) {
-      console.error('[ProductFormDialog] Error:', error);
+    } catch {
       toast.error(`Не удалось ${isEditing ? 'изменить' : 'создать'} продукт`);
     } finally {
       setIsPending(false);

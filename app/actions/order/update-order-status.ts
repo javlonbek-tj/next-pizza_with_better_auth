@@ -2,7 +2,7 @@
 
 import { prisma } from '@/server/prisma';
 import { headers } from 'next/headers';
-import { auth } from '@/server/auth';
+import { auth } from '@/lib/auth';
 import type { ActionResult } from '@/types';
 import type { Order } from '@/lib/generated/prisma/client';
 import { OrderStatus } from '@/lib/generated/prisma/enums';

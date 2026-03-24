@@ -17,7 +17,7 @@ import { useCart } from '@/hooks';
 import { cn } from '@/lib';
 import { EmptyCart } from './index';
 import { AuthModal } from '../modals/AuthModal';
-import { authClient } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth/auth-client';
 
 export function CartDrawer({ children }: PropsWithChildren) {
   const [open, setOpen] = useState(false);
@@ -49,8 +49,7 @@ export function CartDrawer({ children }: PropsWithChildren) {
         router.push('/checkout');
         router.refresh();
       }
-    } catch (error) {
-      console.error('Session check failed:', error);
+    } catch {
       setAuthOpen(true);
     } finally {
       setIsLoading(false);

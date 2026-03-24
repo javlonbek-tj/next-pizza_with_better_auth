@@ -4,6 +4,13 @@
 
 export const OTP_DOWN_SECONDS = 60;
 
+export const USER_ROLES = {
+  USER: 'USER',
+  ADMIN: 'ADMIN',
+} as const;
+
+export type UserRoleValue = (typeof USER_ROLES)[keyof typeof USER_ROLES];
+
 // ==============================
 // 🏷️ APP INFO
 // ==============================

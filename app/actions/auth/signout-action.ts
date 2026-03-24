@@ -2,16 +2,16 @@
 
 import { APIError } from 'better-auth';
 import { headers } from 'next/headers';
-import { auth } from '@/server';
+import { auth } from '@/lib/auth';
 
 export async function signoutAction() {
   try {
     await auth.api.signOut({ headers: await headers() });
-    return { error: null };
+    return { success: true, error: null };
   } catch (error) {
     if (error instanceof APIError) {
-      return { message: error.message };
+      return { success: false, error: error.message };
     }
-    return { error: 'Failed to sign out' };
+    return { success: false, error: 'Failed to sign out' };
   }
 }

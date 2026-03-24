@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
 export async function sendOTPEmail(
   to: string,
   otp: string,
-  type: 'sign-in' | 'email-verification' | 'forget-password'
+  type: 'sign-in' | 'email-verification' | 'forget-password',
 ) {
   try {
     await transporter.sendMail({
@@ -25,9 +25,7 @@ export async function sendOTPEmail(
       subject: subjects[type],
       html: otpTemplate(type, otp),
     });
-  } catch (error) {
-    // TODO REMOVE IN PRODUCTION
-    console.error('Error sending email:', error);
+  } catch {
     throw new Error('Failed to send verification email');
   }
 }

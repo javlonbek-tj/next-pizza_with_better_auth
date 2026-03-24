@@ -46,12 +46,7 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
     },
   });
 
-  const onSubmit = async (
-    values: LoginValues,
-    e?: React.BaseSyntheticEvent
-  ) => {
-    e?.preventDefault(); // Prevent default
-    e?.stopPropagation(); // Stop propagation to parent forms
+  const onSubmit = async (values: LoginValues) => {
     await handleAuthSubmit(() => loginAction(values), values.email);
   };
 
@@ -69,7 +64,7 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
     <Form {...form}>
       <form
         onSubmit={(e) => {
-          e.stopPropagation(); // Stop propagation
+          e.stopPropagation();
           form.handleSubmit(onSubmit)(e);
         }}
         className={`space-y-4 mx-auto w-90 ${
@@ -108,12 +103,12 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
           type='submit'
           className='w-full cursor-pointer'
           disabled={isPending}
-          onClick={(e) => e.stopPropagation()} // Also stop propagation on button click
+          onClick={(e) => e.stopPropagation()}
         >
           {isPending ? <Loader className='w-5 h-5 animate-spin' /> : 'Войти'}
         </Button>
 
-        {error && <p className='text-red-500 text-sm text-center'>{error}</p>}
+        {error && <p className='text-sm text-center text-red-500'>{error}</p>}
       </form>
     </Form>
   );

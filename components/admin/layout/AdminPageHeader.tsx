@@ -6,7 +6,7 @@ import { Loader, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { signoutAction } from '@/app/actions';
 import toast from 'react-hot-toast';
-import type { Session } from '@/server/auth';
+import type { Session } from '@/lib/auth';
 
 interface Props {
   session: Session | null;

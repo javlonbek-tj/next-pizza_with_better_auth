@@ -10,6 +10,7 @@ import {
   Pizza,
   ShoppingCart,
   Home,
+  Users,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -21,6 +22,7 @@ const navItems = [
   { href: '/admin/pizza-sizes', label: 'Размеры', icon: Ruler },
   { href: '/admin/pizza-types', label: 'Типы пиццы', icon: Pizza },
   { href: '/admin/orders', label: 'Заказы', icon: ShoppingCart },
+  { href: '/admin/users', label: 'Пользователи', icon: Users },
 ];
 
 export function AdminSidebar() {

@@ -1,4 +1,4 @@
-import { auth } from '@/server';
+import { auth } from '@/lib/auth';
 import { Header } from './Header';
 import { headers } from 'next/headers';
 

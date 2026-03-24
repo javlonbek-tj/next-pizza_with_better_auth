@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { signInSocialAction } from '@/app/actions';
 
 export function useAuthModal() {
@@ -16,11 +17,10 @@ export function useAuthModal() {
     setLoadingProvider(provider);
     try {
       await signInSocialAction(provider);
+      setLoadingProvider(null);
     } catch (error) {
-      // TODO REMOVE IN PRODUCTION
-      console.error(error);
-      toast.error('Что-то пошло не так, попробуйте еще раз');
-    } finally {
+      if (isRedirectError(error)) throw error;
+      toast.error('Что-то пошло не так, попробуйте еще раз');
       setLoadingProvider(null);
     }
   };

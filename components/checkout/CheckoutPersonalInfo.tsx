@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { CheckoutCard } from './CheckoutCard';
 import { FormField } from '../form/FormField';
-import { authClient } from '@/lib/auth-client';
+import { authClient } from '@/lib/auth/auth-client';
 import { AuthModal } from '../modals/AuthModal';
 import { Button } from '@/components/ui/button';
 import { CheckoutPersonalInfoSkeleton } from '../skeletons/CheckoutPersonalInfoSkeleton';
@@ -46,8 +46,8 @@ export function CheckoutPersonalInfo() {
     setAuthOpen(false);
     try {
       await refetch();
-    } catch (error) {
-      console.error('Session refetch failed:', error);
+    } catch {
+      // ignore
     }
   };
 
@@ -59,7 +59,7 @@ export function CheckoutPersonalInfo() {
   return (
     <>
       <CheckoutCard title='2. Персональные данные'>
-        <div className='gap-5 grid grid-cols-2'>
+        <div className='grid grid-cols-2 gap-5'>
           <FormField label='Имя' name='firstName' placeholder='Имя' required />
           <FormField
             label='Фамилия'
@@ -75,7 +75,7 @@ export function CheckoutPersonalInfo() {
             required
             className={cn(
               !isAuthenticated &&
-                'pointer-events-none opacity-80 cursor-not-allowed'
+                'pointer-events-none opacity-80 cursor-not-allowed',
             )}
             disabled={isAuthenticated}
             suffix={
@@ -84,13 +84,13 @@ export function CheckoutPersonalInfo() {
                   variant='link'
                   size='sm'
                   type='button'
-                  className='px-2 h-6 text-primary hover:underline cursor-pointer'
+                  className='h-6 px-2 cursor-pointer text-primary hover:underline'
                   onClick={() => setAuthOpen(true)}
                 >
                   Войти
                 </Button>
               ) : (
-                <span className='font-medium text-green-600 text-xs'>
+                <span className='text-xs font-medium text-green-600'>
                   ✓ Авторизован
                 </span>
               )

@@ -28,8 +28,7 @@ export function useDelete<T>(
       } else {
         toast.error(result.message || errorMessage);
       }
-    } catch (error) {
-      console.error('[USE_DELETE_ERROR]', error);
+    } catch {
       toast.error(errorMessage);
     } finally {
       setIsDeleting(false);

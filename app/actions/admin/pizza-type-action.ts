@@ -4,10 +4,13 @@ import { PizzaTypeFormValues, pizzaTypeSchema } from '@/lib';
 import { prisma } from '@/server';
 import { ActionResult, PizzaType } from '@/types';
 import { revalidatePath, updateTag } from 'next/cache';
+import { requireAdmin } from '@/lib/auth';
 
 export async function createPizzaType(
   data: PizzaTypeFormValues,
 ): Promise<ActionResult<PizzaType>> {
+  await requireAdmin();
+
   const validationResult = pizzaTypeSchema.safeParse(data);
 
   if (!validationResult.success) {
@@ -44,8 +47,7 @@ export async function createPizzaType(
       success: true,
       data: pizzaType,
     };
-  } catch (error) {
-    console.error('[ADMIN_PIZZA_TYPES_POST]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -57,6 +59,8 @@ export async function updatePizzaType(
   id: string,
   data: PizzaTypeFormValues,
 ): Promise<ActionResult<PizzaType>> {
+  await requireAdmin();
+
   const validationResult = pizzaTypeSchema.safeParse(data);
 
   if (!validationResult.success) {
@@ -95,8 +99,7 @@ export async function updatePizzaType(
       success: true,
       data: pizzaType,
     };
-  } catch (error) {
-    console.error('[ADMIN_PIZZA_TYPES_PUT]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',
@@ -105,6 +108,8 @@ export async function updatePizzaType(
 }
 
 export async function deletePizzaType(id: string): Promise<ActionResult<null>> {
+  await requireAdmin();
+
   try {
     await prisma.pizzaType.update({
       where: { id },
@@ -118,8 +123,7 @@ export async function deletePizzaType(id: string): Promise<ActionResult<null>> {
       success: true,
       data: null,
     };
-  } catch (error) {
-    console.error('[ADMIN_PIZZA_TYPES_DELETE]', error);
+  } catch {
     return {
       success: false,
       error: 'INTERNAL_SERVER_ERROR',

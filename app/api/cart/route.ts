@@ -7,7 +7,7 @@ import {
   getUserCart,
   getUserCartByUserId,
 } from '@/server/data/cart';
-import { auth } from '@/server';
+import { auth } from '@/lib/auth';
 import { AddToCartDto } from '@/types';
 
 export async function GET(req: NextRequest) {

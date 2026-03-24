@@ -57,8 +57,7 @@ export function usePizzaSizeForm({ pizzaSize, open, onClose }: Props) {
 
       onClose();
       form.reset();
-    } catch (error) {
-      console.error('[PizzaSizeFormDialog] Error:', error);
+    } catch {
       toast.error(
         `Не удалось ${isEditing ? 'изменить' : 'создать'} размер пиццы`,
       );

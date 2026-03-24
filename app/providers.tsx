@@ -15,7 +15,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
       new QueryClient({
         queryCache: new QueryCache({
           onError: (error) => {
-            console.log('[ERROR]', error);
             toast.error(error.message ?? 'Внутренняя ошибка сервера');
           },
         }),

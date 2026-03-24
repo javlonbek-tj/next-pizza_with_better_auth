@@ -5,7 +5,7 @@ import { CheckoutValues } from '@/components/checkout';
 import { headers } from 'next/headers';
 import { DELIVERY_PRICE } from '@/lib';
 import { getUserCartByUserId } from '@/server/data/cart';
-import { auth } from '@/server/auth';
+import { auth } from '@/lib/auth';
 import type { ActionResult } from '@/types';
 import type { Order } from '@/lib/generated/prisma/client';
 

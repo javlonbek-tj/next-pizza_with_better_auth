@@ -1,6 +1,6 @@
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { auth } from '@/server/auth';
+import { auth } from '@/lib/auth';
 import { Container, Title } from '@/components/shared';
 import { Mail, User, ShieldCheck, ShieldAlert, CalendarDays } from 'lucide-react';
 

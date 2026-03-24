@@ -67,8 +67,7 @@ export function useIngredientForm({
       markAsSubmitted();
       toast.success(`Ингредиент успешно ${isEditing ? 'изменён' : 'создан'}`);
       onClose();
-    } catch (error) {
-      console.error('[IngredientFormDialog] Error:', error);
+    } catch {
       toast.error(
         `Не удалось ${isEditing ? 'изменить' : 'создать'} ингредиент`,
       );

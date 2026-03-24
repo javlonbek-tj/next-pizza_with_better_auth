@@ -10,7 +10,9 @@ interface UseAuthFormOptions {
 }
 
 interface AuthResult {
-  error: string | null;
+  success: boolean;
+  message?: string | null;
+  error?: string | null;
   requiresVerification?: boolean;
   email?: string;
 }
@@ -25,7 +27,7 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
 
   const handleAuthSubmit = async (
     authAction: () => Promise<AuthResult>,
-    fallbackEmail?: string
+    fallbackEmail?: string,
   ) => {
     setIsPending(true);
     setError(null);
@@ -36,8 +38,8 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
       setVerificationEmail(result.email || fallbackEmail || '');
       setShowOTPVerification(true);
       onShowOTP?.(true);
-    } else if (result.error) {
-      setError(result.error);
+    } else if (!result.success) {
+      setError(result.message || 'Произошла ошибка. Попробуйте позже');
     } else {
       window.dispatchEvent(new Event('auth-success'));
       await queryClient.invalidateQueries({ queryKey: ['cart'] });

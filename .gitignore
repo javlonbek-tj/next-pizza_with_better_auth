@@ -44,4 +44,6 @@ next-env.d.ts
 # Ignore generated prisma files
 /lib/generated/prisma
 
+# Ignore public/uploads
+/public/uploads
 

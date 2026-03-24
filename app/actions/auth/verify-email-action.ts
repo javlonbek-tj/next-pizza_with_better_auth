@@ -1,7 +1,7 @@
 'use server';
 
+import { auth } from '@/lib/auth';
 import { APIError } from 'better-auth';
-import { auth } from '@/server';
 
 export async function verifyEmailAction(email: string, otp: string) {
   try {
@@ -11,11 +11,11 @@ export async function verifyEmailAction(email: string, otp: string) {
         otp,
       },
     });
-    return { error: null };
+    return { success: true, error: null };
   } catch (err) {
     if (err instanceof APIError) {
-      return { error: err.message };
+      return { success: false, error: err.message };
     }
-    return { error: 'Invalid or expired code' };
+    return { success: false, error: 'Invalid or expired code' };
   }
 }

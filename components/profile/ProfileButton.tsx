@@ -2,7 +2,7 @@ import { User } from 'lucide-react';
 
 import { Button } from '../ui/button';
 import { ProfileDropdown } from './ProfileDropdown';
-import type { Session } from '@/server/auth';
+import type { Session } from '@/lib/auth';
 
 interface Props {
   onClickSignIn?: () => void;

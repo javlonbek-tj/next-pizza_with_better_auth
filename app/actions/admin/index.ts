@@ -4,3 +4,4 @@ export * from './pizza-size-action';
 export * from './pizza-type-action';
 export * from './upload-file-action';
 export * from './product-action';
+export * from './user-action';

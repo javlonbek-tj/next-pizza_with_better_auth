@@ -1,6 +1,6 @@
 'use server';
 
-import { auth } from '@/server';
+import { auth } from '@/lib/auth';
 import { APIError } from 'better-auth';
 
 export async function resendVerificationOTP(email: string) {
@@ -8,12 +8,11 @@ export async function resendVerificationOTP(email: string) {
     await auth.api.sendVerificationOTP({
       body: { email, type: 'email-verification' },
     });
-
-    return { error: null };
+    return { success: true, error: null };
   } catch (error) {
     if (error instanceof APIError) {
-      return { error: error.message };
+      return { success: false, error: error.message };
     }
-    return { error: 'Failed to send verification code' };
+    return { success: false, error: 'Failed to send verification code' };
   }
 }

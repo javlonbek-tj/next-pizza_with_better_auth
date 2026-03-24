@@ -1,6 +1,6 @@
 import { prisma } from '@/server/prisma';
 import { NextRequest } from 'next/server';
-import { auth } from '@/server';
+import { auth } from '@/lib/auth';
 
 async function findCartItem(cartItemId: string, req: NextRequest) {
   const token = req.cookies.get('cartToken')?.value;

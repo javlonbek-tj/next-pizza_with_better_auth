@@ -16,12 +16,14 @@ import { LogOut, User, Loader2, Shield, ShoppingBag } from 'lucide-react';
 import { Button } from '../ui/button';
 import { signoutAction } from '@/app/actions/auth/signout-action';
 import { cn } from '@/lib/utils';
+import { USER_ROLES } from '@/lib/constants';
 
 interface Props {
   user: {
     name?: string | null;
     email?: string | null;
     image?: string | null;
+    role?: string | null;
   };
 }
 
@@ -77,13 +79,15 @@ export function ProfileDropdown({ user }: Props) {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem
-          disabled={isLoggingOut}
-          onClick={() => router.push('/admin/products')}
-          className='cursor-pointer'
-        >
-          <Shield className='w-4 h-4' /> Admin
-        </DropdownMenuItem>
+        {user.role === USER_ROLES.ADMIN && (
+          <DropdownMenuItem
+            disabled={isLoggingOut}
+            onClick={() => router.push('/admin/products')}
+            className='cursor-pointer'
+          >
+            <Shield className='w-4 h-4' /> Admin
+          </DropdownMenuItem>
+        )}
         <DropdownMenuItem
           disabled={isLoggingOut}
           onClick={() => router.push('/profile')}
