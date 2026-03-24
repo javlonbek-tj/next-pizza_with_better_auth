@@ -256,6 +256,30 @@ model OrderItem {
   @@map("order_items")
 }
 
+model Story {
+    id              Int    @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    previewImageUrl String
+    items StoryItem[]
+
+    @@map("stories")
+}
+
+model StoryItem {
+    id Int @id @default(autoincrement())
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    storyId Int
+    story   Story @relation(fields: [storyId], references: [id])
+
+    sourceUrl String
+
+    @@map("story_items")
+}
+
 enum OrderStatus {
   PENDING
   SUCCEEDED

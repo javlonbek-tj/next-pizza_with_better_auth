@@ -15,17 +15,18 @@ export default async function Home({
   const resolvedSearchParams = await searchParams;
 
   return (
-    <div className="flex-1">
+    <div className='flex-1'>
       <TopBarContent />
-      <Container className="flex gap-16 mt-5">
-        <aside className="w-3xs shrink-0">
-          <div className="sticky top-20">
+      <Stories />
+      <Container className='flex gap-16 mt-5'>
+        <aside className='w-3xs shrink-0'>
+          <div className='sticky top-20'>
             <Suspense fallback={<FiltersSkeleton />}>
               <FiltersContent />
             </Suspense>
           </div>
         </aside>
-        <main className="flex-1 min-w-0 space-y-12 pb-14">
+        <main className='flex-1 min-w-0 space-y-12 pb-14'>
           <Suspense
             key={JSON.stringify(resolvedSearchParams)}
             fallback={<ProductsSkeleton />}
