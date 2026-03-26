@@ -14,11 +14,11 @@ model User {
 
   name          String
   email         String
-  emailVerified Boolean @default(false)
+  emailVerified Boolean  @default(false)
   image         String?
   role          UserRole @default(USER)
 
-  Cart Cart?
+  Cart   Cart?
   orders Order[]
 
   sessions Session[]
@@ -109,7 +109,7 @@ model ProductItem {
   typeId String?
   type   PizzaType? @relation(fields: [typeId], references: [id], onDelete: SetNull)
 
-  cartItems CartItem[]
+  cartItems  CartItem[]
   orderItems OrderItem[]
 
   product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
@@ -127,7 +127,7 @@ model Category {
 
   name String @unique
 
-  slug String @unique
+  slug    String  @unique
   isPizza Boolean @default(false)
 
   products Product[]
@@ -142,8 +142,8 @@ model PizzaSize {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  size        Int
-  label       String
+  size         Int
+  label        String
   productItems ProductItem[]
 
   isActive Boolean @default(true)
@@ -154,7 +154,7 @@ model PizzaType {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  type        String
+  type         String
   productItems ProductItem[]
 
   isActive Boolean @default(true)
@@ -200,10 +200,10 @@ model CartItem {
   quantity    Int          @default(1)
   ingredients Ingredient[]
 
-  productItem    ProductItem @relation(fields: [productItemId], references: [id], onDelete: Cascade)
+  productItem   ProductItem @relation(fields: [productItemId], references: [id], onDelete: Cascade)
   productItemId String
 
-  cart           Cart        @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  cart   Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
   cartId String
 
   @@map("cart_items")
@@ -216,10 +216,10 @@ model Order {
 
   token String
 
-  totalAmount Float
-  deliveryPrice Float @default(0)
-  status      OrderStatus @default(PENDING)
-  paymentId   String?
+  totalAmount   Float
+  deliveryPrice Float       @default(0)
+  status        OrderStatus @default(PENDING)
+  paymentId     String?
 
   firstName String
   lastName  String
@@ -244,7 +244,7 @@ model OrderItem {
   order   Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
   orderId String
 
-  productItem    ProductItem @relation(fields: [productItemId], references: [id])
+  productItem   ProductItem @relation(fields: [productItemId], references: [id])
   productItemId String
 
   quantity Int
@@ -257,27 +257,27 @@ model OrderItem {
 }
 
 model Story {
-    id              Int    @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+   id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    previewImageUrl String
-    items StoryItem[]
+  previewImageUrl String
+  items           StoryItem[]
 
-    @@map("stories")
+  @@map("stories")
 }
 
 model StoryItem {
-    id Int @id @default(autoincrement())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+   id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    storyId Int
-    story   Story @relation(fields: [storyId], references: [id])
+  storyId String
+  story   Story @relation(fields: [storyId], references: [id])
 
-    sourceUrl String
+  sourceUrl String
 
-    @@map("story_items")
+  @@map("story_items")
 }
 
 enum OrderStatus {

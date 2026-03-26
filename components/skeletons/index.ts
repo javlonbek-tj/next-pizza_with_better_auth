@@ -5,4 +5,5 @@ export { FiltersSkeleton } from './FiltersSkeleton';
 export { GroupVariantsSkeleton } from './GroupVariantsSkeleton';
 export { ProductCardSkeleton } from './ProductCardSkeleton';
 export { ProductsSkeleton } from './ProductsSkeleton';
+export { StoriesSkeleton } from './StoriesSkeleton';
 export { TableBodySkeleton } from './TableBodySkeleton';

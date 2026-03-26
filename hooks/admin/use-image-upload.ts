@@ -4,7 +4,7 @@ import { deleteImageFile, uploadFileAction } from '@/app/actions';
 export function useImageUpload(
   initialImageUrl: string | undefined,
   open: boolean,
-  imageFolder: 'products' | 'ingredients',
+  imageFolder: 'products' | 'ingredients' | 'stories',
   originalImageUrl: string | null | undefined,
 ) {
   const [previewUrl, setPreviewUrl] = useState('');

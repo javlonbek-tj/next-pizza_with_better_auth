@@ -1,6 +1,5 @@
 import { PizzaSizes } from '@/components/admin';
 import { getPizzaSizes } from '@/server';
-import { connection } from 'next/server';
 
 export default async function PizzaSizesPage({
   searchParams,
@@ -11,7 +10,6 @@ export default async function PizzaSizesPage({
     limit?: string;
   }>;
 }) {
-  await connection();
   const { search = '', page = '1', limit = '10' } = await searchParams;
 
   const dataPromise = getPizzaSizes(search, Number(page), Number(limit));

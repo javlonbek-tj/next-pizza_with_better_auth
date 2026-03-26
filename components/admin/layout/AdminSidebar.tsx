@@ -11,6 +11,7 @@ import {
   ShoppingCart,
   Home,
   Users,
+  BookImage,
 } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -21,6 +22,7 @@ const navItems = [
   { href: '/admin/ingredients', label: 'Ингредиенты', icon: Salad },
   { href: '/admin/pizza-sizes', label: 'Размеры', icon: Ruler },
   { href: '/admin/pizza-types', label: 'Типы пиццы', icon: Pizza },
+  { href: '/admin/stories', label: 'Истории', icon: BookImage },
   { href: '/admin/orders', label: 'Заказы', icon: ShoppingCart },
   { href: '/admin/users', label: 'Пользователи', icon: Users },
 ];

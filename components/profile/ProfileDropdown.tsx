@@ -106,7 +106,7 @@ export function ProfileDropdown({ user }: Props) {
         <DropdownMenuItem
           className='cursor-pointer text-destructive'
           onSelect={(e) => {
-            e.preventDefault(); // prevent auto-close
+            e.preventDefault();
             handleSignOut();
           }}
           disabled={isLoggingOut}

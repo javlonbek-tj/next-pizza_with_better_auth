@@ -10,7 +10,7 @@ export function PizzaSizeTable({ children }: Props) {
           <thead className='top-0 z-10 sticky bg-gray-100/80 backdrop-blur-md border-gray-200 border-b'>
             <tr>
               <th className='px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest'>
-                T/R
+                №
               </th>
               <th className='px-6 py-4 font-bold text-[10px] text-gray-900 3xl:text-xs text-left uppercase leading-none tracking-widest'>
                 Название

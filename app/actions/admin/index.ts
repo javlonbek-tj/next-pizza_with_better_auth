@@ -5,3 +5,4 @@ export * from './pizza-type-action';
 export * from './upload-file-action';
 export * from './product-action';
 export * from './user-action';
+export * from './story-action';

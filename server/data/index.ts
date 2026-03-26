@@ -4,3 +4,4 @@ export * from './pizza-options';
 export * from './ingredients';
 export * from './products';
 export * from './users';
+export * from './stories';
