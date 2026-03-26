@@ -17,10 +17,10 @@ html {
 
 :root {
   body[data-scroll-locked][data-scroll-locked] {
-    overflow: auto !important; /* Ensures scrollbar remains */
+    overflow: auto !important;
   }
   body[data-scroll-locked] {
-    margin-right: 0 !important; /* Prevents shifting if scrollbar space is removed */
+    margin-right: 0 !important;
   }
   --radius: 0.65rem;
   --background: oklch(1 0 0);

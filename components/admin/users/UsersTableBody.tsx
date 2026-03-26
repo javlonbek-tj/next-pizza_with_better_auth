@@ -133,7 +133,10 @@ export function UsersTableBody({
             </td>
 
             <td className='px-6 py-2 whitespace-nowrap'>
-              <TableActions onDelete={() => onDelete(user.id)} />
+              <TableActions
+                onDelete={() => onDelete(user.id)}
+                deleteDisabled={user.id === currentUserId}
+              />
             </td>
           </tr>
         ))

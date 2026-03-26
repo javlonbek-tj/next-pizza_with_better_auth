@@ -1,11 +1,11 @@
 import Image from 'next/image';
-import { CartItemModel } from '@/types';
 import { CartUpdateButtons } from '../cart';
-import { RemoveCartItem } from '../car№emoveCartItem';
+import { RemoveCartItem } from '../cart/RemoveCartItem';
 import { cn } from '@/lib';
+import type { CartItemDetails } from '@/types';
 
 interface Props {
-  cartItem: CartItemModel;
+  cartItem: CartItemDetails;
   className?: string;
 }
 
@@ -15,7 +15,7 @@ export function CheckoutCartItem({ cartItem, className }: Props) {
       className={cn('flex justify-between items-center gap-3 py-2', className)}
     >
       {/* Left: image + details */}
-      <div className='flex flex-1 items-center gap-3 min-w-0'>
+      <div className='flex items-center flex-1 min-w-0 gap-3'>
         <Image
           src={cartItem.imageUrl}
           alt={cartItem.name}
@@ -25,14 +25,14 @@ export function CheckoutCartItem({ cartItem, className }: Props) {
         />
         <div>
           <p className='font-bold'>{cartItem.name}</p>
-          <p className='text-gray-400 text-sm'>
+          <p className='text-sm text-gray-400'>
             {cartItem.ingredients.map((ing) => ing.name).join(', ')}
           </p>
         </div>
       </div>
 
       {/* Center: price */}
-      <p className='w-20 font-bold text-gray-900 text-base text-center'>
+      <p className='w-20 text-base font-bold text-center text-gray-900'>
         {cartItem.totalCartItemPrice} ₽
       </p>
 
@@ -46,7 +46,7 @@ export function CheckoutCartItem({ cartItem, className }: Props) {
 
         <RemoveCartItem
           id={cartItem.id}
-          className='text-gray-400 hover:text-red-500 cursor-pointer'
+          className='text-gray-400 cursor-pointer hover:text-red-500'
         />
       </div>
     </div>

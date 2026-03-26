@@ -8,7 +8,7 @@ import {
   getUserCartByUserId,
 } from '@/server/data/cart';
 import { auth } from '@/lib/auth';
-import { AddToCartDto } from '@/types';
+import type { AddToCartDto } from '@/types';
 
 export async function GET(req: NextRequest) {
   try {
@@ -154,6 +154,8 @@ export async function DELETE(req: NextRequest) {
     const userCart = await prisma.cart.findFirst({
       where: { token },
     });
+
+    console.log(userCart);
 
     if (!userCart) {
       return NextResponse.json(

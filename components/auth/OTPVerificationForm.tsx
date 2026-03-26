@@ -38,10 +38,10 @@ export function OTPVerificationForm({ email, onSuccess, onBack }: Props) {
   return (
     <div className='space-y-6'>
       <div className='space-y-2 text-center'>
-        <p className='text-muted-foreground text-sm'>
+        <p className='text-sm text-muted-foreground'>
           Мы отправили код подтверждения на
         </p>
-        <p className='font-semibold text-sm'>{email}</p>
+        <p className='text-sm font-semibold'>{email}</p>
       </div>
 
       <div className='space-y-4'>
@@ -67,26 +67,26 @@ export function OTPVerificationForm({ email, onSuccess, onBack }: Props) {
         </div>
 
         {isPending && (
-          <div className='flex justify-center items-center gap-2 text-muted-foreground text-sm'>
+          <div className='flex items-center justify-center gap-2 text-sm text-muted-foreground'>
             <Loader className='w-4 h-4 animate-spin' />
             <span>Проверка...</span>
           </div>
         )}
 
         {error && (
-          <p className='font-medium text-red-500 text-sm text-center'>
+          <p className='text-sm font-medium text-center text-red-500'>
             {error}
           </p>
         )}
         {successMessage && (
-          <p className='font-medium text-green-500 text-sm text-center'>
+          <p className='text-sm font-medium text-center text-green-500'>
             {successMessage}
           </p>
         )}
 
         <div className='text-center'>
           {isResending ? (
-            <span className='flex justify-center items-center gap-2 text-sm'>
+            <span className='flex items-center justify-center gap-2 text-sm'>
               <Loader className='w-3 h-3 animate-spin' />
               Отправка...
             </span>
@@ -94,13 +94,13 @@ export function OTPVerificationForm({ email, onSuccess, onBack }: Props) {
             <Button
               type='button'
               variant='link'
-              className='p-0 h-auto text-sm'
+              className='h-auto p-0 text-sm cursor-pointer'
               onClick={handleResend}
             >
               Не получили код? Отправить повторно
             </Button>
           ) : (
-            <p className='text-muted-foreground text-sm'>
+            <p className='text-sm cursor-pointer text-muted-foreground'>
               Не получили код? Отправить повторно ({countdown})
             </p>
           )}

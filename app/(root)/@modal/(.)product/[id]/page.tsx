@@ -1,7 +1,6 @@
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
 import { getPizzaSizesList, getPizzaTypesList } from '@/server';
-import { ChooseProductModal } from '@/components/modals';
 
 export default async function ProductModalPage({
   params,
@@ -16,13 +15,11 @@ export default async function ProductModalPage({
   ]);
 
   return (
-    <ChooseProductModal>
-      <ProductForm
-        product={product}
-        isModal={true}
-        pizzaSizes={pizzaSizes}
-        pizzaTypes={pizzaTypes}
-      />
-    </ChooseProductModal>
+    <ProductForm
+      product={product}
+      isModal={true}
+      pizzaSizes={pizzaSizes}
+      pizzaTypes={pizzaTypes}
+    />
   );
 }

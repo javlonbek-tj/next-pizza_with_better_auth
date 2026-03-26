@@ -5,10 +5,10 @@ import { CheckoutCard } from './CheckoutCard';
 import { CheckoutCartItem } from './CheckoutCartItem';
 import { useClearCart } from '@/hooks';
 import { cn } from '@/lib';
-import { CartItemModel } from '@/types';
+import type { CartItemDetails } from '@/types';
 
 interface Props {
-  cartItems: CartItemModel[];
+  cartItems: CartItemDetails[];
   isProcessing?: boolean;
 }
 
@@ -19,7 +19,7 @@ export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
 
   return (
     <CheckoutCard
-      title="1. Корзина"
+      title='1. Корзина'
       endAdornment={
         cartItems.length > 0 && (
           <button
@@ -29,19 +29,19 @@ export function CheckoutCartItems({ cartItems, isProcessing }: Props) {
             )}
             onClick={() => clearCart()}
             disabled={isDisabled}
-            type="button"
+            type='button'
           >
             {isClearing ? (
-              <Loader2 className="w-3.5 h-3.5 text-gray-500 animate-spin" />
+              <Loader2 className='w-3.5 h-3.5 text-gray-500 animate-spin' />
             ) : (
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className='w-3.5 h-3.5' />
             )}
             <span>Удалить корзину</span>
           </button>
         )
       }
     >
-      <div className="flex flex-col divide-y divide-gray-100 max-h-[480px] overflow-y-auto pr-1">
+      <div className='flex flex-col pr-1 overflow-y-auto divide-y divide-gray-100 max-h-120'>
         {cartItems.map((cartItem) => (
           <CheckoutCartItem
             key={cartItem.id}

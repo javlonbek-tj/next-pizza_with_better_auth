@@ -64,13 +64,13 @@ export const mergeCartsOnLogin = async (
     include: { items: { include: { ingredients: true } } },
   });
 
-  // Guest cart yo'q → hech narsa qilish shart emas
+  // No guest cart → do nothing
   if (!guestCart) return;
 
-  // Bir xil cart (logout qilinmay token saqlanib qolgan holat) → hech narsa qilish shart emas
+  // Same cart (logout not done, token saved) → do nothing
   if (userCart && guestCart.id === userCart.id) return;
 
-  // User cart yo'q → guest cart'ga userId biriktirish
+  // No user cart → attach guest cart to user
   if (!userCart) {
     await prisma.cart.update({
       where: { id: guestCart.id },
@@ -79,7 +79,7 @@ export const mergeCartsOnLogin = async (
     return;
   }
 
-  // Ikkala cart ham bor → guest itemlarni user cart'ga merge qilish
+  // Both carts exist → merge guest items into user cart
   for (const guestItem of guestCart.items) {
     const matchingItem = userCart.items.find(
       (ui) =>

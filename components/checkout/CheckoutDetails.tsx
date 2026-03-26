@@ -6,11 +6,11 @@ import {
   CheckoutCartItems,
   CheckoutPersonalInfo,
 } from './index';
-import { CartItemModel } from '@/types';
+import type { CartItemDetails } from '@/types';
 
 interface Props {
   className?: string;
-  cartItems: CartItemModel[];
+  cartItems: CartItemDetails[];
   isProcessing?: boolean;
 }
 
@@ -22,7 +22,7 @@ export function CheckoutDetails({ className, cartItems, isProcessing }: Props) {
       <div
         className={cn(
           'transition-opacity duration-200',
-          isProcessing && 'pointer-events-none opacity-90'
+          isProcessing && 'pointer-events-none opacity-90',
         )}
       >
         <CheckoutPersonalInfo />
@@ -31,7 +31,7 @@ export function CheckoutDetails({ className, cartItems, isProcessing }: Props) {
       <div
         className={cn(
           'transition-opacity duration-200',
-          isProcessing && 'pointer-events-none opacity-90'
+          isProcessing && 'pointer-events-none opacity-90',
         )}
       >
         <CheckoutAddress />

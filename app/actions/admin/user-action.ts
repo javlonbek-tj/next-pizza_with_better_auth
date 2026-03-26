@@ -31,6 +31,11 @@ export async function updateUserRole(
 }
 
 export async function deleteUser(id: string): Promise<ActionResult<null>> {
+  const session = await getServerSession();
+  if (session?.user.id === id) {
+    return { success: false, error: 'SELF_DELETE' };
+  }
+
   await requireAdmin();
 
   try {

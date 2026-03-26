@@ -13,9 +13,10 @@ interface Props {
   onEdit?: () => void;
   onDelete?: () => void;
   onView?: () => void;
+  deleteDisabled?: boolean;
 }
 
-export function TableActions({ onEdit, onDelete, onView }: Props) {
+export function TableActions({ onEdit, onDelete, onView, deleteDisabled }: Props) {
   return (
     <TooltipProvider delayDuration={200}>
       <div
@@ -64,14 +65,21 @@ export function TableActions({ onEdit, onDelete, onView }: Props) {
                 variant='ghost'
                 size='icon-xs'
                 onClick={onDelete}
-                className='text-red-600 transition-all cursor-pointer hover:bg-red-50 active:scale-95'
+                disabled={deleteDisabled}
+                className='text-red-600 transition-all cursor-pointer hover:bg-red-50 active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed disabled:pointer-events-none'
               >
                 <Trash2 />
               </Button>
             </TooltipTrigger>
-            <TooltipContent className='**:data-[slot=tooltip-arrow]:hidden bg-gray-900 shadow-xl px-2 py-1 border-none text-[10px] text-white'>
-              O&apos;chirish
-            </TooltipContent>
+            {deleteDisabled ? (
+              <TooltipContent className='**:data-[slot=tooltip-arrow]:hidden bg-gray-900 shadow-xl px-2 py-1 border-none text-[10px] text-white'>
+                Нельзя удалить себя
+              </TooltipContent>
+            ) : (
+              <TooltipContent className='**:data-[slot=tooltip-arrow]:hidden bg-gray-900 shadow-xl px-2 py-1 border-none text-[10px] text-white'>
+                O&apos;chirish
+              </TooltipContent>
+            )}
           </Tooltip>
         )}
       </div>
