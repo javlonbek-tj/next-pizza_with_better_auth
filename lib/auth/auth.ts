@@ -9,7 +9,7 @@ import { mergeCartsOnLogin } from '@/server/data/cart';
 import { USER_ROLES } from '@/lib/constants';
 
 export const auth = betterAuth({
-  baseURL: process.env.NEXT_PUBLIC_AUTH_API_URL,
+
   database: prismaAdapter(prisma, {
     provider: 'postgresql',
   }),
