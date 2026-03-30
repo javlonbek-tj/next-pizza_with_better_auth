@@ -41,6 +41,21 @@ export const auth = betterAuth({
     },
   },
   databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          const ADMIN_EMAILS = process.env.ADMIN_EMAILS?.split(',') || [];
+          if (ADMIN_EMAILS.includes(user.email)) {
+            return {
+              data: {
+                ...user,
+                role: USER_ROLES.ADMIN,
+              },
+            };
+          }
+        },
+      },
+    },
     session: {
       create: {
         after: async (session, context) => {
