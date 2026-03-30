@@ -13,7 +13,7 @@ export async function ProductsContent({ searchParams }: Props) {
     (category) => category.products.length > 0,
   );
 
-  if (!hasProducts) return <ProductNotFound />;
+  if (!hasProducts) return <ProductNotFound message='Продукты не найдены' />;
 
   return (
     <>
