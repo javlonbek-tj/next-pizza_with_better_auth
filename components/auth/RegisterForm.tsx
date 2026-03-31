@@ -41,10 +41,10 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
   const form = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      name: 'Javlon',
-      email: 'mrjtabc@gmail.com',
-      password: '123456',
-      confirmPassword: '123456',
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
     },
   });
 
