@@ -41,7 +41,7 @@ export function LoginForm({ onClose, onShowOTP, onPendingChange }: Props) {
   const form = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
-      email: 'mrjtabc@gmail.com',
+      email: 'tjdeveloperabc@gmail.com',
       password: '123456',
     },
   });

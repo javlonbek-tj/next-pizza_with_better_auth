@@ -2,14 +2,14 @@
 
 import { createProductSchema, ProductFormValues } from '@/lib';
 import { prisma } from '@/server';
-import { ActionResult, Product } from '@/types';
+import type { ActionResult, ProductWithCategory } from '@/types';
 import { revalidatePath } from 'next/cache';
 import { deleteImageFile } from '../delete-image-file';
 import { requireAdmin } from '@/lib/auth';
 
 export async function createProduct(
   data: ProductFormValues,
-): Promise<ActionResult<Product>> {
+): Promise<ActionResult<ProductWithCategory>> {
   await requireAdmin();
 
   try {
@@ -52,7 +52,13 @@ export async function createProduct(
       include: {
         category: true,
         ingredients: true,
-        productItems: true,
+        productItems: {
+          include: {
+            size: true,
+            type: true,
+          },
+          orderBy: { createdAt: 'asc' },
+        },
       },
     });
 
@@ -112,7 +118,7 @@ export async function deleteProduct(id: string): Promise<ActionResult<null>> {
 export async function updateProduct(
   id: string,
   data: ProductFormValues,
-): Promise<ActionResult<Product>> {
+): Promise<ActionResult<ProductWithCategory>> {
   await requireAdmin();
 
   try {

@@ -1,4 +1,3 @@
-import { connection } from 'next/server';
 import {
   getProductTableData,
   getCategoryList,
@@ -18,7 +17,6 @@ export default async function ProductsPage({
     limit?: string;
   }>;
 }) {
-  await connection();
   const {
     search = '',
     categoryId = 'all',
@@ -26,28 +24,24 @@ export default async function ProductsPage({
     limit = '10',
   } = await searchParams;
 
-  const [categoriesData, ingredientsData, sizesData, typesData] =
-    await Promise.all([
-      getCategoryList(),
-      getIngredientList(),
-      getPizzaSizesList(),
-      getPizzaTypesList(),
-    ]);
-
   const productsPromise = getProductTableData(
     search,
     categoryId,
     Number(page),
     Number(limit),
   );
+  const categoriesPromise = getCategoryList();
+  const ingredientsPromise = getIngredientList();
+  const sizesPromise = getPizzaSizesList();
+  const typesPromise = getPizzaTypesList();
 
   return (
     <Products
       productsPromise={productsPromise}
-      categories={categoriesData}
-      ingredients={ingredientsData}
-      sizes={sizesData}
-      types={typesData}
+      categoriesPromise={categoriesPromise}
+      ingredientsPromise={ingredientsPromise}
+      sizesPromise={sizesPromise}
+      typesPromise={typesPromise}
     />
   );
 }

@@ -41,7 +41,7 @@ export async function createPizzaType(
     });
 
     revalidatePath('/admin/pizza-types');
-    updateTag('pizza-options');
+    updateTag('pizza-types-table');
 
     return {
       success: true,
@@ -93,7 +93,7 @@ export async function updatePizzaType(
     });
 
     revalidatePath('/admin/pizza-types');
-    updateTag('pizza-options');
+    updateTag('pizza-types-table');
 
     return {
       success: true,
@@ -117,7 +117,7 @@ export async function deletePizzaType(id: string): Promise<ActionResult<null>> {
     });
 
     revalidatePath('/admin/pizza-types');
-    updateTag('pizza-options');
+    updateTag('pizza-types-table');
 
     return {
       success: true,

@@ -9,9 +9,7 @@ export function TableBodySkeleton({ colSpan }: Props) {
     <tbody>
       <tr>
         <td colSpan={colSpan} className='py-20 text-center'>
-          <div className='flex justify-center'>
-            <Spinner size='sm' />
-          </div>
+          <Spinner size='sm' />
         </td>
       </tr>
     </tbody>

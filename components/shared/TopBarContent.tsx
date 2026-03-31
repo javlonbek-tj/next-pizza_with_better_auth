@@ -13,12 +13,14 @@ async function CategoriesList() {
 
 export function TopBarContent() {
   return (
-    <div className="sticky top-0 z-20 bg-white shadow-lg shadow-black/5">
-      <Container className="flex items-center justify-between gap-5 py-3">
+    <div className='sticky top-0 z-20 bg-white shadow-lg shadow-black/5'>
+      <Container className='flex items-center justify-between gap-5 py-3'>
         <Suspense fallback={<CategoriesSkeleton />}>
           <CategoriesList />
         </Suspense>
-        <SortPopup />
+        <Suspense>
+          <SortPopup />
+        </Suspense>
       </Container>
     </div>
   );

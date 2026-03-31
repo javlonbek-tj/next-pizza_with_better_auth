@@ -41,7 +41,7 @@ export async function createPizzaSize(
     });
 
     revalidatePath('/admin/pizza-sizes');
-    updateTag('pizza-options');
+    updateTag('pizza-sizes-table');
 
     return {
       success: true,
@@ -93,7 +93,7 @@ export async function updatePizzaSize(
     });
 
     revalidatePath('/admin/pizza-sizes');
-    updateTag('pizza-options');
+    updateTag('pizza-sizes-table');
 
     return {
       success: true,
@@ -117,7 +117,7 @@ export async function deletePizzaSize(id: string): Promise<ActionResult<null>> {
     });
 
     revalidatePath('/admin/pizza-sizes');
-    updateTag('pizza-options');
+    updateTag('pizza-sizes-table');
 
     return {
       success: true,

@@ -30,7 +30,13 @@ import {
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
 import { FormActions } from '@/components/shared/FormActions';
 
-import { Product, Category, Ingredient, PizzaSize, PizzaType } from '@/types';
+import {
+  CategoryListItem,
+  Ingredient,
+  PizzaSize,
+  PizzaType,
+  ProductWithCategory,
+} from '@/types';
 import { MultiSelect } from '@/components/shared/MultiSelect';
 import { useProductForm, useProductItems, useImageUpload } from '@/hooks';
 import { ProductItemCard } from './ProductItemCard';
@@ -38,8 +44,8 @@ import { ProductItemCard } from './ProductItemCard';
 interface Props {
   open: boolean;
   onClose: () => void;
-  product: Product | null;
-  categories: Category[];
+  product: ProductWithCategory | null;
+  categories: CategoryListItem[];
   ingredients: Ingredient[];
   sizes: PizzaSize[];
   types: PizzaType[];
@@ -75,7 +81,7 @@ export function ProductFormDialog({
     open,
     onClose,
     markAsSubmitted,
-    categories, // Pass categories to the hook
+    categories,
   });
 
   const { productItems, addProductItem, removeProductItem } =
@@ -110,31 +116,31 @@ export function ProductFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin">
+      <DialogContent className='sm:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin'>
         <DialogHeader>
-          <DialogTitle className="font-bold text-2xl">
+          <DialogTitle className='text-2xl font-bold'>
             {isEditing ? 'Редактировать продукт' : 'Создать новый продукт'}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-6'>
             {/* Basic Information Section */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <div className="bg-primary/10 p-1.5 rounded-md">
-                  <Info className="w-4 h-4 text-primary" />
+            <div className='space-y-4'>
+              <div className='flex items-center gap-2'>
+                <div className='bg-primary/10 p-1.5 rounded-md'>
+                  <Info className='w-4 h-4 text-primary' />
                 </div>
-                <h3 className="font-semibold text-lg">Основная информация</h3>
+                <h3 className='text-lg font-semibold'>Основная информация</h3>
               </div>
               {/* Image Upload */}
               <FormField
                 control={form.control}
-                name="imageUrl"
+                name='imageUrl'
                 render={() => (
                   <FormItem>
-                    <FormLabel className="text-base">
+                    <FormLabel className='text-base'>
                       Изображение продукта{' '}
-                      <span className="text-red-500">*</span>
+                      <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <ImageUploadInput
@@ -152,19 +158,19 @@ export function ProductFormDialog({
               {/* Name */}
               <FormField
                 control={form.control}
-                name="name"
+                name='name'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base">
-                      Название продукта <span className="text-red-500">*</span>
+                    <FormLabel className='text-base'>
+                      Название продукта <span className='text-red-500'>*</span>
                     </FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="Например: Пепперони, Маргарита, Четыре сыра"
+                        placeholder='Например: Пепперони, Маргарита, Четыре сыра'
                         {...field}
                         disabled={isPending}
-                        autoComplete="off"
-                        className="h-10 text-base"
+                        autoComplete='off'
+                        className='h-10 text-base'
                       />
                     </FormControl>
                     <FormMessage />
@@ -174,11 +180,11 @@ export function ProductFormDialog({
 
               <FormField
                 control={form.control}
-                name="categoryId"
+                name='categoryId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>
-                      Категория <span className="text-destructive">*</span>
+                      Категория <span className='text-destructive'>*</span>
                     </FormLabel>
                     <Select
                       onValueChange={handleCategoryChange}
@@ -186,10 +192,10 @@ export function ProductFormDialog({
                       disabled={isPending || isEditing} // Disable when editing
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Выберите категорию" />
+                        <SelectValue placeholder='Выберите категорию' />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories.map((category: Category) => (
+                        {categories.map((category: CategoryListItem) => (
                           <SelectItem key={category.id} value={category.id}>
                             {category.name}
                           </SelectItem>
@@ -197,7 +203,7 @@ export function ProductFormDialog({
                       </SelectContent>
                     </Select>
                     {isEditing && (
-                      <FormDescription className="text-muted-foreground text-xs">
+                      <FormDescription className='text-xs text-muted-foreground'>
                         Категорию нельзя изменить при редактировании
                       </FormDescription>
                     )}
@@ -208,10 +214,10 @@ export function ProductFormDialog({
               {/* Ingredients */}
               <FormField
                 control={form.control}
-                name="ingredientIds"
+                name='ingredientIds'
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-base">Ингредиенты</FormLabel>
+                    <FormLabel className='text-base'>Ингредиенты</FormLabel>
                     <FormControl>
                       <MultiSelect
                         options={
@@ -222,9 +228,9 @@ export function ProductFormDialog({
                         }
                         value={field.value}
                         onChange={field.onChange}
-                        placeholder="Выберите ингредиенты"
+                        placeholder='Выберите ингредиенты'
                         disabled={isPending || !ingredients?.length}
-                        className="w-full h-10!"
+                        className='w-full h-10!'
                       />
                     </FormControl>
                     <FormDescription>
@@ -239,7 +245,7 @@ export function ProductFormDialog({
             </div>
 
             {/* Product Items Section */}
-            <div className="space-y-4">
+            <div className='space-y-4'>
               <AnimatePresence>
                 {isPizza && (
                   <motion.div
@@ -247,17 +253,17 @@ export function ProductFormDialog({
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2, ease: 'easeOut' }}
-                    className="flex justify-end overflow-hidden"
+                    className='flex justify-end overflow-hidden'
                   >
                     <Button
-                      type="button"
-                      variant="default"
-                      size="sm"
+                      type='button'
+                      variant='default'
+                      size='sm'
                       onClick={addProductItem}
                       disabled={isPending}
-                      className="cursor-pointer"
+                      className='cursor-pointer'
                     >
-                      <Plus className="mr-2 w-4 h-4" />
+                      <Plus className='w-4 h-4 mr-2' />
                       Добавить вариант
                     </Button>
                   </motion.div>
@@ -265,7 +271,7 @@ export function ProductFormDialog({
               </AnimatePresence>
 
               <div className={isPizza ? 'space-y-3' : ''}>
-                <AnimatePresence mode="popLayout">
+                <AnimatePresence mode='popLayout'>
                   {productItems.map((_, index: number) => (
                     <ProductItemCard
                       key={index}
@@ -289,7 +295,7 @@ export function ProductFormDialog({
               isPending={isPending}
               isLoading={isImageUploading}
               onCancel={() => handleClose(false)}
-              className="pt-2"
+              className='pt-2'
             />
           </form>
         </Form>

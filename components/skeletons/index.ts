@@ -7,3 +7,4 @@ export { ProductCardSkeleton } from './ProductCardSkeleton';
 export { ProductsSkeleton } from './ProductsSkeleton';
 export { StoriesSkeleton } from './StoriesSkeleton';
 export { TableBodySkeleton } from './TableBodySkeleton';
+export { ProductDetailSkeleton } from './ProductDetailSkeleton';

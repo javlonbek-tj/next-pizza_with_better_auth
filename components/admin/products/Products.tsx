@@ -1,14 +1,14 @@
 'use client';
 
-import { Suspense } from 'react';
+import { Suspense, use } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AddButton, DeleteDialog } from '@/components/shared';
 import type {
-  Category,
+  CategoryListItem,
   Ingredient,
   PizzaSize,
   PizzaType,
-  Product,
+  ProductTableRow,
   ProductWithCategory,
 } from '@/types';
 import { useDelete } from '@/hooks';
@@ -23,21 +23,26 @@ import { ProductPaginationAsync } from './ProductPaginationAsync';
 import { TableBodySkeleton } from '@/components/skeletons';
 
 interface Props {
-  productsPromise: Promise<{ data: Product[]; total: number }>;
-  ingredients: Ingredient[];
-  categories: Category[];
-  sizes: PizzaSize[];
-  types: PizzaType[];
+  productsPromise: Promise<{ data: ProductTableRow[]; total: number }>;
+  categoriesPromise: Promise<CategoryListItem[]>;
+  ingredientsPromise: Promise<Ingredient[]>;
+  sizesPromise: Promise<PizzaSize[]>;
+  typesPromise: Promise<PizzaType[]>;
 }
 
 export function Products({
   productsPromise,
-  ingredients,
-  categories,
-  sizes,
-  types,
+  categoriesPromise,
+  ingredientsPromise,
+  sizesPromise,
+  typesPromise,
 }: Props) {
   const searchParams = useSearchParams();
+
+  const categories = use(categoriesPromise);
+  const ingredients = use(ingredientsPromise);
+  const sizes = use(sizesPromise);
+  const types = use(typesPromise);
 
   const page = Number(searchParams.get('page')) || 1;
   const limit = Number(searchParams.get('limit')) || 10;
@@ -64,7 +69,7 @@ export function Products({
     handleCloseDelete,
   } = useTableActions<ProductWithCategory>();
 
-  const handleEditProduct = async (product: Product) => {
+  const handleEditProduct = async (product: ProductTableRow) => {
     const full = await Api.products.getProduct(product.id);
     handleEdit(full as ProductWithCategory);
   };

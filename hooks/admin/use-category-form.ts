@@ -62,6 +62,7 @@ export function useCategoryForm({ category, open, onClose }: Props) {
         toast.error(result.message || 'Не удалось создать категорию');
         return;
       }
+      setIsPending(false);
       toast.success('Категория успешно создана');
       form.reset();
       onClose();

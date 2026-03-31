@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import { ArrowLeft } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { SimpleHeader } from '@/components/header/server';
+import { Header } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Логин',
@@ -15,11 +15,15 @@ export default function HomeLayout({
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
-    <main className="bg-[#F4F1EE] min-h-screen">
-      <SimpleHeader />
-      <div className="flex justify-center py-6">
-        <Button asChild variant="outline" className="px-6">
-          <Link href="/">
+    <main className='bg-[#F4F1EE] min-h-screen'>
+      <Header
+        hasSearch={false}
+        hasCartBtn={false}
+        className='sticky top-0 z-50 bg-white'
+      />
+      <div className='flex justify-center py-6'>
+        <Button asChild variant='outline' className='px-6'>
+          <Link href='/'>
             <ArrowLeft size={16} /> Назад на главную
           </Link>
         </Button>

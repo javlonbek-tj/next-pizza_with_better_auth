@@ -16,10 +16,9 @@ import type { UserTableRow } from '@/types';
 
 interface Props {
   dataPromise: Promise<{ data: UserTableRow[]; total: number }>;
-  currentUserId: string;
 }
 
-export function Users({ dataPromise, currentUserId }: Props) {
+export function Users({ dataPromise }: Props) {
   const searchParams = useSearchParams();
   const { handleSearch, isLoading, setIsPending } = useTableFilters();
 
@@ -52,7 +51,6 @@ export function Users({ dataPromise, currentUserId }: Props) {
                 dataPromise={dataPromise}
                 startIndex={startIndex}
                 isLoading={isLoading}
-                currentUserId={currentUserId}
                 onDelete={setDeleteId}
               />
             </Suspense>

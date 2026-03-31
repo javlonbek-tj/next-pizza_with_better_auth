@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface UseAuthFormOptions {
@@ -22,7 +21,6 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
   const [isPending, setIsPending] = useState(false);
   const [showOTPVerification, setShowOTPVerification] = useState(false);
   const [verificationEmail, setVerificationEmail] = useState('');
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const handleAuthSubmit = async (
@@ -43,7 +41,6 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
     } else {
       window.dispatchEvent(new Event('auth-success'));
       await queryClient.invalidateQueries({ queryKey: ['cart'] });
-      router.refresh();
       onClose();
     }
 
@@ -54,7 +51,6 @@ export function useAuthForm({ onClose, onShowOTP }: UseAuthFormOptions) {
     window.dispatchEvent(new Event('auth-success'));
     await queryClient.invalidateQueries({ queryKey: ['cart'] });
     onClose();
-    router.refresh();
   };
 
   const handleBack = () => {

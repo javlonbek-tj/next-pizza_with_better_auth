@@ -4,7 +4,7 @@ import { Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { AddButton, DeleteDialog } from '@/components/shared';
 import { TableBodySkeleton } from '@/components/skeletons';
-import { Category, CategoryWithProductCount } from '@/types';
+import type { CategoryWithProductCount } from '@/types';
 import { deleteCategory } from '@/app/actions';
 import { useDelete } from '@/hooks';
 import { useTableActions, useTableFilters } from '@/hooks/table';
@@ -13,6 +13,7 @@ import { TablePaginationAsync } from '../table/TablePaginationAsync';
 import { CategoriesTable } from './CategoriesTable';
 import { CategoriesTableBody } from './CategoriesTableBody';
 import { CategoryFormDialog } from './CategoryFormDialog';
+import type { Category } from '@/lib/generated/prisma/client';
 
 interface Props {
   dataPromise: Promise<{ data: CategoryWithProductCount[]; total: number }>;

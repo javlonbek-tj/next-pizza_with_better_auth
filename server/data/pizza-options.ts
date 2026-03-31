@@ -5,13 +5,13 @@ import type {
   PizzaTypeWhereInput,
 } from '@/lib/generated/prisma/models';
 import type {
-  PizzaTypeListItem,
+  PizzaSize,
   PizzaTypeTableRow,
-  PizzaSizeListItem,
+  PizzaType,
   PizzaSizeTableRow,
 } from '@/types';
 
-export const getPizzaTypesList = async (): Promise<PizzaTypeListItem[]> => {
+export const getPizzaTypesList = async (): Promise<PizzaType[]> => {
   'use cache';
   cacheLife('hours');
   cacheTag('pizza-types-table');
@@ -63,7 +63,7 @@ export const getPizzaTypes = async (
   return { data, total };
 };
 
-export const getPizzaSizesList = async (): Promise<PizzaSizeListItem[]> => {
+export const getPizzaSizesList = async (): Promise<PizzaSize[]> => {
   'use cache';
   cacheLife('hours');
   cacheTag('pizza-sizes-table');

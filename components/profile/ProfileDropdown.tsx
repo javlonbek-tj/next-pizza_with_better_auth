@@ -14,9 +14,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LogOut, User, Loader2, Shield, ShoppingBag } from 'lucide-react';
 import { Button } from '../ui/button';
-import { signoutAction } from '@/app/actions/auth/signout-action';
 import { cn } from '@/lib/utils';
 import { USER_ROLES } from '@/lib/constants';
+import { signOut } from '@/lib/auth/auth-client';
 
 interface Props {
   user: {
@@ -40,19 +40,23 @@ export function ProfileDropdown({ user }: Props) {
 
   const handleSignOut = async () => {
     setIsLoggingOut(true);
-    const result = await signoutAction();
-
-    if (result.error) {
-      toast.error(result.error);
-    } else {
-      queryClient.setQueryData(['cart'], []);
-      toast.success('Вы вышли из аккаунта');
-      setOpen(false);
-      const queryString = window.location.search;
-      router.push(`/${queryString}`, { scroll: false });
-    }
-
-    setIsLoggingOut(false);
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          queryClient.setQueryData(['cart'], []);
+          toast.success('Вы вышли из аккаунта');
+          setOpen(false);
+          const queryString = window.location.search;
+          router.push(`/${queryString}`, { scroll: false });
+        },
+        onError: () => {
+          toast.error('Что-то пошло не так');
+        },
+        onFinally: () => {
+          setIsLoggingOut(false);
+        },
+      },
+    });
   };
 
   return (

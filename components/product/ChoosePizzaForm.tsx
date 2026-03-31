@@ -127,20 +127,24 @@ export function ChoosePizzaForm({
             className='mt-3'
           />
 
-          <Title text='Ингредиенты' size='xs' className='mt-4' />
+          {product.ingredients.length > 0 && (
+            <>
+              <Title text='Ингредиенты' size='xs' className='mt-4' />
 
-          <div className='grid grid-cols-3 gap-2 pb-4 mt-4'>
-            {product.ingredients.map((ingredient) => (
-              <IngredientItem
-                ingredient={ingredient}
-                key={ingredient.id}
-                selectedIngredients={selectedIngredients}
-                onClick={() => addIngredient(ingredient.id)}
-                active={selectedIngredients.has(ingredient.id)}
-                className={isModal ? '' : 'bg-[#f7f6f5]'}
-              />
-            ))}
-          </div>
+              <div className='grid grid-cols-3 gap-2 pb-4 mt-4'>
+                {product.ingredients.map((ingredient) => (
+                  <IngredientItem
+                    ingredient={ingredient}
+                    key={ingredient.id}
+                    selectedIngredients={selectedIngredients}
+                    onClick={() => addIngredient(ingredient.id)}
+                    active={selectedIngredients.has(ingredient.id)}
+                    className={isModal ? '' : 'bg-[#f7f6f5]'}
+                  />
+                ))}
+              </div>
+            </>
+          )}
         </div>
 
         {/* Fixed button at bottom */}

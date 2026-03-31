@@ -4,32 +4,36 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Loader, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { signoutAction } from '@/app/actions';
 import toast from 'react-hot-toast';
-import type { Session } from '@/lib/auth';
+import { signOut, useSession } from '@/lib/auth/auth-client';
+import { useQueryClient } from '@tanstack/react-query';
 
-interface Props {
-  session: Session | null;
-}
-
-export function AdminPageHeader({ session }: Props) {
+export function AdminPageHeader() {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const queryClient = useQueryClient();
+  const { data: session } = useSession();
 
   if (!session?.user) return null;
 
   const handleSignOut = async () => {
     setIsLoggingOut(true);
-    const result = await signoutAction();
-
-    if (result.error) {
-      toast.error(result.message || 'Ошибка при выходе');
-      setIsLoggingOut(false);
-    } else {
-      toast.success('Вы вышли из аккаунта');
-      router.push('/');
-      setIsLoggingOut(false);
-    }
+    await signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          queryClient.setQueryData(['cart'], []);
+          toast.success('Вы вышли из аккаунта');
+          const queryString = window.location.search;
+          router.push(`/${queryString}`, { scroll: false });
+        },
+        onError: () => {
+          toast.error('Что-то пошло не так');
+        },
+        onFinally: () => {
+          setIsLoggingOut(false);
+        },
+      },
+    });
   };
 
   return (

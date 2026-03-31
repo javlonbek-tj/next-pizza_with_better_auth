@@ -6,12 +6,12 @@ import { TableActions } from '@/components/admin/table/TableActions';
 import { UserRoleSelect } from './UserRoleSelect';
 import { PROVIDER_CONFIG } from './provider-config';
 import type { UserTableRow } from '@/types';
+import { useSession } from '@/lib/auth/auth-client';
 
 interface Props {
   dataPromise: Promise<{ data: UserTableRow[]; total: number }>;
   startIndex: number;
   isLoading: boolean;
-  currentUserId: string;
   onDelete: (id: string) => void;
 }
 
@@ -19,10 +19,10 @@ export function UsersTableBody({
   dataPromise,
   startIndex,
   isLoading,
-  currentUserId,
   onDelete,
 }: Props) {
   const { data } = use(dataPromise);
+  const { data: session } = useSession();
 
   return (
     <tbody
@@ -81,7 +81,7 @@ export function UsersTableBody({
               <UserRoleSelect
                 userId={user.id}
                 currentRole={user.role}
-                isSelf={user.id === currentUserId}
+                isSelf={user.id === session?.user.id}
               />
             </td>
 
@@ -135,7 +135,7 @@ export function UsersTableBody({
             <td className='px-6 py-2 whitespace-nowrap'>
               <TableActions
                 onDelete={() => onDelete(user.id)}
-                deleteDisabled={user.id === currentUserId}
+                deleteDisabled={user.id === session?.user.id}
               />
             </td>
           </tr>

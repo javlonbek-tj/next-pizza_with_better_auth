@@ -10,10 +10,10 @@ interface Props {
 export async function Stories({ className }: Props) {
   const stories = await getStories();
 
+  if (stories.length === 0) return null;
+
   return (
-    <Container
-      className={cn('my-10', className)}
-    >
+    <Container className={cn('my-10', className)}>
       <StoriesClient stories={stories} />
     </Container>
   );

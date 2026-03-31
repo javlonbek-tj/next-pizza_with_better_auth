@@ -1,7 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 
-import { HomeHeader } from '@/components/header/server';
+import { Header } from '@/components/header';
 
 export const metadata: Metadata = {
   title: 'Главная',
@@ -12,8 +12,8 @@ export default function HomeLayout({
   modal,
 }: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
   return (
-    <div className="flex flex-col flex-1">
-      <HomeHeader />
+    <div className='flex flex-col flex-1'>
+      <Header />
       {children}
       {modal}
     </div>

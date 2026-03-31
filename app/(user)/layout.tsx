@@ -1,14 +1,10 @@
-import React from 'react';
-import { Metadata } from 'next';
 import { Header } from '@/components/header';
 
-export const metadata: Metadata = {
-  title: 'Checkout',
-};
-
-export default function CheckoutLayout({
+export default function UserLayout({
   children,
-}: Readonly<{ children: React.ReactNode }>) {
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className='bg-[#F4F1EE] min-h-screen'>
       <Header

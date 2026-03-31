@@ -5,7 +5,12 @@ import path from 'path';
 import { existsSync } from 'fs';
 import { generateUniqueFilename, validateFile } from '@/lib';
 
-const VALID_FOLDERS = ['ingredients', 'products', 'categories', 'stories'] as const;
+const VALID_FOLDERS = [
+  'ingredients',
+  'products',
+  'categories',
+  'stories',
+] as const;
 type UploadFolder = (typeof VALID_FOLDERS)[number];
 
 export async function uploadFileAction(file: File, folder: UploadFolder) {

@@ -5,13 +5,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { TableActions } from '@/components/admin/table/TableActions';
-import type { Product } from '@/types';
+import { ProductTableRow } from '@/types';
 
 interface Props {
-  productsPromise: Promise<{ data: Product[]; total: number }>;
+  productsPromise: Promise<{ data: ProductTableRow[]; total: number }>;
   startIndex: number;
   isLoading: boolean;
-  onEdit: (product: Product) => void;
+  onEdit: (product: ProductTableRow) => void;
   onDelete: (id: string) => void;
 }
 
@@ -35,7 +35,7 @@ export function ProductTableBody({
         <tr>
           <td
             colSpan={7}
-            className="px-6 py-12 font-medium text-gray-800 text-sm text-center"
+            className='px-6 py-12 text-sm font-medium text-center text-gray-800'
           >
             Продукты не найдены
           </td>
@@ -44,54 +44,54 @@ export function ProductTableBody({
         products.map((product, index) => (
           <tr
             key={product.id}
-            className="group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white transition-all duration-200"
+            className='transition-all duration-200 group hover:bg-blue-50/30 even:bg-gray-50/50 odd:bg-white'
           >
-            <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+            <td className='px-6 py-2 text-xs font-bold text-gray-600 whitespace-nowrap'>
               {startIndex + index + 1}
             </td>
-            <td className="px-6 py-2">
-              <div className="flex justify-center items-center bg-gray-50 border border-gray-100 group-hover:border-gray-200 rounded-md w-10 h-10 overflow-hidden transition-colors">
+            <td className='px-6 py-2'>
+              <div className='flex items-center justify-center w-10 h-10 overflow-hidden transition-colors border border-gray-100 rounded-md bg-gray-50 group-hover:border-gray-200'>
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
                   width={36}
                   height={36}
-                  className="object-contain"
+                  className='object-contain'
                 />
               </div>
             </td>
-            <td className="px-6 py-2 font-bold text-gray-600 text-xs whitespace-nowrap">
+            <td className='px-6 py-2 text-xs font-bold text-gray-600 whitespace-nowrap'>
               {product.name}
             </td>
-            <td className="px-6 py-2 whitespace-nowrap">
+            <td className='px-6 py-2 whitespace-nowrap'>
               {product.category ? (
                 <Badge
-                  variant="secondary"
-                  className="bg-blue-50/50 px-2 py-0.5 border-blue-100 rounded font-medium text-[11px] text-blue-600"
+                  variant='secondary'
+                  className='bg-blue-50/50 px-2 py-0.5 border-blue-100 rounded font-medium text-[11px] text-blue-600'
                 >
                   {product.category.name}
                 </Badge>
               ) : (
-                <span className="text-gray-400">—</span>
+                <span className='text-gray-400'>—</span>
               )}
             </td>
-            <td className="px-6 py-2 text-center whitespace-nowrap">
+            <td className='px-6 py-2 text-center whitespace-nowrap'>
               <Badge
-                variant="secondary"
-                className="bg-purple-50/50 px-2 py-0.5 border-purple-100 rounded font-medium text-[11px] text-purple-600"
+                variant='secondary'
+                className='bg-purple-50/50 px-2 py-0.5 border-purple-100 rounded font-medium text-[11px] text-purple-600'
               >
                 {product._count.productItems || 0}
               </Badge>
             </td>
-            <td className="px-6 py-2 text-center whitespace-nowrap">
+            <td className='px-6 py-2 text-center whitespace-nowrap'>
               <Badge
-                variant="secondary"
-                className="bg-green-50/50 px-2 py-0.5 border-green-100 rounded font-medium text-[11px] text-green-600"
+                variant='secondary'
+                className='bg-green-50/50 px-2 py-0.5 border-green-100 rounded font-medium text-[11px] text-green-600'
               >
                 {product._count.ingredients || 0}
               </Badge>
             </td>
-            <td className="px-6 py-2 whitespace-nowrap">
+            <td className='px-6 py-2 whitespace-nowrap'>
               <TableActions
                 onView={() => router.push(`/admin/products/${product.id}`)}
                 onEdit={() => onEdit(product)}

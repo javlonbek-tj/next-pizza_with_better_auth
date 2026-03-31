@@ -3,12 +3,12 @@ import { useForm, UseFormReturn } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import toast from 'react-hot-toast';
 import { createProduct, updateProduct } from '@/app/actions';
-import type { Category } from '@/lib/generated/prisma/client';
 import { createProductSchema, ProductFormValues } from '@/lib';
 import type {
   ActionResult,
   ProductItemWithRelations,
   ProductWithCategory,
+  CategoryListItem,
 } from '@/types';
 
 interface Props {
@@ -16,7 +16,7 @@ interface Props {
   open: boolean;
   onClose: () => void;
   markAsSubmitted: () => void;
-  categories: Category[];
+  categories: CategoryListItem[];
 }
 
 export function useProductForm({
