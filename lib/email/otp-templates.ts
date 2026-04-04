@@ -1,4 +1,4 @@
-type OTPType = 'sign-in' | 'email-verification' | 'forget-password';
+export type OTPType = 'sign-in' | 'email-verification' | 'forget-password';
 
 export const subjects: Record<OTPType, string> = {
   'sign-in': 'Войдите в ваш аккаунт',

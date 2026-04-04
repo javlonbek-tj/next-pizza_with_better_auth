@@ -2,6 +2,7 @@
 
 import nodemailer from 'nodemailer';
 import { otpTemplate, subjects } from '@/lib';
+import { OTPType } from '@/lib/email/otp-templates';
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
@@ -13,11 +14,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-export async function sendOTPEmail(
-  to: string,
-  otp: string,
-  type: 'sign-in' | 'email-verification' | 'forget-password',
-) {
+export async function sendOTPEmail(to: string, otp: string, type: OTPType) {
   try {
     await transporter.sendMail({
       from: `"${process.env.SMTP_FROM_NAME}" <${process.env.SMTP_FROM_EMAIL}>`,
