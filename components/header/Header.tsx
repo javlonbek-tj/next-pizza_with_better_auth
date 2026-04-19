@@ -33,13 +33,13 @@ export function Header({
   }, [refetch]);
   return (
     <header className={cn('border border-b h-20', className)}>
-      <Container className='flex items-center justify-between py-5'>
+      <Container className="flex items-center justify-between py-5">
         <Link href={'/'}>
-          <div className='flex items-center gap-4'>
-            <Image src='/logo.png' alt='logo' width={30} height={30} />
+          <div className="flex items-center gap-4">
+            <Image src="/logo.png" alt="logo" width={30} height={30} />
             <div>
-              <h1 className='text-xl font-black uppercase'>Next Pizza</h1>
-              <p className='text-sm leading-3 text-gray-400'>
+              <h1 className="text-xl font-black uppercase">Next Pizza</h1>
+              <p className="text-sm leading-3 text-gray-400">
                 вкусней уже некуда
               </p>
             </div>
@@ -48,7 +48,7 @@ export function Header({
 
         {hasSearch && <SearchInput />}
 
-        <div className='flex items-center gap-4'>
+        <div className="flex items-center gap-4">
           {hasCartBtn && <CartButton />}
           <AuthModal
             open={openAuthModal}
@@ -56,7 +56,7 @@ export function Header({
           />
 
           {isPending ? (
-            <div className='w-10 h-10 bg-gray-200 rounded-full animate-pulse' />
+            <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
           ) : (
             <ProfileButton
               onClickSignIn={() => setOpenAuthModal(true)}
