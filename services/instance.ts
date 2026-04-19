@@ -7,7 +7,7 @@ export type ApiErrorResponse = {
 };
 
 export const axiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL}/api`,
   withCredentials: true,
 });
 
@@ -27,5 +27,5 @@ axiosInstance.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  },
+  }
 );
