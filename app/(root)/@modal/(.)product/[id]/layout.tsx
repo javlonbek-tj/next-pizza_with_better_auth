@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { ChooseProductModal } from '@/components/modals';
 
 export default function ProductModalLayout({
@@ -5,5 +6,9 @@ export default function ProductModalLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <ChooseProductModal>{children}</ChooseProductModal>;
+  return (
+    <Suspense>
+      <ChooseProductModal>{children}</ChooseProductModal>
+    </Suspense>
+  );
 }

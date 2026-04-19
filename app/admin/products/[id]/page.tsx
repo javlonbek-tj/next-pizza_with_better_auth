@@ -8,9 +8,12 @@ interface Props {
   params: Promise<{ id: string }>;
 }
 
-export default async function ProductDetailPage({ params }: Props) {
+async function ProductDetailWrapper({ params }: Props) {
   const { id } = await params;
+  return <ProductDetailContent id={id} />;
+}
 
+export default function ProductDetailPage({ params }: Props) {
   return (
     <div className='p-6 space-y-6'>
       <Link
@@ -22,7 +25,7 @@ export default async function ProductDetailPage({ params }: Props) {
       </Link>
 
       <Suspense fallback={<ProductDetailSkeleton />}>
-        <ProductDetailContent id={id} />
+        <ProductDetailWrapper params={params} />
       </Suspense>
     </div>
   );

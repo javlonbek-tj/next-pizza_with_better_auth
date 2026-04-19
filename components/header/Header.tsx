@@ -24,9 +24,11 @@ export function Header({
   hasCartBtn = true,
 }: Props) {
   const [openAuthModal, setOpenAuthModal] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { data: session, isPending, refetch } = useSession();
 
   useEffect(() => {
+    setMounted(true);
     const handler = () => refetch();
     window.addEventListener('auth-success', handler);
     return () => window.removeEventListener('auth-success', handler);
@@ -55,7 +57,7 @@ export function Header({
             onClose={() => setOpenAuthModal(false)}
           />
 
-          {isPending ? (
+          {!mounted || isPending ? (
             <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
           ) : (
             <ProfileButton

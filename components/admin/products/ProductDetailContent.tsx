@@ -1,3 +1,4 @@
+import { unstable_noStore as noStore } from 'next/cache';
 import Image from 'next/image';
 import { Package, Tag, Layers } from 'lucide-react';
 import { getProductById } from '@/server/data/products';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export async function ProductDetailContent({ id }: Props) {
+  noStore();
   const product = await getProductById(id);
 
   if (!product) {

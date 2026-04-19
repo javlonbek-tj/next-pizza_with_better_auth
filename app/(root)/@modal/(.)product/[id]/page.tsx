@@ -1,8 +1,9 @@
+import { Suspense } from 'react';
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
 import { getPizzaSizesList, getPizzaTypesList } from '@/server';
 
-export default async function ProductModalPage({
+async function ProductModalContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -21,5 +22,17 @@ export default async function ProductModalPage({
       pizzaSizes={pizzaSizes}
       pizzaTypes={pizzaTypes}
     />
+  );
+}
+
+export default function ProductModalPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense>
+      <ProductModalContent params={params} />
+    </Suspense>
   );
 }

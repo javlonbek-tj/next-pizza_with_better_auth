@@ -1,9 +1,10 @@
+import { Suspense } from 'react';
 import { Container } from '@/components/shared';
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
 import { getPizzaSizesList, getPizzaTypesList } from '@/server';
 
-export default async function ProductPage({
+async function ProductContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -26,5 +27,17 @@ export default async function ProductPage({
         />
       </div>
     </Container>
+  );
+}
+
+export default function ProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense>
+      <ProductContent params={params} />
+    </Suspense>
   );
 }

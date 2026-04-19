@@ -75,12 +75,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
       >
         <FormField
           control={form.control}
-          name='name'
+          name="name"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Имя</FormLabel>
               <FormControl>
-                <Input placeholder='Ваше имя' {...field} />
+                <Input placeholder="Ваше имя" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -89,12 +89,16 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name='email'
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='you@example.com' type='email' {...field} />
+                <Input
+                  placeholder="nextpizza@gmail.com"
+                  type="email"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -103,12 +107,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name='password'
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder='******' type='password' {...field} />
+                <Input placeholder="******" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -117,12 +121,12 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
 
         <FormField
           control={form.control}
-          name='confirmPassword'
+          name="confirmPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Подтвердите пароль</FormLabel>
               <FormControl>
-                <Input placeholder='******' type='password' {...field} />
+                <Input placeholder="******" type="password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -130,19 +134,19 @@ export function RegisterForm({ onClose, onShowOTP, onPendingChange }: Props) {
         />
 
         <Button
-          type='submit'
-          className='w-full cursor-pointer'
+          type="submit"
+          className="w-full cursor-pointer"
           disabled={isPending}
           onClick={(e) => e.stopPropagation()}
         >
           {isPending ? (
-            <Loader className='w-5 h-5 animate-spin' />
+            <Loader className="w-5 h-5 animate-spin" />
           ) : (
             'Зарегистрироваться'
           )}
         </Button>
 
-        {error && <p className='text-sm text-center text-red-500'>{error}</p>}
+        {error && <p className="text-sm text-center text-red-500">{error}</p>}
       </form>
     </Form>
   );
