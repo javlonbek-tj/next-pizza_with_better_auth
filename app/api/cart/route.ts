@@ -155,8 +155,6 @@ export async function DELETE(req: NextRequest) {
       where: { token },
     });
 
-    console.log(userCart);
-
     if (!userCart) {
       return NextResponse.json(
         { success: false, message: 'Cart not found.' },

@@ -8,8 +8,8 @@ export function sortProductsInCategories(
   const sorted = categories.map((category) => ({
     ...category,
     products: [...category.products].sort((a, b) => {
-      const priceA = a.productItems[0]?.price || 0;
-      const priceB = b.productItems[0]?.price || 0;
+      const priceA = Number(a.productItems[0]?.price || 0);
+      const priceB = Number(b.productItems[0]?.price || 0);
 
       switch (sort) {
         case 'price_asc':

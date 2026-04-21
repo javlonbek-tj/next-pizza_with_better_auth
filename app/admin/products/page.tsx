@@ -1,4 +1,3 @@
-import { Suspense } from 'react';
 import {
   getProductTableData,
   getCategoryList,
@@ -8,7 +7,7 @@ import {
 } from '@/server';
 import { Products } from '@/components/admin';
 
-async function ProductsContent({
+export default async function ProductsPage({
   searchParams,
 }: {
   searchParams: Promise<{
@@ -39,22 +38,5 @@ async function ProductsContent({
       sizesPromise={sizesPromise}
       typesPromise={typesPromise}
     />
-  );
-}
-
-export default function ProductsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{
-    search?: string;
-    categoryId?: string;
-    page?: string;
-    limit?: string;
-  }>;
-}) {
-  return (
-    <Suspense>
-      <ProductsContent searchParams={searchParams} />
-    </Suspense>
   );
 }

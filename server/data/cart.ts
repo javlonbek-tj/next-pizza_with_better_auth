@@ -38,7 +38,7 @@ export const getUserCart = async (
   return prisma.cart.findFirst({
     where: { token: cartToken },
     include: cartInclude,
-  });
+  }) as unknown as Promise<CartWithRelations | null>;
 };
 
 export const getUserCartByUserId = async (
@@ -47,7 +47,7 @@ export const getUserCartByUserId = async (
   return prisma.cart.findFirst({
     where: { userId },
     include: cartInclude,
-  });
+  }) as unknown as Promise<CartWithRelations | null>;
 };
 
 export const mergeCartsOnLogin = async (

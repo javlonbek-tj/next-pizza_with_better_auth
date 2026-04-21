@@ -53,7 +53,7 @@ export function OrdersTableBody({
               <p className='text-[10px] text-gray-500'>{order.email}</p>
             </td>
             <td className='px-6 py-2 text-xs font-bold text-gray-700 whitespace-nowrap'>
-              {order.totalAmount.toLocaleString('ru-RU')} ₽
+              {Number(order.totalAmount).toLocaleString('ru-RU')} ₽
             </td>
             <td className='px-6 py-2 text-xs whitespace-nowrap'>
               <p className='text-gray-700'>

@@ -45,7 +45,7 @@ export async function createCategory(
     });
 
     revalidatePath('/admin/categories');
-    updateTag('categories');
+    updateTag('categories-nav');
 
     return {
       success: true,
@@ -100,7 +100,7 @@ export async function updateCategory(
     });
 
     revalidatePath('/admin/categories');
-    updateTag('categories');
+    updateTag('categories-nav');
 
     return {
       success: true,
@@ -124,7 +124,7 @@ export async function deleteCategory(id: string): Promise<ActionResult<null>> {
     });
 
     revalidatePath('/admin/categories');
-    updateTag('categories');
+    updateTag('categories-nav');
 
     return {
       success: true,

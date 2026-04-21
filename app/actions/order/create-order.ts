@@ -50,11 +50,11 @@ export async function createOrder(
           create: userCart.items.map((item) => ({
             productItemId: item.productItemId,
             quantity: item.quantity,
-            price: item.productItem.price,
+            price: Number(item.productItem.price),
             ingredients: item.ingredients.map((ing) => ({
               id: ing.id,
               name: ing.name,
-              price: ing.price,
+              price: Number(ing.price),
             })),
           })),
         },

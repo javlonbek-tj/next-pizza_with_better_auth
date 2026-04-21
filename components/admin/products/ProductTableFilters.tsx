@@ -8,12 +8,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Category } from '@/types';
+import { CategoryListItem } from '@/types';
 
 interface Props {
   search: string;
   handleSearch: (value: string) => void;
-  categories: Category[];
+  categories: CategoryListItem[];
   categoryId: string;
   handleFilterChange: (key: string, value: string) => void;
 }
@@ -49,7 +49,7 @@ export function ProductTableFilters({
           <SelectItem value="all" className="text-xs 2xl:text-sm">
             Все категории
           </SelectItem>
-          {categories.map((category: Category) => (
+          {categories.map((category) => (
             <SelectItem
               key={category.id}
               value={category.id}

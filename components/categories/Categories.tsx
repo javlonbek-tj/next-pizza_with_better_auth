@@ -2,11 +2,11 @@
 
 import { cn } from '@/lib';
 import { useCategoryStore } from '@/store/category';
-import { Category } from '@/types';
+import { CategoryListItem } from '@/types';
 
 interface Props {
   className?: string;
-  categories: Category[];
+  categories: CategoryListItem[];
 }
 
 export function Categories({ className, categories }: Props) {

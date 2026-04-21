@@ -45,7 +45,7 @@ export async function createIngredient(
 
     return {
       success: true,
-      data: ingredient,
+      data: { ...ingredient, price: Number(ingredient.price) },
     };
   } catch {
     return {
@@ -98,7 +98,7 @@ export async function updateIngredient(
 
     return {
       success: true,
-      data: ingredient,
+      data: { ...ingredient, price: Number(ingredient.price) },
     };
   } catch {
     return {

@@ -183,7 +183,7 @@ export function OrderDetailsDialog({ open, onClose, order }: Props) {
                       </div>
                       <div className='text-right shrink-0'>
                         <p className='text-sm font-bold text-gray-900'>
-                          {item.price.toLocaleString('ru-RU')} ₽
+                          {Number(item.price).toLocaleString('ru-RU')} ₽
                         </p>
                         <p className='text-xs text-gray-400 mt-0.5'>
                           {item.quantity} шт.
@@ -201,21 +201,21 @@ export function OrderDetailsDialog({ open, onClose, order }: Props) {
                 <CreditCard className='w-3.5 h-3.5' />
                 Итог
               </div>
-              {order.deliveryPrice > 0 && (
+              {Number(order.deliveryPrice) > 0 && (
                 <div className='flex justify-between text-sm text-gray-500'>
                   <span>Доставка</span>
-                  <span>{order.deliveryPrice.toLocaleString('ru-RU')} ₽</span>
+                  <span>{Number(order.deliveryPrice).toLocaleString('ru-RU')} ₽</span>
                 </div>
               )}
               <div className='flex justify-between pt-1 text-base font-bold text-gray-900 border-t border-gray-200'>
                 <span>К оплате</span>
-                <span>{order.totalAmount.toLocaleString('ru-RU')} ₽</span>
+                <span>{Number(order.totalAmount).toLocaleString('ru-RU')} ₽</span>
               </div>
             </div>
 
             {/* Status change */}
             <div className='flex items-center gap-3 pt-1'>
-              <Select value={status} onValueChange={setStatus}>
+              <Select value={status} onValueChange={(v) => setStatus(v as typeof status)}>
                 <SelectTrigger className='w-48'>
                   <SelectValue />
                 </SelectTrigger>

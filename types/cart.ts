@@ -37,3 +37,5 @@ export type AddToCartDto = {
   ingredients?: string[];
   quantity?: number;
 };
+
+export type CartItemModel = CartItemDetails;

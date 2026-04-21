@@ -2,10 +2,10 @@
 
 import { use } from 'react';
 import { PaginationWrapper } from '@/components/admin/table/PaginationWrapper';
-import type { Product } from '@/types';
+import type { ProductTableRow } from '@/types';
 
 interface Props {
-  productsPromise: Promise<{ data: Product[]; total: number }>;
+  productsPromise: Promise<{ data: ProductTableRow[]; total: number }>;
   page: number;
   limit: number;
   isLoading: boolean;

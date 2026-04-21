@@ -95,7 +95,7 @@ export async function ProductDetailContent({ id }: Props) {
                       )}
                     </td>
                     <td className='px-6 py-3 font-semibold text-right text-gray-800'>
-                      {item.price.toLocaleString('ru-RU')} ₽
+                      {Number(item.price).toLocaleString('ru-RU')} ₽
                     </td>
                   </tr>
                 ))}

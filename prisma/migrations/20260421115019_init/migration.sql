@@ -81,7 +81,7 @@ CREATE TABLE "product_items" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
+    "price" DECIMAL(10,2) NOT NULL,
     "sizeId" TEXT,
     "typeId" TEXT,
     "productId" TEXT NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE "categories" (
 );
 
 -- CreateTable
-CREATE TABLE "PizzaSize" (
+CREATE TABLE "pizza_sizes" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -112,18 +112,18 @@ CREATE TABLE "PizzaSize" (
     "label" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
 
-    CONSTRAINT "PizzaSize_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "pizza_sizes_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "PizzaType" (
+CREATE TABLE "pizza_types" (
     "id" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "type" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
 
-    CONSTRAINT "PizzaType_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "pizza_types_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -132,7 +132,7 @@ CREATE TABLE "ingredients" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "name" TEXT NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
+    "price" DECIMAL(10,2) NOT NULL,
     "imageUrl" TEXT NOT NULL,
     "isActive" BOOLEAN NOT NULL DEFAULT true,
 
@@ -168,8 +168,8 @@ CREATE TABLE "orders" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "token" TEXT NOT NULL,
-    "totalAmount" DOUBLE PRECISION NOT NULL,
-    "deliveryPrice" DOUBLE PRECISION NOT NULL DEFAULT 0,
+    "totalAmount" DECIMAL(10,2) NOT NULL,
+    "deliveryPrice" DECIMAL(10,2) NOT NULL DEFAULT 0,
     "status" "OrderStatus" NOT NULL DEFAULT 'PENDING',
     "paymentId" TEXT,
     "firstName" TEXT NOT NULL,
@@ -191,7 +191,7 @@ CREATE TABLE "order_items" (
     "orderId" TEXT NOT NULL,
     "productItemId" TEXT NOT NULL,
     "quantity" INTEGER NOT NULL,
-    "price" DOUBLE PRECISION NOT NULL,
+    "price" DECIMAL(10,2) NOT NULL,
     "ingredients" JSONB[],
 
     CONSTRAINT "order_items_pkey" PRIMARY KEY ("id")
@@ -203,6 +203,7 @@ CREATE TABLE "stories" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "previewImageUrl" TEXT NOT NULL,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
 
     CONSTRAINT "stories_pkey" PRIMARY KEY ("id")
 );
@@ -241,6 +242,9 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "sessions_token_key" ON "sessions"("token");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "accounts_providerId_accountId_key" ON "accounts"("providerId", "accountId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "categories_name_key" ON "categories"("name");
 
 -- CreateIndex
@@ -251,6 +255,15 @@ CREATE UNIQUE INDEX "ingredients_name_key" ON "ingredients"("name");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "carts_userId_key" ON "carts"("userId");
+
+-- CreateIndex
+CREATE INDEX "carts_token_idx" ON "carts"("token");
+
+-- CreateIndex
+CREATE INDEX "orders_userId_idx" ON "orders"("userId");
+
+-- CreateIndex
+CREATE INDEX "orders_token_idx" ON "orders"("token");
 
 -- CreateIndex
 CREATE INDEX "_IngredientToProduct_B_index" ON "_IngredientToProduct"("B");
@@ -268,10 +281,10 @@ ALTER TABLE "accounts" ADD CONSTRAINT "accounts_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "products" ADD CONSTRAINT "products_categoryId_fkey" FOREIGN KEY ("categoryId") REFERENCES "categories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "product_items" ADD CONSTRAINT "product_items_sizeId_fkey" FOREIGN KEY ("sizeId") REFERENCES "PizzaSize"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "product_items" ADD CONSTRAINT "product_items_sizeId_fkey" FOREIGN KEY ("sizeId") REFERENCES "pizza_sizes"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "product_items" ADD CONSTRAINT "product_items_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "PizzaType"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "product_items" ADD CONSTRAINT "product_items_typeId_fkey" FOREIGN KEY ("typeId") REFERENCES "pizza_types"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "product_items" ADD CONSTRAINT "product_items_productId_fkey" FOREIGN KEY ("productId") REFERENCES "products"("id") ON DELETE CASCADE ON UPDATE CASCADE;
@@ -295,7 +308,7 @@ ALTER TABLE "order_items" ADD CONSTRAINT "order_items_orderId_fkey" FOREIGN KEY 
 ALTER TABLE "order_items" ADD CONSTRAINT "order_items_productItemId_fkey" FOREIGN KEY ("productItemId") REFERENCES "product_items"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "story_items" ADD CONSTRAINT "story_items_storyId_fkey" FOREIGN KEY ("storyId") REFERENCES "stories"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "story_items" ADD CONSTRAINT "story_items_storyId_fkey" FOREIGN KEY ("storyId") REFERENCES "stories"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "_IngredientToProduct" ADD CONSTRAINT "_IngredientToProduct_A_fkey" FOREIGN KEY ("A") REFERENCES "ingredients"("id") ON DELETE CASCADE ON UPDATE CASCADE;

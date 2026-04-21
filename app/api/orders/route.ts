@@ -71,25 +71,16 @@ export async function POST(req: NextRequest) {
         comment: data.comment,
         userId: userCart.userId,
         items: {
-          create: userCart.items.map(
-            (item: {
-              productItemId: string;
-              productItem: { price: number };
-              quantity: number;
-              ingredients: { id: string; name: string; price: number }[];
-            }) => ({
-              productItemId: item.productItemId,
-              quantity: item.quantity,
-              price: item.productItem.price,
-              ingredients: item.ingredients.map(
-                (ing: { id: string; name: string; price: number }) => ({
-                  id: ing.id,
-                  name: ing.name,
-                  price: ing.price,
-                }),
-              ),
-            }),
-          ),
+          create: userCart.items.map((item) => ({
+            productItemId: item.productItemId,
+            quantity: item.quantity,
+            price: Number(item.productItem.price),
+            ingredients: item.ingredients.map((ing) => ({
+              id: ing.id,
+              name: ing.name,
+              price: Number(ing.price),
+            })),
+          })),
         },
       },
     });

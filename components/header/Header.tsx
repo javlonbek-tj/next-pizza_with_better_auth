@@ -24,15 +24,16 @@ export function Header({
   hasCartBtn = true,
 }: Props) {
   const [openAuthModal, setOpenAuthModal] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const { data: session, isPending, refetch } = useSession();
+  const { data: session, refetch } = useSession();
 
   useEffect(() => {
-    setMounted(true);
     const handler = () => refetch();
     window.addEventListener('auth-success', handler);
     return () => window.removeEventListener('auth-success', handler);
   }, [refetch]);
+
+  const currentSession = session ?? null;
+
   return (
     <header className={cn('border border-b h-20', className)}>
       <Container className="flex items-center justify-between py-5">
@@ -57,14 +58,10 @@ export function Header({
             onClose={() => setOpenAuthModal(false)}
           />
 
-          {!mounted || isPending ? (
-            <div className="w-10 h-10 bg-gray-200 rounded-full animate-pulse" />
-          ) : (
-            <ProfileButton
-              onClickSignIn={() => setOpenAuthModal(true)}
-              session={session}
-            />
-          )}
+          <ProfileButton
+            onClickSignIn={() => setOpenAuthModal(true)}
+            session={currentSession}
+          />
         </div>
       </Container>
     </header>

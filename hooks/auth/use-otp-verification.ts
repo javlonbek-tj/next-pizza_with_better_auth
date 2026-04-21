@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { OTP_DOWN_SECONDS } from '@/lib';
 
 interface Props {
@@ -28,6 +28,13 @@ export function useOTPVerification({
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [countdown, setCountdown] = useState(countdownSeconds);
 
+  const onSuccessRef = useRef(onSuccess);
+  useEffect(() => {
+    onSuccessRef.current = onSuccess;
+  }, [onSuccess]);
+
+  const verifyInProgressRef = useRef(false);
+
   // Countdown timer
   useEffect(() => {
     if (countdown > 0) {
@@ -48,6 +55,9 @@ export function useOTPVerification({
 
   const handleVerify = useCallback(
     async (code: string) => {
+      if (verifyInProgressRef.current) return;
+      verifyInProgressRef.current = true;
+
       setIsPending(true);
       setError(null);
       setSuccessMessage(null);
@@ -58,11 +68,12 @@ export function useOTPVerification({
         setError(result.error);
         setIsPending(false);
         setOtp('');
+        verifyInProgressRef.current = false;
       } else {
-        onSuccess();
+        onSuccessRef.current();
       }
     },
-    [email, onSuccess, verifyAction]
+    [email, verifyAction]
   );
 
   // Auto-submit when OTP is complete

@@ -12,7 +12,22 @@ export function AdminPageHeader() {
   const router = useRouter();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const queryClient = useQueryClient();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
+
+  if (isPending) {
+    return (
+      <header className='flex items-center justify-between px-6 py-4 bg-white border-b h-[69px]'>
+        <div className='flex items-center gap-2'>
+          <div className='w-5 h-5 bg-gray-200 rounded-full animate-pulse' />
+          <div className='space-y-1'>
+            <div className='w-24 h-3 bg-gray-200 rounded animate-pulse' />
+            <div className='w-32 h-3 bg-gray-200 rounded animate-pulse' />
+          </div>
+        </div>
+        <div className='w-24 h-8 bg-gray-200 rounded animate-pulse' />
+      </header>
+    );
+  }
 
   if (!session?.user) return null;
 

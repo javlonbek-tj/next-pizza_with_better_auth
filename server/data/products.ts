@@ -77,7 +77,16 @@ export const getFilteredProducts = async (
     },
   });
 
-  return sortProductsInCategories(categories, params.sort);
+  const serialized = categories.map((cat) => ({
+    ...cat,
+    products: cat.products.map((prod) => ({
+      ...prod,
+      ingredients: prod.ingredients.map((ing) => ({ ...ing, price: Number(ing.price) })),
+      productItems: prod.productItems.map((item) => ({ ...item, price: Number(item.price) })),
+    })),
+  }));
+
+  return sortProductsInCategories(serialized as CategoryWithRelations[], params.sort);
 };
 
 export const getProductById = async (
@@ -101,7 +110,13 @@ export const getProductById = async (
     },
   });
 
-  return product;
+  if (!product) return null;
+
+  return {
+    ...product,
+    ingredients: product.ingredients.map((ing) => ({ ...ing, price: Number(ing.price) })),
+    productItems: product.productItems.map((item) => ({ ...item, price: Number(item.price) })),
+  } as ProductWithCategory;
 };
 
 export const getProductTableData = async (

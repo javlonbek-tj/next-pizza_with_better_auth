@@ -7,15 +7,12 @@ export const getIngredientList = async (): Promise<Ingredient[]> => {
   'use cache';
   cacheLife('hours');
   cacheTag('ingredients-table');
-  return prisma.ingredient.findMany({
+  const items = await prisma.ingredient.findMany({
     where: { isActive: true },
-    select: {
-      id: true,
-      name: true,
-      price: true,
-      imageUrl: true,
-    },
+    select: { id: true, name: true, price: true, imageUrl: true },
+    orderBy: { name: 'asc' },
   });
+  return items.map((i) => ({ ...i, price: Number(i.price) }));
 };
 
 export const getIngredients = async (
@@ -35,15 +32,10 @@ export const getIngredients = async (
     }),
   };
 
-  const [data, total] = await Promise.all([
+  const [raw, total] = await Promise.all([
     prisma.ingredient.findMany({
       where,
-      select: {
-        id: true,
-        name: true,
-        price: true,
-        imageUrl: true,
-      },
+      select: { id: true, name: true, price: true, imageUrl: true },
       orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
@@ -51,5 +43,6 @@ export const getIngredients = async (
     prisma.ingredient.count({ where }),
   ]);
 
+  const data = raw.map((i) => ({ ...i, price: Number(i.price) }));
   return { data, total };
 };

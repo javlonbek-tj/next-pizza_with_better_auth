@@ -1,12 +1,22 @@
 import type {
   Category,
   Product,
-  ProductItem,
+  ProductItem as PrismaProductItem,
 } from '@/lib/generated/prisma/client';
 
-export type ProductItemWithRelations = ProductItem & {
+export type { Category, Product };
+
+export type ProductItemWithRelations = Omit<PrismaProductItem, 'price'> & {
+  price: number;
   size: PizzaSize | null;
   type: PizzaType | null;
+};
+
+export type ProductItem = {
+  id: string;
+  price: number;
+  sizeId?: string | null;
+  typeId?: string | null;
 };
 
 export type ProductWithRelations = Product & {
@@ -63,6 +73,8 @@ export type PizzaTypeTableRow = PizzaType & {
   };
 };
 
+export type PizzaTypeWithProductCount = PizzaTypeTableRow;
+
 export type PizzaSize = {
   id: string;
   size: number;
@@ -74,6 +86,8 @@ export type PizzaSizeTableRow = PizzaSize & {
     productItems: number;
   };
 };
+
+export type PizzaSizeWithProductCount = PizzaSizeTableRow;
 
 export type Ingredient = {
   id: string;

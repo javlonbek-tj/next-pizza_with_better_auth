@@ -7,6 +7,7 @@ export const getStories = async (): Promise<IStory[]> => {
   cacheLife('hours');
   cacheTag('stories');
   return prisma.story.findMany({
+    where: { isActive: true },
     include: { items: true },
     orderBy: { createdAt: 'asc' },
   });

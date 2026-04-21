@@ -74,7 +74,7 @@ export function useProductForm({
         productItems:
           product.productItems?.map((item: ProductItemWithRelations) => ({
             id: item.id,
-            price: item.price,
+            price: Number(item.price),
             sizeId: item.size?.id || null,
             typeId: item.type?.id || null,
           })) || [],

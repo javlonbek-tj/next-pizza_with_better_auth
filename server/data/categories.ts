@@ -6,8 +6,9 @@ import { CategoryListItem, CategoryTableRow } from '@/types';
 export const getCategoryList = async (): Promise<CategoryListItem[]> => {
   'use cache';
   cacheLife('hours');
-  cacheTag('categories-table');
+  cacheTag('categories-nav');
   return prisma.category.findMany({
+    where: { isActive: true },
     select: {
       id: true,
       slug: true,

@@ -12,8 +12,7 @@ export const metadata: Metadata = {
 
 export default function HomeLayout({
   children,
-  modal,
-}: Readonly<{ children: React.ReactNode; modal: React.ReactNode }>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <main className='bg-[#F4F1EE] min-h-screen'>
       <Header
@@ -29,7 +28,6 @@ export default function HomeLayout({
         </Button>
       </div>
       {children}
-      {modal}
     </main>
   );
 }

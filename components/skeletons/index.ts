@@ -4,7 +4,7 @@ export { CheckoutPersonalInfoSkeleton } from './CheckoutPersonalInfoSkeleton';
 export { FiltersSkeleton } from './FiltersSkeleton';
 export { GroupVariantsSkeleton } from './GroupVariantsSkeleton';
 export { ProductCardSkeleton } from './ProductCardSkeleton';
+export { ProductDetailSkeleton } from './ProductDetailSkeleton';
 export { ProductsSkeleton } from './ProductsSkeleton';
 export { StoriesSkeleton } from './StoriesSkeleton';
 export { TableBodySkeleton } from './TableBodySkeleton';
-export { ProductDetailSkeleton } from './ProductDetailSkeleton';

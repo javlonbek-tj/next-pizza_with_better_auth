@@ -2,10 +2,34 @@
 
 import { createProductSchema, ProductFormValues } from '@/lib';
 import { prisma } from '@/server';
-import type { ActionResult, ProductWithCategory } from '@/types';
+import type { ActionResult, ProductWithCategory, Ingredient } from '@/types';
+import type { Category } from '@/lib/generated/prisma/client';
+import { Prisma } from '@/lib/generated/prisma/client';
 import { revalidatePath } from 'next/cache';
 import { deleteImageFile } from '../delete-image-file';
 import { requireAdmin } from '@/lib/auth';
+
+type RawIngredient = Omit<Ingredient, 'price'> & { price: Prisma.Decimal };
+type RawProductItem = { id: string; price: Prisma.Decimal; sizeId: string | null; typeId: string | null; [key: string]: unknown };
+type RawProduct = Omit<ProductWithCategory, 'ingredients' | 'productItems' | 'category'> & {
+  ingredients: RawIngredient[];
+  productItems: RawProductItem[];
+  category: Category;
+};
+
+function serializeProduct(product: RawProduct): ProductWithCategory {
+  return {
+    ...product,
+    ingredients: product.ingredients.map((ing) => ({
+      ...ing,
+      price: Number(ing.price),
+    })),
+    productItems: product.productItems.map((item) => ({
+      ...item,
+      price: Number(item.price),
+    })),
+  } as ProductWithCategory;
+}
 
 export async function createProduct(
   data: ProductFormValues,
@@ -66,7 +90,7 @@ export async function createProduct(
 
     return {
       success: true,
-      data: product,
+      data: serializeProduct(product),
     };
   } catch {
     return {
@@ -243,7 +267,7 @@ export async function updateProduct(
 
     return {
       success: true,
-      data: updatedProduct,
+      data: serializeProduct(updatedProduct),
     };
   } catch {
     return {

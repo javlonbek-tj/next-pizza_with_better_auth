@@ -16,10 +16,9 @@ export const getPizzaTypesList = async (): Promise<PizzaType[]> => {
   cacheLife('hours');
   cacheTag('pizza-types-table');
   return prisma.pizzaType.findMany({
-    select: {
-      id: true,
-      type: true,
-    },
+    where: { isActive: true },
+    select: { id: true, type: true },
+    orderBy: { createdAt: 'asc' },
   });
 };
 export const getPizzaTypes = async (
@@ -68,11 +67,9 @@ export const getPizzaSizesList = async (): Promise<PizzaSize[]> => {
   cacheLife('hours');
   cacheTag('pizza-sizes-table');
   return prisma.pizzaSize.findMany({
-    select: {
-      id: true,
-      size: true,
-      label: true,
-    },
+    where: { isActive: true },
+    select: { id: true, size: true, label: true },
+    orderBy: { size: 'asc' },
   });
 };
 

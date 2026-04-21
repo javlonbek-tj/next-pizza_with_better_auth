@@ -11,7 +11,7 @@ import { IngredientItem } from './Ingredient';
 import { Button } from '../ui/button';
 import type { PizzaSize, PizzaType, ProductWithRelations } from '@/types';
 import { CartUpdateButtons } from '../cart/CartUpdateButtons';
-import type { ProductItem } from '@/lib/generated/prisma/client';
+import type { ProductItemWithRelations } from '@/types';
 
 interface Props {
   className?: string;
@@ -72,7 +72,7 @@ export function ChoosePizzaForm({
       name: pizzaType.type,
       value: pizzaType.id,
       disabled: !product.productItems.some(
-        (item: ProductItem) => item.typeId === pizzaType.id,
+        (item: ProductItemWithRelations) => item.typeId === pizzaType.id,
       ),
     };
   });

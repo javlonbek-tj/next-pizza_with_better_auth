@@ -12,7 +12,7 @@ import {
 import { ProductsContent } from '@/components/product/server';
 import { Stories } from '@/components/shared/Stories';
 
-export default function Home({
+export default async function Home({
   searchParams,
 }: {
   searchParams: Promise<GetSearchParams>;

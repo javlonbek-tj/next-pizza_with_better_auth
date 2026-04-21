@@ -4,9 +4,6 @@ const nextConfig = {
     remotePatterns: [],
   },
   cacheComponents: true,
-  typescript: {
-    ignoreBuildErrors: true,
-  },
 };
 
 module.exports = nextConfig;

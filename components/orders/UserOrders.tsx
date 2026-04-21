@@ -109,7 +109,7 @@ export function UserOrders() {
                       </div>
                       <div className="text-right shrink-0">
                         <p className="font-bold text-gray-900">
-                          {item.price.toLocaleString('ru-RU')} ₽
+                          {Number(item.price).toLocaleString('ru-RU')} ₽
                         </p>
                         <p className="text-sm text-gray-400 mt-0.5">
                           {item.quantity} шт.
@@ -122,7 +122,7 @@ export function UserOrders() {
               <div className="py-4 border-t">
                 <span className="text-gray-700">Итого: </span>
                 <span className="font-bold text-gray-900">
-                  {order.totalAmount.toLocaleString('ru-RU')} ₽
+                  {Number(order.totalAmount).toLocaleString('ru-RU')} ₽
                 </span>
               </div>
             </AccordionContent>

@@ -18,7 +18,7 @@ export function ProductFormWrapper({ product, isModal, onClose }: Props) {
     <ChooseProductForm
       imageUrl={product.imageUrl}
       name={product.name}
-      price={product.productItems[0].price}
+      price={Number(product.productItems[0].price)}
       productItemId={productItemId}
       onAddToCart={handleAddToCart}
       isPending={isPending}
