@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { getUsersTableData } from '@/server';
 import { Users } from '@/components/admin';
+import { AdminTableSkeleton } from '@/components/skeletons';
 
 type SearchParams = Promise<{ search?: string; page?: string; limit?: string }>;
 
@@ -12,7 +13,7 @@ async function UsersLoader({ searchParams }: { searchParams: SearchParams }) {
 
 export default function UsersPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <Suspense>
+    <Suspense fallback={<AdminTableSkeleton cols={6} />}>
       <UsersLoader searchParams={searchParams} />
     </Suspense>
   );

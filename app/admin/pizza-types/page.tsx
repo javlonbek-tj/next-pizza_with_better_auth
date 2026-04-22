@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { PizzaTypes } from '@/components/admin';
 import { getPizzaTypes } from '@/server';
+import { AdminTableSkeleton } from '@/components/skeletons';
 
 type SearchParams = Promise<{ search?: string; page?: string; limit?: string }>;
 
@@ -12,7 +13,7 @@ async function PizzaTypesLoader({ searchParams }: { searchParams: SearchParams }
 
 export default function PizzaTypesPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <Suspense>
+    <Suspense fallback={<AdminTableSkeleton cols={4} />}>
       <PizzaTypesLoader searchParams={searchParams} />
     </Suspense>
   );

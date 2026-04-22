@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Ingredients } from '@/components/admin';
 import { getIngredients } from '@/server';
+import { AdminTableSkeleton } from '@/components/skeletons';
 
 type SearchParams = Promise<{ search?: string; page?: string; limit?: string }>;
 
@@ -12,7 +13,7 @@ async function IngredientsLoader({ searchParams }: { searchParams: SearchParams 
 
 export default function IngredientsPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <Suspense>
+    <Suspense fallback={<AdminTableSkeleton cols={5} />}>
       <IngredientsLoader searchParams={searchParams} />
     </Suspense>
   );

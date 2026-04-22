@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Categories } from '@/components/admin';
 import { getCategoriesTableData } from '@/server/data/categories';
+import { AdminTableSkeleton } from '@/components/skeletons';
 
 type SearchParams = Promise<{ search?: string; page?: string; limit?: string }>;
 
@@ -24,7 +25,7 @@ export default function CategoriesPage({
   searchParams: SearchParams;
 }) {
   return (
-    <Suspense>
+    <Suspense fallback={<AdminTableSkeleton cols={5} />}>
       <CategoriesLoader searchParams={searchParams} />
     </Suspense>
   );

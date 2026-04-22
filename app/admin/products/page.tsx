@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { AdminTableSkeleton } from '@/components/skeletons';
 import {
   getProductTableData,
   getCategoryList,
@@ -42,7 +43,7 @@ async function ProductsLoader({ searchParams }: { searchParams: SearchParams }) 
 
 export default function ProductsPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <Suspense>
+    <Suspense fallback={<AdminTableSkeleton cols={6} />}>
       <ProductsLoader searchParams={searchParams} />
     </Suspense>
   );

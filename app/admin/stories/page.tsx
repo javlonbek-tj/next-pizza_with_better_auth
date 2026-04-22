@@ -1,6 +1,7 @@
 import { Suspense } from 'react';
 import { Stories } from '@/components/admin';
 import { getStoriesTableData } from '@/server/data/stories';
+import { AdminTableSkeleton } from '@/components/skeletons';
 
 type SearchParams = Promise<{ page?: string; limit?: string }>;
 
@@ -12,7 +13,7 @@ async function StoriesLoader({ searchParams }: { searchParams: SearchParams }) {
 
 export default function StoriesPage({ searchParams }: { searchParams: SearchParams }) {
   return (
-    <Suspense>
+    <Suspense fallback={<AdminTableSkeleton cols={4} />}>
       <StoriesLoader searchParams={searchParams} />
     </Suspense>
   );

@@ -10,3 +10,4 @@ export { StoriesSkeleton } from './StoriesSkeleton';
 export { TableBodySkeleton } from './TableBodySkeleton';
 export { ProfileSkeleton } from './ProfileSkeleton';
 export { OrdersSkeleton } from './OrdersSkeleton';
+export { AdminTableSkeleton } from './AdminTableSkeleton';
