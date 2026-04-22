@@ -1,11 +1,9 @@
-import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { requireSession } from '@/lib/auth';
 import { Container, Title } from '@/components/shared';
 import { Mail, User, ShieldCheck, ShieldAlert, CalendarDays } from 'lucide-react';
-import { ProfileSkeleton } from '@/components/skeletons';
 
-async function ProfileContent() {
+export default async function ProfilePage() {
   const session = await requireSession();
 
   if (!session) redirect('/');
@@ -74,13 +72,5 @@ async function ProfileContent() {
         </div>
       </div>
     </Container>
-  );
-}
-
-export default function ProfilePage() {
-  return (
-    <Suspense fallback={<ProfileSkeleton />}>
-      <ProfileContent />
-    </Suspense>
   );
 }
