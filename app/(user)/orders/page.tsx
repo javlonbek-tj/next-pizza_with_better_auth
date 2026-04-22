@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { Container, Title } from '@/components/shared';
 import { UserOrders } from '@/components/orders/UserOrders';
 import { requireSession } from '@/lib/auth';
+import { OrdersSkeleton } from '@/components/skeletons';
 
 export const metadata = { title: 'Мои заказы' };
 
@@ -17,7 +18,7 @@ async function OrdersContent() {
 
 export default function OrdersPage() {
   return (
-    <Suspense>
+    <Suspense fallback={<OrdersSkeleton />}>
       <OrdersContent />
     </Suspense>
   );

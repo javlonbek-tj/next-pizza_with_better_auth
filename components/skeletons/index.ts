@@ -8,3 +8,5 @@ export { ProductDetailSkeleton } from './ProductDetailSkeleton';
 export { ProductsSkeleton } from './ProductsSkeleton';
 export { StoriesSkeleton } from './StoriesSkeleton';
 export { TableBodySkeleton } from './TableBodySkeleton';
+export { ProfileSkeleton } from './ProfileSkeleton';
+export { OrdersSkeleton } from './OrdersSkeleton';

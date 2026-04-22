@@ -32,7 +32,6 @@ export function ProductTableFilters({
         className="shadow-sm w-52 2xl:w-64 h-8 2xl:h-9"
         defaultValue={search}
         onChange={(e) => handleSearch(e.target.value)}
-        autoFocus
         autoComplete="off"
       />
       <Select

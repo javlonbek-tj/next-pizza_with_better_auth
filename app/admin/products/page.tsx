@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import {
   getProductTableData,
   getCategoryList,
@@ -7,16 +8,14 @@ import {
 } from '@/server';
 import { Products } from '@/components/admin';
 
-export default async function ProductsPage({
-  searchParams,
-}: {
-  searchParams: Promise<{
-    search?: string;
-    categoryId?: string;
-    page?: string;
-    limit?: string;
-  }>;
-}) {
+type SearchParams = Promise<{
+  search?: string;
+  categoryId?: string;
+  page?: string;
+  limit?: string;
+}>;
+
+async function ProductsLoader({ searchParams }: { searchParams: SearchParams }) {
   const {
     search = '',
     categoryId = 'all',
@@ -38,5 +37,13 @@ export default async function ProductsPage({
       sizesPromise={sizesPromise}
       typesPromise={typesPromise}
     />
+  );
+}
+
+export default function ProductsPage({ searchParams }: { searchParams: SearchParams }) {
+  return (
+    <Suspense>
+      <ProductsLoader searchParams={searchParams} />
+    </Suspense>
   );
 }
