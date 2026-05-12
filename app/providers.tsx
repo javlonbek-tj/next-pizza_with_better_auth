@@ -7,6 +7,7 @@ import {
 } from '@tanstack/react-query';
 import { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import NextTopLoader from 'nextjs-toploader';
 import { TooltipProvider } from '@/components/ui/tooltip';
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -40,7 +41,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           }}
         />
       </TooltipProvider>
-      {/* <NextTopLoader color="oklch(0.646 0.222 41.116)" showSpinner={false} /> */}
+      <NextTopLoader color='oklch(0.646 0.222 41.116)' showSpinner={false} />
     </QueryClientProvider>
   );
 }
