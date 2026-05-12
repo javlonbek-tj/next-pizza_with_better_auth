@@ -2,7 +2,7 @@ export function ProductModalSkeleton() {
   return (
     <div className='flex h-full overflow-hidden'>
       {/* Left: image area */}
-      <div className='flex w-72 shrink-0 items-center justify-center bg-gray-100 animate-pulse' />
+      <div className='flex w-md shrink-0 items-center justify-center bg-gray-100 animate-pulse' />
 
       {/* Right: form area */}
       <div className='flex flex-1 flex-col bg-[#f7f6f5]'>
