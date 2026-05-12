@@ -36,16 +36,8 @@ export async function uploadFileAction(file: File, folder: UploadFolder) {
   const filename = generateUniqueFilename(file);
 
   if (isVercel) {
-    try {
-      const blob = await put(`${folder}/${filename}`, file, { access: 'public' });
-      return { success: true, data: { imageUrl: blob.url } };
-    } catch (err) {
-      console.error('[uploadFileAction] Vercel Blob error:', err);
-      return {
-        success: false,
-        message: err instanceof Error ? err.message : 'Не удалось загрузить изображение',
-      };
-    }
+    const blob = await put(`${folder}/${filename}`, file, { access: 'public' });
+    return { success: true, data: { imageUrl: blob.url } };
   }
 
   // Local filesystem fallback

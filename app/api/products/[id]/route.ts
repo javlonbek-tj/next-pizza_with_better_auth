@@ -8,6 +8,7 @@ export async function GET(
   const product = await prisma.product.findFirst({
     where: { id },
     include: {
+      category: true,
       ingredients: true,
       productItems: { include: { size: true, type: true } },
     },

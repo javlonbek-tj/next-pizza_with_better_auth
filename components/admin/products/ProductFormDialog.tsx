@@ -116,7 +116,7 @@ export function ProductFormDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin'>
+      <DialogContent className='sm:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin' aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle className='text-2xl font-bold'>
             {isEditing ? 'Редактировать продукт' : 'Создать новый продукт'}

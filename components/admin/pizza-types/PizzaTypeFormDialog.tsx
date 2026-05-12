@@ -35,7 +35,7 @@ export function PizzaTypeFormDialog({ open, onClose, pizzaType }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-sm'>
+      <DialogContent className='sm:max-w-sm' aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать тип пиццы' : 'Создать тип пиццы'}

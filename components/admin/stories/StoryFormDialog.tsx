@@ -105,7 +105,7 @@ export function StoryFormDialog({ open, onClose, story }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='sm:max-w-xl max-h-[90vh] overflow-y-auto'>
+      <DialogContent className='sm:max-w-xl max-h-[90vh] overflow-y-auto' aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать историю' : 'Создать историю'}

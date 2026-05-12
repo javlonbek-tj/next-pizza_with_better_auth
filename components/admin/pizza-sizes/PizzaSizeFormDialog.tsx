@@ -34,7 +34,7 @@ export function PizzaSizeFormDialog({ open, onClose, pizzaSize }: Props) {
   });
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-sm'>
+      <DialogContent className='sm:max-w-sm' aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать размер пиццы' : 'Создать размер пиццы'}

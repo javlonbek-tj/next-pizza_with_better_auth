@@ -39,7 +39,7 @@ export function CategoryFormDialog({ open, onClose, category }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='sm:max-w-lg'>
+      <DialogContent className='sm:max-w-lg' aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>
             {isEditing ? 'Редактировать категорию' : 'Создать категорию'}

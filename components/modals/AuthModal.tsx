@@ -47,7 +47,7 @@ export function AuthModal({ open, onClose, callbackUrl }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className='bg-white w-md p-7'>
+      <DialogContent className='bg-white w-md p-7' aria-describedby={undefined}>
         <div className={isLoading ? 'opacity-70 pointer-events-none' : ''}>
           <DialogTitle className='text-xl font-semibold text-center'>
             {showingOTP

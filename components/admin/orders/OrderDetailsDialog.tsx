@@ -63,7 +63,7 @@ export function OrderDetailsDialog({ open, onClose, order }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className='max-w-2xl gap-0 p-0 overflow-visible'>
+      <DialogContent className='max-w-2xl gap-0 p-0 overflow-visible' aria-describedby={undefined}>
         <div className='overflow-hidden rounded-lg'>
           {/* Header */}
           <div className='px-6 py-5 bg-linear-to-r from-gray-900 to-gray-700'>
