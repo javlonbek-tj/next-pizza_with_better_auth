@@ -2,13 +2,14 @@ import { Container } from '@/components/shared/Container';
 
 export function StoriesSkeleton() {
   return (
-    <Container className='flex items-center justify-between gap-2 my-10'>
-      {[...Array(6)].map((_, index) => (
-        <div
-          key={index}
-          className='bg-gray-200 rounded-md w-50 h-70 animate-pulse'
-        />
-      ))}
+    <Container className='my-10'>
+      <div className='flex -ml-2'>
+        {[...Array(6)].map((_, index) => (
+          <div key={index} className='pl-2 basis-1/6 shrink-0'>
+            <div className='h-56 w-full rounded-md bg-gray-200 animate-pulse' />
+          </div>
+        ))}
+      </div>
     </Container>
   );
 }

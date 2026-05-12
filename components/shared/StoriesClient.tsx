@@ -34,14 +34,19 @@ export const StoriesClient: React.FC<Props> = ({ stories }) => {
         <CarouselContent className='-ml-2'>
           {stories.map((story) => (
             <CarouselItem key={story.id} className='pl-2 basis-1/6'>
-              <Image
+              <div
+                className='relative w-full h-56 overflow-hidden rounded-md cursor-pointer'
                 onClick={() => onClickStory(story)}
-                className='rounded-md cursor-pointer w-full h-auto'
-                height={250}
-                width={200}
-                src={story.previewImageUrl}
-                alt='previewStory'
-              />
+              >
+                <Image
+                  onClick={() => onClickStory(story)}
+                  className='w-full h-auto rounded-md cursor-pointer'
+                  height={250}
+                  width={200}
+                  src={story.previewImageUrl}
+                  alt='previewStory'
+                />
+              </div>
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -62,6 +67,14 @@ export const StoriesClient: React.FC<Props> = ({ stories }) => {
               stories={
                 selectedStory?.items.map((item) => ({
                   url: item.sourceUrl,
+                  type: 'image',
+                  styles: {
+                    objectFit: 'cover',
+                    width: '100%',
+                    height: '100%',
+                    maxWidth: 'none',
+                    maxHeight: 'none',
+                  },
                 })) || []
               }
               defaultInterval={3000}
