@@ -39,12 +39,11 @@ export const StoriesClient: React.FC<Props> = ({ stories }) => {
                 onClick={() => onClickStory(story)}
               >
                 <Image
-                  onClick={() => onClickStory(story)}
-                  className='w-full h-auto rounded-md cursor-pointer'
-                  height={250}
-                  width={200}
+                  fill
+                  className='object-cover'
                   src={story.previewImageUrl}
                   alt='previewStory'
+                  sizes='(max-width: 768px) 33vw, 17vw'
                 />
               </div>
             </CarouselItem>
