@@ -11,3 +11,4 @@ export { TableBodySkeleton } from './TableBodySkeleton';
 export { ProfileSkeleton } from './ProfileSkeleton';
 export { OrdersSkeleton } from './OrdersSkeleton';
 export { AdminTableSkeleton } from './AdminTableSkeleton';
+export { ProductModalSkeleton } from './ProductModalSkeleton';

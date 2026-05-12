@@ -13,15 +13,18 @@ export const useProductDetail = (
   );
 
   const handleAddToCart = () => {
-    addToCart({
-      productItemId: product.productItems[0].id,
-      quantity: 1,
-      ingredients: Array.from(selectedIngredients),
-    });
-
-    if (isModal) {
-      onClose?.();
-    }
+    addToCart(
+      {
+        productItemId: product.productItems[0].id,
+        quantity: 1,
+        ingredients: Array.from(selectedIngredients),
+      },
+      {
+        onSuccess: () => {
+          if (isModal) onClose?.();
+        },
+      },
+    );
   };
 
   return {

@@ -12,16 +12,19 @@ export const usePizzaDetail = (
   const { mutate: addToCart, isPending: isSubmitting } = useAddToCart();
 
   const handleAddToCart = () => {
-    addToCart({
-      productItemId:
-        pizzaOptions.selectedPizzaItemId ?? product.productItems[0].id,
-      quantity: 1,
-      ingredients: Array.from(pizzaOptions.selectedIngredients),
-    });
-
-    if (isModal) {
-      onClose?.();
-    }
+    addToCart(
+      {
+        productItemId:
+          pizzaOptions.selectedPizzaItemId ?? product.productItems[0].id,
+        quantity: 1,
+        ingredients: Array.from(pizzaOptions.selectedIngredients),
+      },
+      {
+        onSuccess: () => {
+          if (isModal) onClose?.();
+        },
+      },
+    );
   };
 
   return { pizzaOptions, handleAddToCart, isSubmitting };

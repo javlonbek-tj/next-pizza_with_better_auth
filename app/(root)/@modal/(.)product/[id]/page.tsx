@@ -2,6 +2,7 @@ import { Suspense } from 'react';
 import { ProductForm } from '@/components/product';
 import { getProductById } from '@/server/data/products';
 import { getPizzaSizesList, getPizzaTypesList } from '@/server';
+import { ProductModalSkeleton } from '@/components/skeletons';
 
 async function ProductModalContent({
   params,
@@ -31,7 +32,7 @@ export default function ProductModalPage({
   params: Promise<{ id: string }>;
 }) {
   return (
-    <Suspense>
+    <Suspense fallback={<ProductModalSkeleton />}>
       <ProductModalContent params={params} />
     </Suspense>
   );
