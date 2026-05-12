@@ -3,6 +3,7 @@
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { existsSync } from 'fs';
+import { put } from '@vercel/blob';
 import { generateUniqueFilename, validateFile } from '@/lib';
 
 const VALID_FOLDERS = [
@@ -12,6 +13,8 @@ const VALID_FOLDERS = [
   'stories',
 ] as const;
 type UploadFolder = (typeof VALID_FOLDERS)[number];
+
+const isVercel = process.env.VERCEL === '1';
 
 export async function uploadFileAction(file: File, folder: UploadFolder) {
   if (!folder || !VALID_FOLDERS.includes(folder)) {
@@ -30,13 +33,19 @@ export async function uploadFileAction(file: File, folder: UploadFolder) {
     return { success: false, message: validationError };
   }
 
+  const filename = generateUniqueFilename(file);
+
+  if (isVercel) {
+    const blob = await put(`${folder}/${filename}`, file, { access: 'public' });
+    return { success: true, data: { imageUrl: blob.url } };
+  }
+
+  // Local filesystem fallback
   const bytes = await file.arrayBuffer();
   const buffer = Buffer.from(bytes);
 
-  const filename = generateUniqueFilename(file);
   const uploadDir = path.join(process.cwd(), 'public', 'uploads', folder);
 
-  // Create directory
   if (!existsSync(uploadDir)) {
     await mkdir(uploadDir, { recursive: true });
   }
@@ -44,6 +53,5 @@ export async function uploadFileAction(file: File, folder: UploadFolder) {
   const filepath = path.join(uploadDir, filename);
   await writeFile(filepath, buffer);
 
-  const imageUrl = `/uploads/${folder}/${filename}`;
-  return { success: true, data: { imageUrl } };
+  return { success: true, data: { imageUrl: `/uploads/${folder}/${filename}` } };
 }
