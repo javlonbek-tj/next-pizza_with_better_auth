@@ -16,6 +16,9 @@ interface Props {
   stories: IStory[];
 }
 
+const getStoryInterval = (itemCount: number) =>
+  Math.min(6000, Math.max(2000, Math.round(18000 / itemCount)));
+
 export const StoriesClient: React.FC<Props> = ({ stories }) => {
   const [open, setOpen] = useState(false);
   const [selectedStory, setSelectedStory] = useState<IStory>();
@@ -76,7 +79,7 @@ export const StoriesClient: React.FC<Props> = ({ stories }) => {
                   },
                 })) || []
               }
-              defaultInterval={3000}
+              defaultInterval={getStoryInterval(selectedStory?.items.length ?? 1)}
               width={520}
               height={800}
             />
