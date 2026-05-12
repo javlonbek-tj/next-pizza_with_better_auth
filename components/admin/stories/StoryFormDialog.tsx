@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { Plus } from 'lucide-react';
 import {
@@ -21,7 +21,7 @@ import { Button } from '@/components/ui/button';
 import { ImageUploadInput } from '@/components/shared/ImageUploadInput';
 import { FormActions } from '@/components/shared/FormActions';
 import { useImageUpload, useStoryForm } from '@/hooks';
-import { uploadFileAction } from '@/app/actions';
+import { deleteImageFile, uploadFileAction } from '@/app/actions';
 import type { IStory } from '@/types';
 
 interface Props {
@@ -45,11 +45,31 @@ export function StoryFormDialog({ open, onClose, story }: Props) {
     story?.previewImageUrl,
   );
 
+  // Track newly uploaded slide URLs and whether the form was submitted
+  const submittedRef = useRef(false);
+  const uploadedSlideUrlsRef = useRef<string[]>([]);
+  const originalSlideUrlsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (open) {
+      submittedRef.current = false;
+      uploadedSlideUrlsRef.current = [];
+      originalSlideUrlsRef.current = new Set(
+        story?.items.map((i) => i.sourceUrl).filter(Boolean) ?? [],
+      );
+    }
+  }, [open, story]);
+
+  const handleMarkAsSubmitted = () => {
+    submittedRef.current = true;
+    markAsSubmitted();
+  };
+
   const { form, isEditing, isPending, onSubmit } = useStoryForm({
     story,
     open,
     onClose,
-    markAsSubmitted,
+    markAsSubmitted: handleMarkAsSubmitted,
   });
 
   const [uploadingItems, setUploadingItems] = useState<Set<number>>(new Set());
@@ -59,6 +79,15 @@ export function StoryFormDialog({ open, onClose, story }: Props) {
     index: number,
     onChange: (url: string) => void,
   ) => {
+    // If this slot already has a newly uploaded URL, delete the old one immediately
+    const existingUrl = form.getValues(`items.${index}.sourceUrl`);
+    if (existingUrl && !originalSlideUrlsRef.current.has(existingUrl)) {
+      uploadedSlideUrlsRef.current = uploadedSlideUrlsRef.current.filter(
+        (u) => u !== existingUrl,
+      );
+      deleteImageFile(existingUrl);
+    }
+
     setUploadingItems((prev) => new Set(prev).add(index));
     const res = await uploadFileAction(file, 'stories');
     setUploadingItems((prev) => {
@@ -66,9 +95,38 @@ export function StoryFormDialog({ open, onClose, story }: Props) {
       next.delete(index);
       return next;
     });
+
     if (res.success && res.data?.imageUrl) {
-      onChange(res.data.imageUrl);
+      const newUrl = res.data.imageUrl;
+      onChange(newUrl);
+      uploadedSlideUrlsRef.current = [...uploadedSlideUrlsRef.current, newUrl];
     }
+  };
+
+  const handleClearSlideImage = async (
+    index: number,
+    onChange: (url: string) => void,
+  ) => {
+    const existingUrl = form.getValues(`items.${index}.sourceUrl`);
+    if (existingUrl && !originalSlideUrlsRef.current.has(existingUrl)) {
+      uploadedSlideUrlsRef.current = uploadedSlideUrlsRef.current.filter(
+        (u) => u !== existingUrl,
+      );
+      await deleteImageFile(existingUrl);
+    }
+    onChange('');
+    form.trigger(`items.${index}.sourceUrl`);
+  };
+
+  const handleRemoveCard = async (index: number) => {
+    const existingUrl = form.getValues(`items.${index}.sourceUrl`);
+    if (existingUrl && !originalSlideUrlsRef.current.has(existingUrl)) {
+      uploadedSlideUrlsRef.current = uploadedSlideUrlsRef.current.filter(
+        (u) => u !== existingUrl,
+      );
+      deleteImageFile(existingUrl);
+    }
+    remove(index);
   };
 
   const { fields, append, remove } = useFieldArray({
@@ -79,6 +137,14 @@ export function StoryFormDialog({ open, onClose, story }: Props) {
   const handleClose = async (isOpen: boolean) => {
     if (!isOpen) {
       await cleanupOrphanedImage();
+
+      // If cancelled (not submitted), delete all uploaded slide images
+      if (!submittedRef.current && uploadedSlideUrlsRef.current.length > 0) {
+        await Promise.all(
+          uploadedSlideUrlsRef.current.map((url) => deleteImageFile(url)),
+        );
+      }
+      uploadedSlideUrlsRef.current = [];
     }
     onClose();
   };
@@ -173,11 +239,10 @@ export function StoryFormDialog({ open, onClose, story }: Props) {
                                 form.trigger(`items.${index}.sourceUrl`);
                               })
                             }
-                            onRemove={() => {
-                              inputField.onChange('');
-                              form.trigger(`items.${index}.sourceUrl`);
-                            }}
-                            onRemoveCard={() => remove(index)}
+                            onRemove={() =>
+                              handleClearSlideImage(index, inputField.onChange)
+                            }
+                            onRemoveCard={() => handleRemoveCard(index)}
                             canRemove={fields.length > 1}
                             isUploading={uploadingItems.has(index)}
                             disabled={isPending}

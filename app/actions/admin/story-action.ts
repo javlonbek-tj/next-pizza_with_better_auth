@@ -77,7 +77,10 @@ export async function deleteStory(id: string): Promise<ActionResult<null>> {
   await requireAdmin();
 
   try {
-    await prisma.story.update({ where: { id }, data: { isActive: false } });
+    await prisma.$transaction([
+      prisma.storyItem.deleteMany({ where: { storyId: id } }),
+      prisma.story.delete({ where: { id } }),
+    ]);
 
     revalidatePath('/admin/stories');
     updateTag('stories');
