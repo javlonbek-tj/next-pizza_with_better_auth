@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useQueryClient } from '@tanstack/react-query';
 import toast from 'react-hot-toast';
 import {
@@ -84,27 +85,21 @@ export function ProfileDropdown({ user }: Props) {
         <DropdownMenuSeparator />
 
         {user.role === USER_ROLES.ADMIN && (
-          <DropdownMenuItem
-            disabled={isLoggingOut}
-            onClick={() => router.push('/admin/products')}
-            className='cursor-pointer'
-          >
-            <Shield className='w-4 h-4' /> Admin
+          <DropdownMenuItem disabled={isLoggingOut} asChild>
+            <Link href='/admin/products' className='cursor-pointer'>
+              <Shield className='w-4 h-4' /> Admin
+            </Link>
           </DropdownMenuItem>
         )}
-        <DropdownMenuItem
-          disabled={isLoggingOut}
-          onClick={() => router.push('/profile')}
-          className='cursor-pointer'
-        >
-          <User className='w-4 h-4' /> Профиль
+        <DropdownMenuItem disabled={isLoggingOut} asChild>
+          <Link href='/profile' className='cursor-pointer'>
+            <User className='w-4 h-4' /> Профиль
+          </Link>
         </DropdownMenuItem>
-        <DropdownMenuItem
-          disabled={isLoggingOut}
-          onClick={() => router.push('/orders')}
-          className='cursor-pointer'
-        >
-          <ShoppingBag className='w-4 h-4' /> Мои заказы
+        <DropdownMenuItem disabled={isLoggingOut} asChild>
+          <Link href='/orders' className='cursor-pointer'>
+            <ShoppingBag className='w-4 h-4' /> Мои заказы
+          </Link>
         </DropdownMenuItem>
 
         <DropdownMenuItem
