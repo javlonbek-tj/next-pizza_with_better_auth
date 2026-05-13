@@ -27,7 +27,7 @@ export function CheckoutTotal({ cartItems, isProcessing }: Props) {
   }, [totalPriceWithDelivery, totalCartPrice, setValue]);
 
   return (
-    <div className="basis-1/3">
+    <div className="w-full lg:basis-1/3">
       <CheckoutCard
         title="Итого:"
         endAdornment={

@@ -16,7 +16,7 @@ interface Props {
 
 export function CheckoutDetails({ className, cartItems, isProcessing }: Props) {
   return (
-    <div className={cn('flex flex-col gap-6 basis-2/3', className)}>
+    <div className={cn('flex flex-col gap-6 w-full lg:basis-2/3', className)}>
       <CheckoutCartItems cartItems={cartItems} isProcessing={isProcessing} />
 
       <div

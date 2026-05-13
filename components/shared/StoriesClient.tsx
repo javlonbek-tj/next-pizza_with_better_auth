@@ -36,7 +36,7 @@ export const StoriesClient: React.FC<Props> = ({ stories }) => {
       <Carousel className='w-full' opts={{ align: 'start', dragFree: true }}>
         <CarouselContent className='-ml-2'>
           {stories.map((story) => (
-            <CarouselItem key={story.id} className='pl-2 basis-1/6'>
+            <CarouselItem key={story.id} className='pl-2 basis-1/3 sm:basis-1/4 lg:basis-1/6'>
               <div
                 className='relative w-full h-56 overflow-hidden rounded-md cursor-pointer'
                 onClick={() => onClickStory(story)}
@@ -55,13 +55,16 @@ export const StoriesClient: React.FC<Props> = ({ stories }) => {
       </Carousel>
 
       {open && (
-        <div className='absolute top-0 left-0 flex items-center justify-center w-full h-full z-80 bg-black/80'>
-          <div className='relative' style={{ width: 520 }}>
+        <div className='fixed inset-0 flex items-center justify-center z-80 bg-black/80'>
+          <div
+            className='relative w-full max-w-[520px] mx-4'
+            style={{ height: 'min(800px, 90dvh)' }}
+          >
             <button
-              className='absolute z-30 cursor-pointer -right-10 -top-5'
+              className='absolute z-30 cursor-pointer -right-2 md:-right-10 -top-8'
               onClick={() => setOpen(false)}
             >
-              <X className='absolute top-0 right-0 w-8 h-8 text-white/50' />
+              <X className='w-8 h-8 text-white/50' />
             </button>
 
             <ReactStories
@@ -80,8 +83,8 @@ export const StoriesClient: React.FC<Props> = ({ stories }) => {
                 })) || []
               }
               defaultInterval={getStoryInterval(selectedStory?.items.length ?? 1)}
-              width={520}
-              height={800}
+              width='100%'
+              height='100%'
             />
           </div>
         </div>

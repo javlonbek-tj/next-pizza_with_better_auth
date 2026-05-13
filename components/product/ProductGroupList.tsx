@@ -53,7 +53,7 @@ export function ProductGroupList({
     >
       <Title text={categoryTitle} className='mb-4 font-extrabold' size='md' />
 
-      <div className={cn('gap-8 grid grid-cols-3', listClassName)}>
+      <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-8', listClassName)}>
         {products.map((product) => (
           <ProductCard
             key={product.id}

@@ -55,7 +55,7 @@ export function ChooseProductForm({
   return (
     <div
       className={cn(
-        'flex h-full overflow-hidden',
+        'flex flex-col md:flex-row h-full overflow-hidden',
         !isModal && 'max-w-5xl mx-auto',
         className,
       )}
@@ -63,7 +63,7 @@ export function ChooseProductForm({
       {/* Left: Image */}
       <div
         className={cn(
-          'flex w-md shrink-0 justify-center items-center',
+          'flex md:w-md shrink-0 justify-center items-center py-6 md:py-0',
           !isModal && 'rounded-2xl overflow-hidden bg-[#FFF7EE]',
         )}
       >
@@ -89,7 +89,7 @@ export function ChooseProductForm({
           {ingredients?.length > 0 && (
             <>
               <Title text='Ингредиенты' size='xs' className='mt-4 mb-2' />
-              <div className='grid grid-cols-3 gap-2'>
+              <div className='grid grid-cols-2 md:grid-cols-3 gap-2'>
                 {ingredients.map((ingredient) => (
                   <IngredientItem
                     key={ingredient.id}

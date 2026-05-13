@@ -86,8 +86,8 @@ export function ChoosePizzaForm({
   return (
     <div
       className={cn(
-        'flex h-full',
-        !isModal && 'max-w-5xl w-4xl mx-auto',
+        'flex flex-col md:flex-row h-full',
+        !isModal && 'max-w-5xl mx-auto',
         className,
       )}
     >
@@ -131,7 +131,7 @@ export function ChoosePizzaForm({
             <>
               <Title text='Ингредиенты' size='xs' className='mt-4' />
 
-              <div className='grid grid-cols-3 gap-2 pb-4 mt-4'>
+              <div className='grid grid-cols-2 md:grid-cols-3 gap-2 pb-4 mt-4'>
                 {product.ingredients.map((ingredient) => (
                   <IngredientItem
                     ingredient={ingredient}

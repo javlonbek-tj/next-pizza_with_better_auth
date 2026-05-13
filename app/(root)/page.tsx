@@ -23,8 +23,8 @@ export default async function Home({
       <Suspense fallback={<StoriesSkeleton />}>
         <Stories />
       </Suspense>
-      <Container className='flex gap-16 mt-5'>
-        <aside className='w-3xs shrink-0'>
+      <Container className='flex flex-col lg:flex-row gap-6 lg:gap-16 mt-5'>
+        <aside className='hidden lg:block w-full lg:w-3xs shrink-0'>
           <div className='sticky top-20'>
             <Suspense fallback={<FiltersSkeleton />}>
               <FiltersContent />

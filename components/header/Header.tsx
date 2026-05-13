@@ -35,12 +35,12 @@ export function Header({
   const currentSession = session ?? null;
 
   return (
-    <header className={cn('border border-b h-20', className)}>
-      <Container className="flex items-center justify-between py-5">
-        <Link href={'/'}>
-          <div className="flex items-center gap-4">
+    <header className={cn('border border-b h-16 md:h-20', className)}>
+      <Container className="flex items-center justify-between h-full gap-3">
+        <Link href={'/'} className="shrink-0">
+          <div className="flex items-center gap-2 md:gap-4">
             <Image src="/logo.png" alt="logo" width={30} height={30} />
-            <div>
+            <div className="hidden sm:block">
               <h1 className="text-xl font-black uppercase">Next Pizza</h1>
               <p className="text-sm leading-3 text-gray-400">
                 вкусней уже некуда
@@ -49,9 +49,9 @@ export function Header({
           </div>
         </Link>
 
-        {hasSearch && <SearchInput />}
+        {hasSearch && <SearchInput className="hidden md:flex" />}
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 shrink-0">
           {hasCartBtn && <CartButton />}
           <AuthModal
             open={openAuthModal}

@@ -73,7 +73,7 @@ export default function CheckoutPage() {
                 <form
                   onSubmit={form.handleSubmit(onSubmit)}
                   className={cn(
-                    'flex gap-6 mt-4 transition-opacity duration-200',
+                    'flex flex-col lg:flex-row gap-6 mt-4 transition-opacity duration-200',
                     isProcessing && 'opacity-90 pointer-events-none',
                   )}
                 >

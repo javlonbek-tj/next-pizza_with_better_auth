@@ -18,7 +18,7 @@ async function ProductContent({
 
   return (
     <Container className='my-10'>
-      <div className='h-138'>
+      <div className='min-h-80 md:h-138'>
         <ProductForm
           product={product}
           isModal={false}
